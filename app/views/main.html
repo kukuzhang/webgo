@@ -2,7 +2,7 @@
     <tr ng-repeat="row in board track by $index">
         <td ng-repeat="cell in row track by $index"
             ng-click="clickMe($parent.$index,$index,cell);">
-            <img class="webgo-stone" src={{cell|stoneUrl}}
+            <img class="webgo-stone" ng-src="{{cell|stoneUrl}}" />
         </td>
     </tr>
 </table>

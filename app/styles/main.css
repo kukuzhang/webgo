@@ -4,6 +4,32 @@ body {
   padding-bottom: 20px;
 }
 
+.webgo-board tbody tr td {
+    background-image: url('../images/grid-middle.png');
+    background-size: 100%;
+}
+
+.webgo-board tbody tr:first-child td { background-image: url('../images/grid-t.png'); }
+.webgo-board tbody tr td:last-child { background-image: url('../images/grid-r.png'); }
+.webgo-board tbody tr:last-child td { background-image: url('../images/grid-b.png'); }
+.webgo-board tbody tr td:first-child { background-image: url('../images/grid-l.png'); }
+.webgo-board tbody tr:first-child td:last-child { background-image: url('../images/grid-tr.png'); }
+.webgo-board tbody tr:last-child td:last-child { background-image: url('../images/grid-br.png'); }
+.webgo-board tbody tr:last-child td:first-child { background-image: url('../images/grid-bl.png'); }
+.webgo-board tbody tr:first-child td:first-child { background-image: url('../images/grid-tl.png'); }
+
+.webgo-board tbody tr:nth-child(4) td:nth-child(4),
+.webgo-board tbody tr:nth-child(10) td:nth-child(4),
+.webgo-board tbody tr:nth-child(16) td:nth-child(4),
+.webgo-board tbody tr:nth-child(4) td:nth-child(10),
+.webgo-board tbody tr:nth-child(10) td:nth-child(10),
+.webgo-board tbody tr:nth-child(16) td:nth-child(10),
+.webgo-board tbody tr:nth-child(4) td:nth-child(16),
+.webgo-board tbody tr:nth-child(10) td:nth-child(16),
+.webgo-board tbody tr:nth-child(16) td:nth-child(16) {
+    background-image: url('../images/grid-hoshi.png');
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -80,6 +106,8 @@ body {
 
 .webgo-board {
     width: auto;
+    background: url('../images/wood1.jpg');
+    background-size:100%;
 }
 .webgo-board tbody tr td {
 
