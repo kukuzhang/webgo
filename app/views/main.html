@@ -1,0 +1,30 @@
+<table ng-table="tableParams" class="table webgo-board">
+    <tr ng-repeat="row in board track by $index">
+        <td ng-repeat="cell in row track by $index"
+            ng-click="clickMe($parent.$index,$index,cell);">
+            <img class="webgo-stone" src={{cell|stoneUrl}}
+        </td>
+    </tr>
+</table>
+
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li class="active"><a ng-href="#">Home</a></li>
+    <li><a ng-href="#">About</a></li>
+    <li><a ng-href="#">Contact</a></li>
+  </ul>
+  <h3 class="text-muted">a</h3>
+</div>
+
+<p><a class="btn btn-lg btn-success" ng-href="#">Splendid!</a></p>
+
+<input type="text" ng-model="newAwesome" />
+<button ng-click="addAwesome()">add</button><ul>
+  <li ng-repeat="it in awesomeThings track by $index">
+    {{it}}
+  </li>
+</ul>
+
+<div class="footer">
+  <p>♥ from the Yeoman team</p>
+</div>
