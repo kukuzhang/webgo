@@ -4,35 +4,7 @@ body {
   padding-bottom: 20px;
 }
 
-.webgo-board tbody tr td {
-    background-image: url('../images/grid-middle.png');
-    background-size: 100%;
-}
-
-.webgo-board tbody tr:first-child td { background-image: url('../images/grid-t.png'); }
-.webgo-board tbody tr td:last-child { background-image: url('../images/grid-r.png'); }
-.webgo-board tbody tr:last-child td { background-image: url('../images/grid-b.png'); }
-.webgo-board tbody tr td:first-child { background-image: url('../images/grid-l.png'); }
-.webgo-board tbody tr:first-child td:last-child { background-image: url('../images/grid-tr.png'); }
-.webgo-board tbody tr:last-child td:last-child { background-image: url('../images/grid-br.png'); }
-.webgo-board tbody tr:last-child td:first-child { background-image: url('../images/grid-bl.png'); }
-.webgo-board tbody tr:first-child td:first-child { background-image: url('../images/grid-tl.png'); }
-
-.webgo-board tbody tr:nth-child(4) td:nth-child(4),
-.webgo-board tbody tr:nth-child(10) td:nth-child(4),
-.webgo-board tbody tr:nth-child(16) td:nth-child(4),
-.webgo-board tbody tr:nth-child(4) td:nth-child(10),
-.webgo-board tbody tr:nth-child(10) td:nth-child(10),
-.webgo-board tbody tr:nth-child(16) td:nth-child(10),
-.webgo-board tbody tr:nth-child(4) td:nth-child(16),
-.webgo-board tbody tr:nth-child(10) td:nth-child(16),
-.webgo-board tbody tr:nth-child(16) td:nth-child(16) {
-    background-image: url('../images/grid-hoshi.png');
-}
-
-/* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
-.marketing,
 .footer {
   padding-left: 15px;
   padding-right: 15px;
@@ -42,14 +14,6 @@ body {
 .header {
   border-bottom: 1px solid #e5e5e5;
 }
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
-}
-
 /* Custom page footer */
 .footer {
   padding-top: 19px;
@@ -67,29 +31,10 @@ body {
   margin: 30px 0;
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
-}
-.jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
-}
-
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-}
-.marketing p + h4 {
-  margin-top: 28px;
-}
-
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */
   .header,
-  .marketing,
   .footer {
     padding-left: 0;
     padding-right: 0;
@@ -97,10 +42,6 @@ body {
   /* Space out the masthead */
   .header {
     margin-bottom: 30px;
-  }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
   }
 }
 
@@ -113,12 +54,43 @@ body {
 
     border-top:none;
     padding:0;
-
+    background-image: url('../images/grid-middle.png');
+    background-size: 100%;
 }
 
-.webgo-stone {
+.webgo-board tbody tr td.webgo-coord {
+    background-image: none;
+}
+.webgo-board tbody tr td.top {
+    background-image: url('../images/grid-t.png');
+}
+.webgo-board tbody tr td.right {
+    background-image: url('../images/grid-r.png');
+}
+.webgo-board tbody tr td.bottom {
+    background-image: url('../images/grid-b.png');
+}
+.webgo-board tbody tr td.left {
+    background-image: url('../images/grid-l.png');
+}
+.webgo-board tbody tr td.top.right {
+    background-image: url('../images/grid-tr.png');
+}
+.webgo-board tbody tr td.bottom.right {
+    background-image: url('../images/grid-br.png');
+}
+.webgo-board tbody tr td.bottom.left {
+    background-image: url('../images/grid-bl.png');
+}
+.webgo-board tbody tr td.top.left {
+    background-image: url('../images/grid-tl.png');
+}
+.webgo-board tbody tr td.hoshi {
+    background-image: url('../images/grid-hoshi.png');
+}
 
+.webgo-coord,
+.webgo-stone {
     width:32px;
     height:32px;
-
 }

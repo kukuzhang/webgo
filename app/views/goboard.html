@@ -1,0 +1,23 @@
+<table ng-table="tableParams" class="table webgo-board">
+  <tr ng-show="coords">
+    <td class="webgo-coord" >&nbsp;</td>
+    <td class="webgo-coord" ng-repeat="row in board track by $index">
+      {{$index+1}}
+    </td>
+  </tr>
+  <tr ng-repeat="row in board track by $index">
+    <td class="webgo-coord" ng-show="coords"> {{$index+1}} </td>
+    <td ng-repeat="cell in row track by $index"
+        ng-click="play($parent.$index,$index);"
+        ng-class="cellClass($parent.$index,$index)">
+    <img class="webgo-stone" ng-src="{{cell|stoneUrl}}" />
+    </td>
+    <td class="webgo-coord" ng-show="coords"> {{$index+1}} </td>
+  </tr>
+  <tr ng-show="coords">
+    <td class="webgo-coord" >&nbsp;</td>
+    <td class="webgo-coord" ng-repeat="row in board track by $index">
+      {{$index+1}}
+    </td>
+  </tr>
+</table>
