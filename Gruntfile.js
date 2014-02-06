@@ -77,7 +77,7 @@ module.exports = function (grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
-      }
+      },
     },
 
     // The actual grunt server settings
@@ -136,6 +136,9 @@ module.exports = function (grunt) {
       all: [
         'Gruntfile.js',
         '<%= yeoman.app %>/scripts/{,*/}*.js'
+      ],
+      backend: [
+        'server/app.js server/route/*.js'
       ],
       test: {
         options: {
@@ -412,4 +415,20 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  /*
+  grunt.registerTask('backend', [
+    'newer:jshint',
+    'test',
+    'build'
+  ]);
+  'backend-js': {
+    files: ['server/app.js server/route/*.js'],
+    tasks: ['newer:jshint:backend'],
+    options: {
+      server-reload: '<%= connect.options.livereload %>'
+    }
+  },
+  */
+
 };

@@ -14,21 +14,17 @@ angular.module('aApp')
         cbPlay: '&'
       },
 
-      link: function (scope,elem,attrs) {
+      link: function (scope,elem) {
         
-        var board = scope.board;
-        var boardSize = scope.board.length;
         scope.play = function (r,c) {
-            console.log(r,c);
-            scope.playcb({row:r,col:c});
+          console.log(r,c);
+          scope.playcb({row:r,col:c});
         };
-        console.log(scope,elem,attrs);
-        elem.find('img')
-          .css('width',attrs.stoneSize)
-          .css('height',attrs.stoneSize);
 
+        console.log(elem.find('img'));
         scope.cellClass = function (row,col) {
 
+          var boardSize = scope.board.length;
           var classes = [];
           if (row === 0) { classes.push('top'); }
           if (col === 0) { classes.push('left'); }

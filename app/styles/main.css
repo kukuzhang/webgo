@@ -49,6 +49,7 @@ body {
     width: auto;
     background: url('../images/wood1.jpg');
     background-size:100%;
+    box-shadow: 0 0 10px;
 }
 .webgo-board tbody tr td {
 

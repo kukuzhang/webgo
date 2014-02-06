@@ -7,10 +7,10 @@ angular.module('aApp')
   var serverUrl = '/api';
   $scope.games = [];
   $http({method:'GET',url:serverUrl + '/game'})
-    .success(function (data, status, headers, config) {
+    .success(function (data) {
       $scope.games = data;
     })
-    .error(function (data, status, headers, config) {
+    .error(function (data, status) {
 
       console.log('error ' + status);
     });
