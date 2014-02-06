@@ -12,6 +12,10 @@ angular.module('aApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/game/:gameId', {
+        templateUrl: 'views/game.html',
+        controller: 'GameCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

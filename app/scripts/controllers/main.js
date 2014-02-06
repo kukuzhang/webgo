@@ -2,39 +2,17 @@
 
 //angular.module('aApp', ['webgoFilters']);
 angular.module('aApp')
-.controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
-  function getInitialBoard() {
+  var serverUrl = '/api';
+  $scope.games = [];
+  $http({method:'GET',url:serverUrl + '/game'})
+    .success(function (data, status, headers, config) {
+      $scope.games = data;
+    })
+    .error(function (data, status, headers, config) {
 
-    var board = [];
+      console.log('error ' + status);
+    });
 
-    for (var i=0;i<19;i++) {
-
-      board[i] = [];
-
-      for (var j=0;j<19;j++) {
-
-        board[i][j] = EMPTY;
-
-      }
-
-    }
-
-    board[3][4] = BLACK;
-    board[5][3] = WHITE;
-    board[4][6] = BLACK;
-    board[3][2] = WHITE;
-    board[2][3] = BLACK;
-    board[8][3] = WHITE;
-
-    return board;
-
-  }
-
-  var BLACK = 'b';
-  var WHITE = 'w';
-  var EMPTY = '_';
-  $scope.myboard = getInitialBoard();
-  $scope.showCoords = false;
-
-});
+}]);

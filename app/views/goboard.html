@@ -8,7 +8,7 @@
   <tr ng-repeat="row in board track by $index">
     <td class="webgo-coord" ng-show="coords"> {{$index+1}} </td>
     <td ng-repeat="cell in row track by $index"
-        ng-click="play($parent.$index,$index);"
+        ng-click="cbPlay({row:$parent.$index,col:$index})"
         ng-class="cellClass($parent.$index,$index)">
     <img class="webgo-stone" ng-src="{{cell|stoneUrl}}" />
     </td>

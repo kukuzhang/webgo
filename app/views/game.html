@@ -4,15 +4,11 @@
     <li><a ng-href="#">About</a></li>
     <li><a ng-href="#">Contact</a></li>
   </ul>
-  <h3 class="text-muted">w</h3>
+  <h3 class="text-muted">webgo</h3>
 </div>
 
-<ul>
-    <li ng-repeat="game in games" >
-        <a href="#/game/{{game.id}}"> {{game.id}} </a>
-    </li>
-</ul>
+<goboard board="myboard" stone-size="39" cb-play="play(row,col)" coords="showCoords"/>
 
 <div class="footer">
-  <p>w</p>
+  <p>{{myboard | stoneCount}}</p>
 </div>

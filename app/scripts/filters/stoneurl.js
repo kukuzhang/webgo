@@ -15,8 +15,9 @@
   .filter('stoneCount', function () {
     return function (board) {
       var sum = 0;
-      for (var i=0; i<19;i++) {
-        for (var j=0; j<19;j++) {
+      var boardSize = board.length;
+      for (var i=0; i<boardSize;i++) {
+        for (var j=0; j<boardSize;j++) {
           sum += (board[i][j] !== EMPTY) ? 1 : 0;
         }
       }
