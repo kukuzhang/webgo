@@ -12,27 +12,6 @@ module.exports = function (grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
-  function connectProxyMiddleware(connect, options) {
-    if (!Array.isArray(options.base)) {
-      options.base = [options.base];
-    }
-
-    // Setup the proxy
-    var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
-
-    // Serve static files.
-    options.base.forEach(function(base) {
-      middlewares.push(connect.static(base));
-    });
-
-    // Make directory browse-able.
-    var directory = options.directory || options.base[options.base.length - 1];
-    middlewares.push(connect.directory(directory));
-
-    return middlewares;
-  }
-
-
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -48,6 +27,23 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
 
+    express: {
+      options: {
+        port: process.env.PORT || 9000
+      },
+      dev: {
+        options: {
+          script: 'server/app.js',
+          debug: true
+        }
+      },
+      prod: {
+        options: {
+          script: 'dist/server.js',
+          node_env: 'production'
+        }
+      }
+    },
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       js: {
@@ -107,7 +103,27 @@ module.exports = function (grunt) {
             '.tmp',
             '<%= yeoman.app %>'
           ],
-          middleware: connectProxyMiddleware
+          middleware: function (connect, options) {
+            if (!Array.isArray(options.base)) {
+              options.base = [options.base];
+            }
+
+            // Setup the proxy
+            var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
+
+            // Serve static files.
+            options.base.forEach(function(base) {
+              middlewares.push(connect.static(base));
+            });
+
+            // Make directory browse-able.
+            var directory = options.directory || options.base[options.base.length - 1];
+            middlewares.push(connect.directory(directory));
+
+            return middlewares;
+          }
+
+
         }
       },
       test: {
@@ -375,6 +391,7 @@ module.exports = function (grunt) {
       'concurrent:server',
       'configureProxies:start',
       'autoprefixer',
+      //'express:dev',
       'connect:livereload',
       'watch'
     ]);
@@ -415,20 +432,5 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
-
-  /*
-  grunt.registerTask('backend', [
-    'newer:jshint',
-    'test',
-    'build'
-  ]);
-  'backend-js': {
-    files: ['server/app.js server/route/*.js'],
-    tasks: ['newer:jshint:backend'],
-    options: {
-      server-reload: '<%= connect.options.livereload %>'
-    }
-  },
-  */
 
 };
