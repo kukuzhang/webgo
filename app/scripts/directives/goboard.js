@@ -6,25 +6,22 @@ angular.module('aApp')
     return {
       templateUrl: 'views/goboard.html',
       restrict: 'E',
-      //require: '^board',
+      //require: '^stones',
       scope: {
-        board: '=',
+        stones: '=',
         coords: '=',
         stoneSize: '=',
-        cbPlay: '&'
+        cbPlay: '&',
+        cbHover: '&',
+        cbHoverOut: '&'
       },
 
       link: function (scope,elem) {
         
-        scope.play = function (r,c) {
-          console.log(r,c);
-          scope.playcb({row:r,col:c});
-        };
-
-        console.log(elem.find('img'));
+        console.log(scope);
         scope.cellClass = function (row,col) {
 
-          var boardSize = scope.board.length;
+          var boardSize = scope.stones.length;
           var classes = [];
           if (row === 0) { classes.push('top'); }
           if (col === 0) { classes.push('left'); }

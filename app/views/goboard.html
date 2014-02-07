@@ -5,10 +5,12 @@
       {{$index+1}}
     </td>
   </tr>
-  <tr ng-repeat="row in board track by $index">
+  <tr ng-repeat="row in stones track by $index">
     <td class="webgo-coord" ng-show="coords"> {{$index+1}} </td>
     <td ng-repeat="cell in row track by $index"
         ng-click="cbPlay({row:$parent.$index,col:$index})"
+        ng-mouseover="cbHover({row:$parent.$index,col:$index})"
+        ng-mouseleave="cbHoverOut({row:$parent.$index,col:$index})"
         ng-class="cellClass($parent.$index,$index)">
     <img class="webgo-stone" ng-style="{width:stoneSize,height:stoneSize}" ng-src="{{cell|stoneUrl}}" />
     </td>

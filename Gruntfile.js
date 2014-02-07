@@ -20,6 +20,12 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+    env: {
+      options: {
+        CHROME_BIN:'/usr/bin/chromium-browser'
+      }
+
+    },
     // Project settings
     yeoman: {
       // configurable paths

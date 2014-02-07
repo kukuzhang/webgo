@@ -14,6 +14,8 @@
   exports.BLACK = BLACK;
   exports.WHITE = WHITE;
   exports.EMPTY = EMPTY;
+  exports.BLACK_HOVER = 'B';
+  exports.WHITE_HOVER = 'W';
 
   exports.newGame = function (options) { return new Game(options); }
 
@@ -91,7 +93,7 @@
   function Board(boardSize,template) {
 
     this.stones = [];
-    this.boardSize = boardSize
+    this.length = boardSize
 
     for (var i=0;i<boardSize;i++) {
 
@@ -110,7 +112,7 @@
   }
 
   Board.prototype.validCoordinate = function (row) {
-    return (row >= 0 && row < this.boardSize);
+    return (row >= 0 && row < this.length);
   }
 
   Board.prototype.setStone = function (row,column,content) {
@@ -165,7 +167,7 @@
       throw new Error('Point ' + move.row + ',' + move.column + ' not empty');
     }
 
-    var newBoard = new Board(this.boardSize,this.stones);
+    var newBoard = new Board(this.length,this.stones);
 
     newBoard.setStone(move.row,move.column, move.stone);
     var myGroup = new Group(newBoard,move.row,move.column);
@@ -189,14 +191,14 @@
 
   Board.prototype.point2Hash = function (row,column) {
 
-    return row*this.boardSize + column;
+    return row*this.length + column;
 
   };
 
   Board.prototype.hash2Point = function (hash) {
 
-    var row = Math.floor (hash / this.boardSize);
-    var col = hash % this.boardSize;
+    var row = Math.floor (hash / this.length);
+    var col = hash % this.length;
 
     return [row,col];
 
@@ -283,7 +285,6 @@
       return (board.getStone(point[0],point[1]) === EMPTY)
     });
 
-    console.log('f',freedoms);
     return freedoms.length;
 
   };
