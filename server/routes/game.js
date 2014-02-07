@@ -30,14 +30,16 @@ function getGameById(id) {
 
     }
 
-    return game.getBoard().stones;
+    //return game.getBoard();
+    return game;
 
 }
 
 function playTo(id,move) {
+
   var game = games[id];
 
-  // for debuggind
+  // for debugging
   if (game === undefined) {
 
     game = libgo.newGame();
@@ -46,7 +48,10 @@ function playTo(id,move) {
   }
 
   var newBoard = game.play(move);
-  return newBoard.stones;
+
+  //return newBoard;
+  return game;
+
 }
 
 exports.get = function(req, res){

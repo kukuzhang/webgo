@@ -9,12 +9,13 @@ angular.module('aApp')
     var serverUrl = '/api';
     var gameUrl = serverUrl + '/game/' + $routeParams.gameId;
     var turn = BLACK;
+    $scope.game = {};
     $scope.myboard = [];
     $scope.showCoords = false;
 
     $http.get(gameUrl)
       .success(function (data) {
-        $scope.myboard = data;
+        setNewGame(data);
       })
       .error(function (data, status) {
         console.log('error ' + status);
@@ -26,12 +27,20 @@ angular.module('aApp')
       turn = (turn === WHITE) ? BLACK : WHITE;
       $http.post(gameUrl,data)
         .success(function (data) {
-          $scope.myboard = data;
+          setNewGame(data);
         })
         .error(function (data, status) {
           console.log('error ' + status);
         });
 
     };
+
+    function setNewGame (game) {
+
+      $scope.game = game;
+      console.log(game);
+      $scope.myboard = game.boards[game.boards.length-1].stones;
+
+    }
 
   }]);

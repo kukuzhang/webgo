@@ -40,7 +40,7 @@ module.exports = function (grunt) {
       prod: {
         options: {
           script: 'dist/server.js',
-          node_env: 'production'
+          'node_env': 'production'
         }
       }
     },

@@ -4,9 +4,17 @@
   var WHITE = 'w';
   var EMPTY = '_';
 
+  var PLAY = 'play';
+  var PASS = 'pass';
+  var RESIGN = 'resign';
+
+  exports.PLAY = PLAY;
+  exports.PASS = PASS;
+  exports.RESIGN = RESIGN;
   exports.BLACK = BLACK;
   exports.WHITE = WHITE;
   exports.EMPTY = EMPTY;
+
   exports.newGame = function (options) { return new Game(options); }
 
   function Game(options) {
@@ -16,6 +24,7 @@
       white : 'white', // name of the player
       boardSize : 19,
       handicaps : 0,
+      scoring : {},
       moves : []
 
     };
@@ -32,26 +41,50 @@
 
   Game.prototype.play = function (move) {
 
+    /*
+    if (!(move instanceof Move)) {
+      throw new Error ('You must play only Move objects');
+    }
+    */
+
     var newBoard = this.getBoard().play(move);
     this.moves.push(move);
+    this.boards.push(newBoard);
 
     return newBoard;
 
   };
 
-  Game.prototype.getBoard = function (move) {
+  Game.prototype.getState = function () {
 
-    if (move === undefined) move = this.moves.length;
+    var moves = this.moves.length;
+    var whoplays = (((this.handicaps > 0) ? 1 : 1) + moves) % 2;
+    var twoPasses = this.moves.length >= 2 &&
+                    this.moves[moves-1].type == PASS &&
+                    this.moves[moves-2].type == PASS;
+    var resign = this.moves.length >= 1 && this.moves[moves-1].type == RESIGN;
+    var scored = this.scoring.whiteAgree && this.scoring.blackAgree;
 
-    if (move < 0) { throw new Error('Move must be a positive integer'); }
-
-    if (this.boards[move] === undefined) {
-
-      this.boards[move] = this.getBoard(move-1).play(this.moves[move-1]);
+    if (scored) {
 
     }
 
-    return this.boards[move];
+  };
+
+  Game.prototype.getBoard = function (moveNumber) {
+
+    if (moveNumber === undefined) moveNumber = this.moves.length;
+
+    if (moveNumber < 0) { throw new Error('Move must be a positive integer'); }
+
+    if (this.boards[moveNumber] === undefined) {
+
+      var lastMove = this.moves[moveNumber-1];
+      this.boards[moveNumber] = this.getBoard(moveNumber-1).play(lastMove);
+
+    }
+
+    return this.boards[moveNumber];
 
   };
 
