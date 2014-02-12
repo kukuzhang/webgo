@@ -6,6 +6,9 @@ angular.module('aApp', [
   'ngSanitize',
   'ngRoute'
 ])
+  .factory('libgo',function () {
+    return window.libgo;
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

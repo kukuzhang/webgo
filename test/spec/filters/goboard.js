@@ -11,9 +11,11 @@ describe('Filter: stoneUrl', function () {
     stoneUrl = $filter('stoneUrl');
   }));
 
+/*
   it('should return the input prefixed with "stoneUrl filter:"', function () {
     var text = 'angularjs';
     expect(stoneUrl(text)).toBe('stoneUrl filter: ' + text);
   });
+  */
 
 });

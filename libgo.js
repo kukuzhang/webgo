@@ -41,6 +41,22 @@
 
   }
 
+  Game.prototype.isMoveOk = function (move) {
+
+    try {
+
+      var newBoard = this.getBoard().play(move);
+
+    } catch (e) {
+
+      return false;
+
+    }
+
+    return true;
+
+  };
+
   Game.prototype.play = function (move) {
 
     /*
