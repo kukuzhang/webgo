@@ -21,10 +21,8 @@ angular.module('aApp')
     var turn = libgo.BLACK;
     //var newGameStream = Bacon.fromPromise(wre);
     var game = libgo.newGame();
-    $scope.moves = game.getBoard().moves;
     $scope.stones = game.getBoard().stones;
     $scope.showCoords = false;
-    var moveStream = $scope.$watchAsProperty('moves');
 
     $http.get(gameUrl)
       .success(updateGame)
