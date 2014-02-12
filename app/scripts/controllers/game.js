@@ -21,8 +21,10 @@ angular.module('aApp')
     var turn = libgo.BLACK;
     //var newGameStream = Bacon.fromPromise(wre);
     var game = libgo.newGame();
+    $scope.moves = game.getBoard().moves;
     $scope.stones = game.getBoard().stones;
     $scope.showCoords = false;
+    var moveStream = $scope.$watchAsProperty('moves');
 
     $http.get(gameUrl)
       .success(updateGame)
@@ -35,8 +37,7 @@ angular.module('aApp')
       if (canPlay) {
 
         $scope.stones[row][column] = (turn === libgo.WHITE) ?
-                                      libgo.WHITE_HOVER:
-                                      libgo.BLACK_HOVER;
+          libgo.WHITE_HOVER: libgo.BLACK_HOVER;
 
       }
 
