@@ -89,6 +89,15 @@
 
   };
 
+  Game.prototype.getTurn = function () {
+
+    var moves = this.moves.length;
+    var whoplays = (((this.handicaps > 0) ? 1 : 0) + moves) % 2;
+
+    return (whoplays == 0) ? BLACK : WHITE;
+
+  }
+
   Game.prototype.getBoard = function (moveNumber) {
 
     if (moveNumber === undefined) moveNumber = this.moves.length;
