@@ -39,7 +39,10 @@ angular.module('aApp')
     
     $scope.hover = function (row,column) {
 
-      var canPlay = game.isMoveOk({stone:turn,row:row,column:column});
+      var move = libgo.json2Move({type:'stone',stone:turn,row:row,column:column});
+      console.log(move);
+
+      var canPlay = game.isMoveOk(move);
       
       if (canPlay) {
 

@@ -35,9 +35,10 @@ function getGameById(id) {
 
 }
 
-function playTo(id,move) {
+function playTo(id,moveJson) {
 
   var game = games[id];
+  var move = libgo.json2Move(moveJson);
 
   // for debugging
   if (game === undefined) {

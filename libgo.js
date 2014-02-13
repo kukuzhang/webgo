@@ -8,6 +8,8 @@
   var PASS = 'pass';
   var RESIGN = 'resign';
 
+  var moveTypes = {'pass':true, 'resign': true, 'stone':true}
+
   exports.PLAY = PLAY;
   exports.PASS = PASS;
   exports.RESIGN = RESIGN;
@@ -18,6 +20,32 @@
   exports.WHITE_HOVER = 'W';
 
   exports.newGame = function (options) { return new Game(options); }
+
+  exports.json2Move = function (json) { return new Move(json); }
+
+
+  function Move(options) {
+
+    if (!moveTypes[options.type]) {
+
+      throw new Error('Invalid move type ' + options.type);
+
+    }
+
+    if (options.stone === BLACK) { this.stone = BLACK; }
+
+    else if (options.stone === WHITE) { this.stone = WHITE; }
+
+    else { throw new Error ('Invalid stone ' + options.stone); }
+    this.type = options.type;
+
+    if (this.type === 'stone') {
+
+      this.row = parseInt(options.row);
+      this.column = parseInt(options.column);
+    }
+
+  }
 
   function Game(options) {
 
@@ -45,7 +73,7 @@
 
     try {
 
-      var newBoard = this.getBoard().play(move);
+      var newBoard = this.getBoard().playStone(move);
 
     } catch (e) {
 
@@ -59,13 +87,15 @@
 
   Game.prototype.play = function (move) {
 
-    /*
     if (!(move instanceof Move)) {
       throw new Error ('You must play only Move objects');
     }
-    */
 
-    var newBoard = this.getBoard().play(move);
+    if (this.getTurn() !== move.stone) {
+      throw new Error ('Not possible to play ' + move.stone + ' now.');
+    }
+
+    var newBoard = this.getBoard().playStone(move);
     this.moves.push(move);
     this.boards.push(newBoard);
 
@@ -102,12 +132,16 @@
 
     if (moveNumber === undefined) moveNumber = this.moves.length;
 
-    if (moveNumber < 0) { throw new Error('Move must be a positive integer'); }
+    if (moveNumber < 0) {
+
+      throw new Error('Move number must be a positive integer');
+
+    }
 
     if (this.boards[moveNumber] === undefined) {
 
       var lastMove = this.moves[moveNumber-1];
-      this.boards[moveNumber] = this.getBoard(moveNumber-1).play(lastMove);
+      this.boards[moveNumber] = this.getBoard(moveNumber-1).playStone(lastMove);
 
     }
 
@@ -164,7 +198,14 @@
 
   }
 
-  Board.prototype.play = function (move) {
+  Board.prototype.isMoveOnBoard = function (move) {
+
+    return this.validCoordinate(move.row) &&
+           this.validCoordinate(move.column);
+
+  }
+
+  Board.prototype.playStone = function (move) {
 
     function kill(row,column) {
 
@@ -179,20 +220,18 @@
 
     }
 
-    if (!this.validCoordinate(move.row)) {
-      throw new Error('Invalid row ' + move.row);
+    var newBoard = new Board(this.length,this.stones);
+
+    if (move.type === 'pass' || move.type === 'resign') { return newBoard; }
+
+    if (!this.isMoveOnBoard(move)) {
+      throw new Error('Move is not on board: ' + move.row + ',' + move.column);
     }
-    if (!this.validCoordinate(move.column)) {
-      throw new Error('Invalid column ' + move.column);
-    }
-    if (move.stone != WHITE && move.stone !== BLACK) {
-      throw new Error('Invalid stone ' + move.stone);
-    }
+
     if (this.getStone(move.row,move.column) !== EMPTY) {
       throw new Error('Point ' + move.row + ',' + move.column + ' not empty');
     }
 
-    var newBoard = new Board(this.length,this.stones);
 
     newBoard.setStone(move.row,move.column, move.stone);
     var myGroup = new Group(newBoard,move.row,move.column);
