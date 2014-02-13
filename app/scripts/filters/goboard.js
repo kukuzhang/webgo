@@ -1,6 +1,18 @@
 'use strict';
 
 angular.module('aApp')
+  .filter('stoneClass', ['libgo',function (libgo) {
+
+    var map = {};
+    map[libgo.EMPTY] = 'empty';
+    map[libgo.BLACK] = 'black';
+    map[libgo.WHITE] = 'white';
+    map[libgo.BLACK_HOVER] = 'black-hover';
+    map[libgo.WHITE_HOVER] = 'white-hover';
+
+    return function (content) { return 'webgo-stone-' + map[content]; };
+
+  }])
   .filter('stoneUrl', ['libgo',function (libgo) {
 
     var map = {};

@@ -12,9 +12,8 @@
         ng-mouseover="cbHover({row:$parent.$index,col:$index})"
         ng-mouseleave="cbHoverOut({row:$parent.$index,col:$index})"
         ng-class="cellClass($parent.$index,$index)">
-    <img class="webgo-stone"
-      ng-style="{width:stoneSize||32,height:stoneSize||32}"
-      ng-src="{{cell|stoneUrl}}" />
+    <div class="webgo-stone {{cell|stoneClass}}"
+      ng-style="{width:stoneSize||32,height:stoneSize||32}" />
     </td>
     <td class="webgo-coord" ng-show="coords"> {{$index+1}} </td>
   </tr>

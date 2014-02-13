@@ -94,7 +94,44 @@ body {
 .webgo-stone {
     width:32px;
     height:32px;
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
+
+.webgo-stone-empty {
+
+    background-image: none;
+
+}
+
+.webgo-stone-white {
+
+    background-image: url('../images/white.png');
+
+}
+
+.webgo-stone-black {
+
+    background-size: 95%;
+    background-position: 1px 2px;
+    background-image: url('../images/black.png');
+
+}
+
+.webgo-stone-white-hover {
+
+    background-image: url('../images/white-hover.png');
+
+}
+
+.webgo-stone-black-hover {
+
+    background-size: 95%;
+    background-position: 1px 2px;
+    background-image: url('../images/black-hover.png');
+
+}
+
 
 a.webgo-action {
     cursor: pointer;
