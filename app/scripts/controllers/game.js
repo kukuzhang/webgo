@@ -15,6 +15,9 @@ angular.module('aApp')
         return row.map(function(col) { return col; });
       });
 
+      console.log('Last move: ', game.moves[game.moves.length - 1]);
+
+
     }
 
     function apiPlay(move) {
@@ -41,8 +44,8 @@ angular.module('aApp')
 
       var move = libgo.json2Move({type:'stone',stone:turn,row:row,column:column});
       console.log(move);
-
       var canPlay = game.isMoveOk(move);
+      console.log(canPlay);
       
       if (canPlay) {
 

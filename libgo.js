@@ -8,7 +8,10 @@
   var PASS = 'pass';
   var RESIGN = 'resign';
 
-  var moveTypes = {'pass':true, 'resign': true, 'stone':true}
+  var moveTypes = {
+    'pass': Pass,
+    'resign': Resign,
+    'stone': Stone}
 
   exports.PLAY = PLAY;
   exports.PASS = PASS;
@@ -21,31 +24,54 @@
 
   exports.newGame = function (options) { return new Game(options); }
 
-  exports.json2Move = function (json) { return new Move(json); }
+  exports.json2Move = function (json) {
 
+    var Cls = moveTypes[json.type];
+
+    if (!Cls) { throw new Error('Invalid move type ' + options.type); }
+
+    return new Cls(json);
+
+  }
 
   function Move(options) {
-
-    if (!moveTypes[options.type]) {
-
-      throw new Error('Invalid move type ' + options.type);
-
-    }
 
     if (options.stone === BLACK) { this.stone = BLACK; }
 
     else if (options.stone === WHITE) { this.stone = WHITE; }
 
     else { throw new Error ('Invalid stone ' + options.stone); }
+
     this.type = options.type;
 
-    if (this.type === 'stone') {
+  }
 
-      this.row = parseInt(options.row);
-      this.column = parseInt(options.column);
-    }
+  function Pass(options) {
+
+    Move.bind(this)(options);
 
   }
+
+  Pass.prototype.__proto__ = Move.prototype;
+
+
+  function Resign(options) {
+
+    Move.bind(this)(options);
+
+  }
+
+  Resign.prototype.__proto__ = Move.prototype;
+
+  function Stone(options) {
+
+    Move.bind(this)(options);
+    this.row = parseInt(options.row);
+    this.column = parseInt(options.column);
+
+  }
+
+  Stone.prototype.__proto__ = Move.prototype;
 
   function Game(options) {
 
@@ -69,13 +95,28 @@
 
   }
 
+  Game.prototype.assertMoveSanity = function (move) {
+
+    if (!(move instanceof Move)) {
+      throw new Error ('You must play only Move objects');
+    }
+
+    if (this.getTurn() !== move.stone) {
+      throw new Error ('Not possible to play ' + move.stone + ' now.');
+    }
+
+  }
+
   Game.prototype.isMoveOk = function (move) {
 
     try {
 
+      this.assertMoveSanity(move);
       var newBoard = this.getBoard().playStone(move);
 
     } catch (e) {
+
+      console.log(e);
 
       return false;
 
@@ -87,14 +128,7 @@
 
   Game.prototype.play = function (move) {
 
-    if (!(move instanceof Move)) {
-      throw new Error ('You must play only Move objects');
-    }
-
-    if (this.getTurn() !== move.stone) {
-      throw new Error ('Not possible to play ' + move.stone + ' now.');
-    }
-
+    this.assertMoveSanity(move);
     var newBoard = this.getBoard().playStone(move);
     this.moves.push(move);
     this.boards.push(newBoard);
