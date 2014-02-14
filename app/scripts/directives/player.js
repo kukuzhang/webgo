@@ -2,7 +2,7 @@
 
 angular.module('aApp')
 
-  .directive('player', ['libgo',function (libgo) {
+  .directive('player', [function () {
 
     return {
 
@@ -10,19 +10,17 @@ angular.module('aApp')
       restrict: 'E',
       scope: { ngModel: '=' },
 
-      link: function (scope, element, attrs) {
+      link: function (scope) {
 
-        var player = scope.ngModel || {}
-        console.log('linking!',player);
-        scope.$watch('ngModel', setClasses);
-        
         function setClasses() {
 
-          var player = scope.ngModel || {}
+          var player = scope.ngModel || {};
           scope.playerClass = 'webgo-' + player.color +
             (player.turn ?  ' webgo-myturn' : '');
 
         }
+
+        scope.$watch('ngModel', setClasses);
 
       }
 

@@ -17,9 +17,10 @@ describe('Controller: MainCtrl', function () {
   }));
 
   it('should attach an array of games to the scope', function () {
-    return;
+    /*
     console.log(Object.keys(expect(scope.games)));
     console.log(expect(scope.games).to);
     expect(scope.games).to.have.property('length');
+    */
   });
 });

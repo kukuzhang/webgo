@@ -5,6 +5,7 @@ describe('Directive: goboard', function () {
   // load the directive's module
   beforeEach(module('aApp'));
 
+/*
   var element,
     scope;
 
@@ -12,7 +13,6 @@ describe('Directive: goboard', function () {
     scope = $rootScope.$new();
   }));
 
-/*
   it('should make hidden element visible', inject(function ($compile) {
     scope.stones = [];
     for (var i = 0; i<19; i++) {

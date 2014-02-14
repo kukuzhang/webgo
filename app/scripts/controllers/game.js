@@ -15,13 +15,13 @@ angular.module('aApp')
         timing: game.black.timing,
         color: 'black',
         turn: $scope.turn === libgo.BLACK
-      }
+      };
       $scope.white = {
         name: game.white.name,
         timing: game.white.timing,
         color: 'white',
         turn: $scope.turn === libgo.WHITE
-      }
+      };
       console.log('Last move: ', game.moves[game.moves.length - 1]);
       console.log('Turn: ', $scope.turn);
       var board = game.getBoard();
@@ -46,7 +46,7 @@ angular.module('aApp')
         .success(updateGame)
         .error(ajaxError);
 
-    };
+    }
 
     var apiUrl = '/api/game/' + $routeParams.gameId;
     //var newGameStream = Bacon.fromPromise(wre);
@@ -94,6 +94,6 @@ angular.module('aApp')
 
       apiPlay({stone:$scope.turn,type:'stone',row:row,column:column});
 
-    }
+    };
 
   }]);
