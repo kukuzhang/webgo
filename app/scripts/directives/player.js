@@ -3,10 +3,22 @@
 angular.module('aApp')
   .directive('player', function () {
     return {
-      template: '<div></div>',
+      template: '<div class="{{playerClass}}"> {{player.name}} </div>',
       restrict: 'E',
-      link: function postLink(scope, element, attrs) {
-        element.text('this is the player directive');
+      scope: {
+        player: '='
+      },
+      link: function (scope, element, attrs) {
+
+        var player = scope.player || {}
+        var color = player.color;
+        scope.playerName = player.name;
+        console.log('linking!',color,player);
+        
+        scope.playerClass = (color === 'black') ? 'webgo-black' :
+                            (color === 'white') ? 'webgo-white' :
+                            'webgo-unknown'
+
       }
     };
   });

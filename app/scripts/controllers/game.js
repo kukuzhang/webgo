@@ -8,14 +8,17 @@ angular.module('aApp')
 
     function updateGame (data) {
 
-      game = libgo.newGame(data);
+      if (data !== undefined) game = libgo.newGame(data);
       turn = game.getTurn();
+      $scope.stones = game.getBoard().stones;
+      $scope.black = game.black;
+      $scope.white = game.white;
+      console.log(game);
+      console.log('Last move: ', game.moves[game.moves.length - 1]);
       var board = game.getBoard();
       $scope.stones = board.stones.map(function (row) {
         return row.map(function(col) { return col; });
       });
-
-      console.log('Last move: ', game.moves[game.moves.length - 1]);
 
 
     }
@@ -33,7 +36,7 @@ angular.module('aApp')
     var turn = libgo.BLACK;
     //var newGameStream = Bacon.fromPromise(wre);
     var game = libgo.newGame();
-    $scope.stones = game.getBoard().stones;
+    updateGame();
     $scope.showCoords = false;
 
     $http.get(apiUrl)

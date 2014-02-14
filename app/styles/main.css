@@ -136,3 +136,30 @@ body {
 a.webgo-action {
     cursor: pointer;
 }
+
+.webgo-players li {
+
+  display: inline;
+  list-style-type: none;
+  margin-right: 1em;
+  border: red;
+  background-color: #faa;
+
+}
+
+.webgo-players li div {
+  display: inline;
+  border: red;
+  background-color: #faa;
+  padding: 0.5em;
+}
+
+.webgo-players li .webgo-black {
+  border: 2px solid black;
+  background-color: gray;
+}
+.webgo-players li .webgo-white {
+  border: 2px solid gray;
+  background-color: white;
+}
+
