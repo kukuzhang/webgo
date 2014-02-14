@@ -4,7 +4,7 @@
  */
 
 
-var libgo = require('../../libgo');
+var libgo = require('../../lib/libgo');
 var games = {}
 var BLACK = 'b';
 var WHITE = 'w';

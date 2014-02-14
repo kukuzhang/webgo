@@ -1,1 +1,1 @@
-../libgo.js
+../lib/libgo.js
