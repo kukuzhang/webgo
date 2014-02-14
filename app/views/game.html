@@ -4,11 +4,14 @@
     <li><a class="webgo-action" ng-click="resign()">Resign</a></li>
   </ul>
   <h3 class="text-muted">webgo</h3>
+  {{stones | stoneCount}}
+  <input type="checkbox" ng-model="showCoords" /> Show coordinates
+</div>
 </div>
 
 <ul class="webgo-players">
-  <li><player player="black" turn="turn" /></li>
-  <li><player player="white" turn="turn" /></li>
+  <li><player ng-model="black" /></li>
+  <li><player ng-model="white" /></li>
 </ul>
 
 <goboard stones="stones"
@@ -18,6 +21,4 @@
          cb-play="play(row,col)"
          coords="showCoords"/>
 
-<div class="footer">
-  <p>{{stones | stoneCount}}</p>
-</div>
+<div class="footer"> </div>

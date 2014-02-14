@@ -10,9 +10,18 @@ angular.module('aApp')
 
       $scope.turn = game.getTurn();
       $scope.stones = game.getBoard().stones;
-      $scope.black = game.black;
-      $scope.white = game.white;
-      console.log(game);
+      $scope.black = {
+        name: game.black.name,
+        timing: game.black.timing,
+        color: 'black',
+        turn: $scope.turn === libgo.BLACK
+      }
+      $scope.white = {
+        name: game.white.name,
+        timing: game.white.timing,
+        color: 'white',
+        turn: $scope.turn === libgo.WHITE
+      }
       console.log('Last move: ', game.moves[game.moves.length - 1]);
       console.log('Turn: ', $scope.turn);
       var board = game.getBoard();

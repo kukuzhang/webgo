@@ -6,28 +6,21 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{player.name}} </div>',
+      template: '<div class="{{playerClass}}"> {{ngModel.name}} </div>',
       restrict: 'E',
-      scope: {
-        player: '=',
-        turn: '='
-      },
+      scope: { ngModel: '=' },
 
       link: function (scope, element, attrs) {
 
-        var player = scope.player || {}
-        var color = player.color;
-        scope.playerName = player.name;
-        console.log('linking!',color,player);
-        scope.$watch('turn', setClasses);
+        var player = scope.ngModel || {}
+        console.log('linking!',player);
+        scope.$watch('ngModel', setClasses);
         
         function setClasses() {
 
-          scope.playerClass = (color === libgo.BLACK) ? 'webgo-black' :
-                              (color === libgo.WHITE) ? 'webgo-white' :
-                              'webgo-unknown'
-          scope.playerClass += (player.isMyTurn(scope.turn)) ?
-            ' webgo-myturn' : '';
+          var player = scope.ngModel || {}
+          scope.playerClass = 'webgo-' + player.color +
+            (player.turn ?  ' webgo-myturn' : '');
 
         }
 
