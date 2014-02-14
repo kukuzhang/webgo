@@ -10,5 +10,5 @@ angular.module('aApp')
         console.log(ok);
         $location.path(pPrefix + ok.id);
       })
-      .error(function(e) { $scope.fail="Failed. " + e; })
+      .error(function(e) { $scope.fail='Failed. ' + e; });
   }]);
