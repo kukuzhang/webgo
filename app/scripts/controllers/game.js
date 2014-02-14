@@ -6,20 +6,27 @@ angular.module('aApp')
 
     function ajaxError(data, status) { console.log('error ' + status); }
 
-    function updateGame (data) {
+    function game2Scope () {
 
-      if (data !== undefined) game = libgo.newGame(data);
-      turn = game.getTurn();
+      $scope.turn = game.getTurn();
       $scope.stones = game.getBoard().stones;
       $scope.black = game.black;
       $scope.white = game.white;
       console.log(game);
       console.log('Last move: ', game.moves[game.moves.length - 1]);
+      console.log('Turn: ', $scope.turn);
       var board = game.getBoard();
       $scope.stones = board.stones.map(function (row) {
         return row.map(function(col) { return col; });
       });
 
+    }
+
+    function updateGame (data) {
+
+      game = libgo.newGame(data);
+      //$scope.$apply(game2Scope);
+      game2Scope();
 
     }
 
@@ -33,10 +40,9 @@ angular.module('aApp')
     };
 
     var apiUrl = '/api/game/' + $routeParams.gameId;
-    var turn = libgo.BLACK;
     //var newGameStream = Bacon.fromPromise(wre);
     var game = libgo.newGame();
-    updateGame();
+    game2Scope();
     $scope.showCoords = false;
 
     $http.get(apiUrl)
@@ -45,13 +51,13 @@ angular.module('aApp')
     
     $scope.hover = function (row,column) {
 
-      var json = {type:'stone',stone:turn,row:row,column:column};
+      var json = {type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.json2Move(json);
       var canPlay = game.isMoveOk(move);
       
       if (canPlay) {
 
-        $scope.stones[row][column] = (turn === libgo.WHITE) ?
+        $scope.stones[row][column] = ($scope.turn === libgo.WHITE) ?
           libgo.WHITE_HOVER: libgo.BLACK_HOVER;
 
       }
@@ -66,19 +72,19 @@ angular.module('aApp')
 
     $scope.pass = function () {
 
-      apiPlay({stone:turn,type:'pass'});
+      apiPlay({stone:$scope.turn,type:'pass'});
 
     };
 
     $scope.resign = function () {
 
-      apiPlay({stone:turn,type:'resign'});
+      apiPlay({stone:$scope.turn,type:'resign'});
 
     };
 
     $scope.play = function (row,column) {
 
-      apiPlay({stone:turn,type:'stone',row:row,column:column});
+      apiPlay({stone:$scope.turn,type:'stone',row:row,column:column});
 
     }
 
