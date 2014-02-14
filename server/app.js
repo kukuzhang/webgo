@@ -31,6 +31,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/api/game/:id', game.get);
+app.post('/api/game', game.newGame);
 app.post('/api/game/:id', game.play);
 app.get('/api/game', game.list);
 

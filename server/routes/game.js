@@ -3,7 +3,7 @@
  * GET game
  */
 
-
+var uuid = require('node-uuid');
 var libgo = require('../../lib/libgo');
 var games = {}
 var BLACK = 'b';
@@ -19,16 +19,22 @@ function getGameIds() {
 
 }
 
+function newGame () {
+
+    var id = uuid.v1();
+    var game = libgo.newGame();
+
+    if (games[id] !== undefined) throw new Error('Collision!');
+
+    games[id] = game;
+
+    return {id: id};
+
+}
+
 function getGameById(id) {
 
     var game = games[id];
-
-    if (game === undefined) {
-
-      game = libgo.newGame();
-      games[id] = game;
-
-    }
 
     //return game.getBoard();
     return game;
@@ -40,14 +46,6 @@ function playTo(id,moveJson) {
   var game = games[id];
   var move = libgo.json2Move(moveJson);
 
-  // for debugging
-  if (game === undefined) {
-
-    game = libgo.newGame();
-    games[id] = game;
-
-  }
-
   var newBoard = game.play(move);
 
   //return newBoard;
@@ -57,6 +55,9 @@ function playTo(id,moveJson) {
 
 exports.get = function(req, res){
     res.send(JSON.stringify(getGameById(req.params.id)));
+};
+exports.newGame = function(req, res){
+    res.send(newGame());
 };
 exports.play = function(req, res){
     res.send(JSON.stringify(playTo(req.params.id,req.body)));

@@ -15,6 +15,7 @@ angular.module('aApp')
         function setClasses() {
 
           var player = scope.ngModel || {};
+          console.log(scope.ngModel);
           scope.playerClass = 'webgo-' + player.color +
             (player.turn ?  ' webgo-myturn' : '');
 

@@ -15,6 +15,10 @@ angular.module('aApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/new', {
+        templateUrl: 'views/newgame.html',
+        controller: 'NewGameCtrl'
+      })
       .when('/game/:gameId', {
         templateUrl: 'views/game.html',
         controller: 'GameCtrl'
