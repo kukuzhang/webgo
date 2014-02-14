@@ -52,8 +52,7 @@ angular.module('aApp')
     //var newGameStream = Bacon.fromPromise(wre);
     var game = libgo.newGame();
     game2Scope();
-    $scope.showCoords = false;
-
+    $scope.showCoords = true;
     $http.get(apiUrl)
       .success(updateGame)
       .error(ajaxError);

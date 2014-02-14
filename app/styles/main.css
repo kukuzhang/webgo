@@ -54,6 +54,8 @@ body {
 .webgo-board tbody tr td {
 
     border-top:none;
+    text-align: center;
+    vertical-align: middle;
     padding:0;
     background-image: url('../images/grid-middle.png');
     background-size: 100%;
@@ -98,6 +100,10 @@ body {
     background-repeat: no-repeat;
 }
 
+.webgo-stone {
+    cursor: pointer;
+}
+
 .webgo-stone-empty {
 
     background-image: none;
@@ -135,6 +141,10 @@ body {
 
 a.webgo-action {
     cursor: pointer;
+}
+
+.webgo-players {
+  margin-bottom: 2em;
 }
 
 .webgo-players li {
