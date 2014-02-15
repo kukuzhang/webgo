@@ -11,6 +11,16 @@ var express = require('express')
   , path = require('path');
 
 var app = express();
+var server = http.createServer(app)
+var io = require('socket.io').listen(server)
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -35,6 +45,6 @@ app.post('/api/game', game.newGame);
 app.post('/api/game/:id', game.play);
 app.get('/api/game', game.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

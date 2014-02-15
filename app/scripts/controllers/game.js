@@ -4,6 +4,14 @@ angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$http', '$routeParams', 'libgo',
   function ($scope, $http, $routeParams, libgo) {
 
+    function initIO() {
+      var socket = io.connect('/');
+      socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('my other event', { my: 'data' });
+      });
+    }
+
     function ajaxError(data, status) { console.log('error ' + status); }
 
     function game2Scope () {
@@ -53,6 +61,7 @@ angular.module('aApp')
     var game = libgo.newGame();
     game2Scope();
     $scope.showCoords = true;
+    initIO();
     $http.get(apiUrl)
       .success(updateGame)
       .error(ajaxError);
