@@ -51,14 +51,13 @@ io.sockets.on('connection', game.setupConnection);
 
 
 function socketAuth(data, accept) {
-  console.log('auth');
+
   var token = data.query.auth;
   var parts = token.split(/:/);
   var username = parts[0];
   var password = parts[1];
   data.username = null;
-
-  console.log(username,"...",password);
+  console.log('auth',username,"...",password);
   /* var auth = new Buffer(token||"", 'base64').toString(); */
 
   if (!username) {

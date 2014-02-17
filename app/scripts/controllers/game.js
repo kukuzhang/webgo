@@ -7,7 +7,6 @@ angular.module('aApp')
     function initSocketIO() {
 
       var s = io.connect('http://localhost:3000/', {query:'auth=juho:123'});
-      s.emit('game', $routeParams.gameId);
       s.on('game', updateGame);
       s.on('event',updateByEvent);
       s.on('connect_failed',setConnectionStatus);
@@ -27,15 +26,21 @@ angular.module('aApp')
 
     function setConnectionStatus() {
 
-      $scope.connection = connectionStatus();
+      $scope.$apply(function () { $scope.connection = connectionStatus(); });
+      setTurn(null);
+
+      if (this.socket.connected) {
+
+        console.log('=> game', $routeParams.gameId);
+        this.emit('game', $routeParams.gameId);
+
+      }
 
     }
 
-    function connectionStatus(a,b) {
+    function connectionStatus() {
 
       var s = socket.socket;
-      window.s = s;
-      console.log('s');
 
       if (!s.connected) return 'disconnected';
 
@@ -47,6 +52,7 @@ angular.module('aApp')
 
     function setTurn(turn) {
 
+      console.log(turn);
       $scope.turn = turn;
       $scope.black = {
         name: game.black.name,
@@ -110,6 +116,7 @@ angular.module('aApp')
         type: 'stone'
       },options);
       var msg = { gameId: $routeParams.gameId, move: move };
+      if (!move.stone) throw new Error('Invalid stone',move.stone);
       console.log('move',msg);
       socket.emit('move',msg);
       setTurn(null);

@@ -59,6 +59,7 @@ function socketMove(socket,data) {
 
   console.log('data', data);
   var gameId = data.gameId;
+  console.log(socket);
   var move = data.move;
   var ev = { index: games[gameId].moves.length, move: move };
   playTo(gameId,move);
@@ -70,6 +71,7 @@ function socketGetGame(socket,id) {
 
   var game = getGameById(id);
   var out = _.extend({},game,{boards:[]});
+  console.log('game',out);
   socket.emit('game',out);
 
 }
@@ -78,7 +80,6 @@ function setupConnection(socket) {
 
   function bindToSocket(f) { return function (data) { f(socket,data); }; }
 
-  console.log('connection juho');
   socket.on('move', bindToSocket(socketMove));
   socket.on('game', bindToSocket(socketGetGame));
 
