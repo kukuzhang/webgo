@@ -1,18 +1,8 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('GameCtrl', ['$scope', '$http', '$routeParams', 'libgo',
-  function ($scope, $http, $routeParams, libgo) {
-
-    function initIO() {
-      var socket = io.connect('/');
-      socket.on('news', function (data) {
-        console.log(data);
-        socket.emit('my other event', { my: 'data' });
-      });
-    }
-
-    function ajaxError(data, status) { console.log('error ' + status); }
+  .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
+  function ($scope, $routeParams, libgo) {
 
     function game2Scope () {
 
@@ -41,32 +31,43 @@ angular.module('aApp')
 
     function updateGame (data) {
 
+      console.log('received game', data);
       game = libgo.newGame(data);
-      //$scope.$apply(game2Scope);
-      game2Scope();
+      $scope.$apply(game2Scope);
 
     }
 
-    function apiPlay(move) {
+    function updateByEvent (data) {
 
-      console.log('play',move);
-      $http.post(apiUrl,move)
-        .success(updateGame)
-        .error(ajaxError);
+      console.log('received move', data);
+      if (data.index === game.moves.length) {
+
+        var move = libgo.json2Move(data.move);
+        game.play(move);
+        $scope.$apply(game2Scope);
+
+      } else {
+
+        console.log(game.moves);
+        console.log('Moves not in sync???');
+        socket.emit('game', $routeParams.gameId);
+
+      }
 
     }
 
-    var apiUrl = '/api/game/' + $routeParams.gameId;
-    //var newGameStream = Bacon.fromPromise(wre);
-    var game = libgo.newGame();
-    game2Scope();
-    $scope.showCoords = true;
-    initIO();
-    $http.get(apiUrl)
-      .success(updateGame)
-      .error(ajaxError);
-    
-    $scope.hover = function (row,column) {
+    function apiPlay(options) {
+
+      var move = _.extend({
+        stone: $scope.turn,
+        type: 'stone'
+      },options);
+      console.log('move',move);
+      socket.emit('move',move);
+
+    }
+
+    function hoverIn (row,column) {
 
       var json = {type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.json2Move(json);
@@ -79,30 +80,31 @@ angular.module('aApp')
 
       }
 
-    };
+    }
 
-    $scope.hoverOut = function (row,column) {
+    function hoverOut(row,column) {
 
       $scope.stones[row][column] = game.getBoard().stones[row][column];
 
-    };
+    }
 
-    $scope.pass = function () {
+    //var newGameStream = Bacon.fromPromise(wre);
+    var game = libgo.newGame();
+    game2Scope();
+    $scope.showCoords = true;
 
-      apiPlay({stone:$scope.turn,type:'pass'});
+    var socket = io.connect('http://localhost:3000/');
+    console.log('initial get');
+    window.s = socket;
+    socket.on('moi', function (m) {console.log(':'+m);socket.emit('game', $routeParams.gameId);});
+    socket.emit('game', $routeParams.gameId);
+    socket.on('game', updateGame);
+    socket.on('event',updateByEvent);
 
-    };
-
-    $scope.resign = function () {
-
-      apiPlay({stone:$scope.turn,type:'resign'});
-
-    };
-
-    $scope.play = function (row,column) {
-
-      apiPlay({stone:$scope.turn,type:'stone',row:row,column:column});
-
-    };
+    $scope.hover = hoverIn;
+    $scope.hoverOut = hoverOut;
+    $scope.pass = function () { apiPlay({type:'pass'}); };
+    $scope.resign = function () { apiPlay({type:'resign'}); };
+    $scope.play = function (row,column) { apiPlay({row:row,column:column}); };
 
   }]);

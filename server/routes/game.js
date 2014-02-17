@@ -10,6 +10,7 @@ var BLACK = 'b';
 var WHITE = 'w';
 var EMPTY = '_';
 
+games[0] = libgo.newGame(); // debug
 
 function getGameIds() {
 
@@ -52,6 +53,27 @@ function playTo(id,moveJson) {
   return game;
 
 }
+
+function setupConnection(socket) {
+  var gameId = undefined
+  console.log('connection juho');
+  socket.emit('moi','moi');
+  socket.on('move', function (data) {
+    console.log('data', data);
+    var event = {
+      index: games[gameId].moves.length,
+      move: data
+    };
+    playTo(gameId,data);
+    socket.emit('event',event);
+  });
+  socket.on('game', function (id) {
+    gameId = id;
+    socket.emit('game',getGameById(id));
+  });
+}
+exports.setupConnection = setupConnection;
+
 
 exports.get = function(req, res){
     res.send(JSON.stringify(getGameById(req.params.id)));

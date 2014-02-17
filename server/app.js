@@ -8,19 +8,12 @@ var express = require('express')
   , user = require('./routes/user')
   , game = require('./routes/game')
   , http = require('http')
+  , cors = require('cors')
   , path = require('path');
 
 var app = express();
 var server = http.createServer(app)
 var io = require('socket.io').listen(server)
-
-io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-});
-
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -28,6 +21,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
+app.use(cors({origin: '*'}));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
@@ -48,3 +42,12 @@ app.get('/api/game', game.list);
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+io.configure(function() {
+  io.set('transports', [ 'websocket' , 'flashsocket' , 'htmlfile' ,
+                        'xhr-polling' , 'jsonp-polling' ]);
+
+});
+io.sockets.on('connection', game.setupConnection);
+
+

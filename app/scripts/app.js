@@ -6,6 +6,12 @@ angular.module('aApp', [
   'ngSanitize',
   'ngRoute'
 ])
+  .factory('socketio',function () {
+    return window.io;
+  })
+  .factory('underscore',function () {
+    return window._;
+  })
   .factory('libgo',function () {
     return window.libgo;
   })
