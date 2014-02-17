@@ -6,13 +6,20 @@ angular.module('aApp')
 
     function initSocketIO() {
 
-      var s = io.connect('http://localhost:3000/');
-      console.log('initial get');
+      var s = io.connect('http://localhost:3000/', {query:'auth=juho:123'});
       s.emit('game', $routeParams.gameId);
       s.on('game', updateGame);
       s.on('event',updateByEvent);
+      s.on('connect_failed',setConnectionStatus);
       s.on('connect',setConnectionStatus);
       s.on('disconnect',setConnectionStatus);
+      s.on('connecting', setConnectionStatus);
+      s.on('reconnect_failed', setConnectionStatus);
+      s.on('reconnect', setConnectionStatus);
+      s.on('reconnecting', setConnectionStatus);
+
+      //socket.on('error', function () {}) - "error" is emitted when an error occurs and it cannot be handled by the other event types.
+      //socket.on('message', function (message, callback) {}) - "message" is emitted when a message sent with socket.send is received. message is the sent message, and callback is an optional acknowledgement function.
 
       return s;
 
@@ -28,6 +35,7 @@ angular.module('aApp')
 
       var s = socket.socket;
       window.s = s;
+      console.log('s');
 
       if (!s.connected) return 'disconnected';
 
@@ -37,22 +45,28 @@ angular.module('aApp')
 
     }
 
-    function game2Scope () {
+    function setTurn(turn) {
 
-      $scope.turn = game.getTurn();
-      $scope.stones = game.getBoard().stones;
+      $scope.turn = turn;
       $scope.black = {
         name: game.black.name,
         timing: game.black.timing,
         color: 'black',
-        turn: $scope.turn === libgo.BLACK
+        turn: turn === libgo.BLACK
       };
       $scope.white = {
         name: game.white.name,
         timing: game.white.timing,
         color: 'white',
-        turn: $scope.turn === libgo.WHITE
+        turn: turn === libgo.WHITE
       };
+
+    }
+
+    function game2Scope () {
+
+      $scope.stones = game.getBoard().stones;
+      setTurn(game.getTurn());
       console.log('Last move: ', game.moves[game.moves.length - 1]);
       console.log('Turn: ', $scope.turn);
       var board = game.getBoard();
@@ -98,10 +112,13 @@ angular.module('aApp')
       var msg = { gameId: $routeParams.gameId, move: move };
       console.log('move',msg);
       socket.emit('move',msg);
+      setTurn(null);
 
     }
 
     function hoverIn (row,column) {
+
+      if (!$scope.turn) return;
 
       var json = {type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.json2Move(json);
@@ -117,6 +134,8 @@ angular.module('aApp')
     }
 
     function hoverOut(row,column) {
+
+      if (!$scope.turn) return;
 
       $scope.stones[row][column] = game.getBoard().stones[row][column];
 

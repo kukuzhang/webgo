@@ -19,7 +19,6 @@ angular.module('aApp')
 
       link: function (scope) {
         
-        console.log(scope);
         scope.cellClass = function (row,col) {
 
           var boardSize = scope.stones.length;

@@ -44,10 +44,41 @@ server.listen(app.get('port'), function(){
 });
 
 io.configure(function() {
-  io.set('transports', [ 'websocket' , 'flashsocket' , 'htmlfile' ,
-                        'xhr-polling' , 'jsonp-polling' ]);
-
+  io.set('authorization', socketAuth);
 });
+
 io.sockets.on('connection', game.setupConnection);
 
 
+function socketAuth(data, accept) {
+  console.log('auth');
+  var token = data.query.auth;
+  var parts = token.split(/:/);
+  var username = parts[0];
+  var password = parts[1];
+  data.username = null;
+
+  console.log(username,"...",password);
+  /* var auth = new Buffer(token||"", 'base64').toString(); */
+
+  if (!username) {
+
+    accept("No username",false);
+    console.log('bad u',username);
+
+  }
+
+  else if (password !== '123') {
+    
+    accept("Wrong password", false);
+    console.log('bad p',password);
+
+  } else {
+
+    data.username = username;
+    console.log('ok');
+    accept(null, true);
+
+  }
+
+}
