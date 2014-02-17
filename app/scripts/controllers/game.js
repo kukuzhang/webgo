@@ -7,6 +7,7 @@ angular.module('aApp')
     function initSocketIO() {
 
       var auth = $routeParams.auth || 'juho:123'
+      $scope.username = auth.split(':')[0];
       var q = 'auth=' + auth;
       var s = io.connect('http://localhost:3000/', {query:q});
       s.on('game', updateGame);
@@ -141,7 +142,9 @@ angular.module('aApp')
 
     function hoverIn (row,column) {
 
-      if (!$scope.turn) return;
+      console.log ($scope.turn, game.myColor($scope.username), $scope.turn);
+      if (!$scope.turn ||
+        (game.myColor($scope.username) !== $scope.turn)) return;
 
       var json = {type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.json2Move(json);
@@ -158,7 +161,8 @@ angular.module('aApp')
 
     function hoverOut(row,column) {
 
-      if (!$scope.turn) return;
+      if (!$scope.turn ||
+        (game.myColor($scope.username) !== $scope.turn)) return;
 
       $scope.stones[row][column] = game.getBoard().stones[row][column];
 

@@ -51,39 +51,34 @@ function socketMove(socket,data) {
   var moveJson = data.move;
   var ev = { index: games[gameId].moves.length, move: moveJson };
   var game = games[gameId];
-  var player = moveJson.stone == libgo.BLACK ? 'black' :
-               moveJson.stone == libgo.WHITE ? 'white' : null;
 
-  if (player === null) throw new Error('Invalid stone.');
-  
-  var expectedUsername = game[player].name;
-  
-  if (username != expectedUsername) {
-    
-    var msg = username + ' is not allowed to play moves of '
-      + expectedUsername;
+  if (game.myColor(username) !== moveJson.stone) {
+
+    var color = libgo.longColor(game.turn);
+    var expected = game[color].name;
+    var msg = username + ' is not allowed to play moves of ' + expected;
     socket.emit('error', msg);
 
-  } else {
-
-    var move = libgo.json2Move(moveJson);
-
-    try {
-
-      game.play(move);
-
-    } catch (e) {
-
-      socket.emit('error',e.message);
-
-      return;
-
-    }
-
-    socket.broadcast.to(gameId).emit('event',ev);
-    socket.emit('event',ev);
+    return;
 
   }
+
+  var move = libgo.json2Move(moveJson);
+
+  try {
+
+    game.play(move);
+
+  } catch (e) {
+
+    socket.emit('error',e.message);
+
+    return;
+
+  }
+
+  socket.broadcast.to(gameId).emit('event',ev);
+  socket.emit('event',ev);
 
 }
 
