@@ -1,14 +1,17 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-  function ($scope, $routeParams, libgo) {
+  .controller('GameCtrl', ['$scope', '$routeParams', '$location', 'libgo',
+  function ($scope, $routeParams, $location, libgo) {
 
     function initSocketIO() {
 
-      var s = io.connect('http://localhost:3000/', {query:'auth=juho:123'});
+      var auth = $routeParams.auth || 'juho:123'
+      var q = 'auth=' + auth;
+      var s = io.connect('http://localhost:3000/', {query:q});
       s.on('game', updateGame);
       s.on('event',updateByEvent);
+      s.on('error',updateByError);
       s.on('connect_failed',setConnectionStatus);
       s.on('connect',setConnectionStatus);
       s.on('disconnect',setConnectionStatus);
@@ -84,14 +87,27 @@ angular.module('aApp')
 
     function updateGame (data) {
 
+      $scope.error = null;
       console.log('received game', data);
       game = libgo.newGame(data);
       $scope.$apply(game2Scope);
 
     }
 
+    function updateByError (data) {
+
+      $scope.$apply(function() {
+
+        $scope.error = data;
+        game2Scope();
+        
+      });
+
+    }
+
     function updateByEvent (data) {
 
+      $scope.error = null;
       console.log('received move', data);
       if (data.index === game.moves.length) {
 

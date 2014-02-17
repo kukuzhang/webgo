@@ -45,9 +45,7 @@ server.listen(app.get('port'), function(){
 io.configure(function() {
   io.set('authorization', socketAuth);
 });
-
 io.sockets.on('connection', game.setupConnection);
-
 
 function socketAuth(data, accept) {
 

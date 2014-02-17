@@ -157,6 +157,15 @@ a.webgo-action {
 
 }
 
+.webgo-error {
+
+  border: 1px solid red;
+  background-color: #faa;
+  padding: 0.5em;
+  margin: 1em 0;
+
+}
+
 .webgo-players li div {
   display: inline;
   border: 1px solid red;

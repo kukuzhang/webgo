@@ -7,11 +7,9 @@ var _ = require('underscore');
 var uuid = require('node-uuid');
 var libgo = require('../../lib/libgo');
 var games = {}
-var BLACK = 'b';
-var WHITE = 'w';
-var EMPTY = '_';
+var io;
 
-games[0] = libgo.newGame({black:'juho'}); // debug
+games[0] = libgo.newGame({black:'juho',white:'pekka'}); // debug
 
 function getGameIds() {
 
@@ -45,49 +43,80 @@ function getGameById(id) {
 
 function socketMove(socket,data) {
 
-  console.log('data', data);
-  console.log('username',socket.handshake.username);
   var username = socket.handshake.username;
   var gameId = data.gameId;
+  console.log('data', data);
+  console.log('username',username);
+  console.log('gameId',gameId);
   var moveJson = data.move;
   var ev = { index: games[gameId].moves.length, move: moveJson };
   var game = games[gameId];
-  var player = moveJson.stone == BLACK ? 'black' :
-               moveJson.stone == WHITE ? 'white' : null;
+  var player = moveJson.stone == libgo.BLACK ? 'black' :
+               moveJson.stone == libgo.WHITE ? 'white' : null;
 
   if (player === null) throw new Error('Invalid stone.');
   
   var expectedUsername = game[player].name;
   
-  if (username != expectedUsername) throw new Error(
-    username + ' is not allowed to play moves of ' + expectedUsername);
+  if (username != expectedUsername) {
+    
+    var msg = username + ' is not allowed to play moves of '
+      + expectedUsername;
+    socket.emit('error', msg);
 
-  var move = libgo.json2Move(moveJson);
-  game.play(move);
-  socket.emit('event',ev);
+  } else {
+
+    var move = libgo.json2Move(moveJson);
+
+    try {
+
+      game.play(move);
+
+    } catch (e) {
+
+      socket.emit('error',e.message);
+
+      return;
+
+    }
+
+    socket.broadcast.to(gameId).emit('event',ev);
+    socket.emit('event',ev);
+
+  }
 
 }
 
-function socketGetGame(socket,id) {
+function socketDisconnect(socket,id) {
 
-  var game = getGameById(id);
+  console.log('disconnect');
+  /*
+  for (var gameId in socket.get('joined')) {
+    joiners[gameId][so
+  */
+
+}
+
+function socketGetGame(socket,gameId) {
+
+  var game = getGameById(gameId);
   var out = _.extend({},game,{boards:[]});
+  socket.join(gameId);
   socket.emit('game',out);
 
 }
 
-function setupConnection(socket,x) {
-  console.log('here',socket.handshake.username);
+function setupConnection(socket, x) {
 
   function bindToSocket(f) { return function (data) { f(socket,data); }; }
 
   socket.on('move', bindToSocket(socketMove));
   socket.on('game', bindToSocket(socketGetGame));
+  socket.on('disconnect', bindToSocket(socketDisconnect));
 
 }
 
 exports.setupConnection = setupConnection;
-
 
 exports.get = function(req, res){
     res.send(JSON.stringify(getGameById(req.params.id)));

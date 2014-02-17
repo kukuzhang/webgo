@@ -15,6 +15,8 @@
   <li><player ng-model="white" /></li>
 </ul>
 
+<div class="webgo-error" ng-show="error" >{{error}}</div>
+
 <goboard stones="stones"
          stone-size="36"
          cb-hover="hover(row,col)"
