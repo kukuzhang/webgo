@@ -29,6 +29,10 @@ angular.module('aApp', [
         templateUrl: 'views/game.html',
         controller: 'GameCtrl'
       })
+      .when('/game/:gameId/:moveIndex', {
+        templateUrl: 'views/game.html',
+        controller: 'BrowserCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

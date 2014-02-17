@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('GameCtrl', ['$scope', '$routeParams', '$location', 'libgo',
-  function ($scope, $routeParams, $location, libgo) {
+  .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
+          'underscore','socketio',
+  function ($scope, $routeParams, libgo, _, io) {
 
     function initSocketIO() {
 
-      var auth = $routeParams.auth || 'juho:123'
+      var auth = $routeParams.auth || 'juho:123';
       $scope.username = auth.split(':')[0];
       var q = 'auth=' + auth;
       var s = io.connect('http://localhost:3000/', {query:q});
@@ -30,10 +31,11 @@ angular.module('aApp')
 
     function setConnectionStatus() {
 
+      /* jshint validthis:true */
       $scope.$apply(function () { $scope.connection = connectionStatus(); });
       setTurn(null);
 
-      if (this.socket.connected) {
+      if (this.socket.connected === true) {
 
         console.log('=> game', $routeParams.gameId);
         this.emit('game', $routeParams.gameId);
@@ -46,9 +48,9 @@ angular.module('aApp')
 
       var s = socket.socket;
 
-      if (!s.connected) return 'disconnected';
+      if (!s.connected) { return 'disconnected'; }
 
-      if (s.connecting) return 'connecting';
+      if (s.connecting) { return 'connecting'; }
 
       return s.transport.name;
 
@@ -133,7 +135,7 @@ angular.module('aApp')
         type: 'stone'
       },options);
       var msg = { gameId: $routeParams.gameId, move: move };
-      if (!move.stone) throw new Error('Invalid stone',move.stone);
+      if (!move.stone) { throw new Error('Invalid stone',move.stone); }
       console.log('move',msg);
       socket.emit('move',msg);
       setTurn(null);
@@ -144,7 +146,7 @@ angular.module('aApp')
 
       console.log ($scope.turn, game.myColor($scope.username), $scope.turn);
       if (!$scope.turn ||
-        (game.myColor($scope.username) !== $scope.turn)) return;
+        (game.myColor($scope.username) !== $scope.turn)) { return; }
 
       var json = {type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.json2Move(json);
@@ -162,7 +164,7 @@ angular.module('aApp')
     function hoverOut(row,column) {
 
       if (!$scope.turn ||
-        (game.myColor($scope.username) !== $scope.turn)) return;
+        (game.myColor($scope.username) !== $scope.turn)) { return; }
 
       $scope.stones[row][column] = game.getBoard().stones[row][column];
 
@@ -176,8 +178,11 @@ angular.module('aApp')
     var socket = initSocketIO();
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
-    $scope.pass = function () { apiPlay({type:'pass'}); };
-    $scope.resign = function () { apiPlay({type:'resign'}); };
+    $scope.action = function (action) { apiPlay({type:action}); }
     $scope.play = function (row,column) { apiPlay({row:row,column:column}); };
+    $scope.actions = [
+      {name:'pass',label:'Pass'},
+      {name:'resign',label:'Resign'}
+    ];
 
   }]);
