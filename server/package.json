@@ -10,6 +10,7 @@
     "jade": "*",
     "node-uuid": "~1.4.1",
     "socket.io": "~0.9.16",
-    "cors": "~2.1.1"
+    "cors": "~2.1.1",
+    "underscore": "~1.6.0"
   }
 }

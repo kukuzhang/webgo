@@ -3,6 +3,7 @@
  * GET game
  */
 
+var _ = require('underscore');
 var uuid = require('node-uuid');
 var libgo = require('../../lib/libgo');
 var games = {}
@@ -54,24 +55,35 @@ function playTo(id,moveJson) {
 
 }
 
-function setupConnection(socket) {
-  var gameId = undefined
-  console.log('connection juho');
-  socket.emit('moi','moi');
-  socket.on('move', function (data) {
-    console.log('data', data);
-    var event = {
-      index: games[gameId].moves.length,
-      move: data
-    };
-    playTo(gameId,data);
-    socket.emit('event',event);
-  });
-  socket.on('game', function (id) {
-    gameId = id;
-    socket.emit('game',getGameById(id));
-  });
+function socketMove(socket,data) {
+
+  console.log('data', data);
+  var gameId = data.gameId;
+  var move = data.move;
+  var ev = { index: games[gameId].moves.length, move: move };
+  playTo(gameId,move);
+  socket.emit('event',ev);
+
 }
+
+function socketGetGame(socket,id) {
+
+  var game = getGameById(id);
+  var out = _.extend({},game,{boards:[]});
+  socket.emit('game',out);
+
+}
+
+function setupConnection(socket) {
+
+  function bindToSocket(f) { return function (data) { f(socket,data); }; }
+
+  console.log('connection juho');
+  socket.on('move', bindToSocket(socketMove));
+  socket.on('game', bindToSocket(socketGetGame));
+
+}
+
 exports.setupConnection = setupConnection;
 
 

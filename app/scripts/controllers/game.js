@@ -4,6 +4,39 @@ angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
   function ($scope, $routeParams, libgo) {
 
+    function initSocketIO() {
+
+      var s = io.connect('http://localhost:3000/');
+      console.log('initial get');
+      s.emit('game', $routeParams.gameId);
+      s.on('game', updateGame);
+      s.on('event',updateByEvent);
+      s.on('connect',setConnectionStatus);
+      s.on('disconnect',setConnectionStatus);
+
+      return s;
+
+    }
+
+    function setConnectionStatus() {
+
+      $scope.connection = connectionStatus();
+
+    }
+
+    function connectionStatus(a,b) {
+
+      var s = socket.socket;
+      window.s = s;
+
+      if (!s.connected) return 'disconnected';
+
+      if (s.connecting) return 'connecting';
+
+      return s.transport.name;
+
+    }
+
     function game2Scope () {
 
       $scope.turn = game.getTurn();
@@ -62,8 +95,9 @@ angular.module('aApp')
         stone: $scope.turn,
         type: 'stone'
       },options);
-      console.log('move',move);
-      socket.emit('move',move);
+      var msg = { gameId: $routeParams.gameId, move: move };
+      console.log('move',msg);
+      socket.emit('move',msg);
 
     }
 
@@ -92,15 +126,8 @@ angular.module('aApp')
     var game = libgo.newGame();
     game2Scope();
     $scope.showCoords = true;
-
-    var socket = io.connect('http://localhost:3000/');
-    console.log('initial get');
-    window.s = socket;
-    socket.on('moi', function (m) {console.log(':'+m);socket.emit('game', $routeParams.gameId);});
-    socket.emit('game', $routeParams.gameId);
-    socket.on('game', updateGame);
-    socket.on('event',updateByEvent);
-
+    $scope.connection = 'disconnected';
+    var socket = initSocketIO();
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
     $scope.pass = function () { apiPlay({type:'pass'}); };
