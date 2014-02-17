@@ -11,7 +11,7 @@ var BLACK = 'b';
 var WHITE = 'w';
 var EMPTY = '_';
 
-games[0] = libgo.newGame(); // debug
+games[0] = libgo.newGame({black:'juho'}); // debug
 
 function getGameIds() {
 
@@ -21,10 +21,10 @@ function getGameIds() {
 
 }
 
-function newGame () {
+function newGame (options) {
 
     var id = uuid.v1();
-    var game = libgo.newGame();
+    var game = libgo.newGame(options);
 
     if (games[id] !== undefined) throw new Error('Collision!');
 
@@ -43,26 +43,27 @@ function getGameById(id) {
 
 }
 
-function playTo(id,moveJson) {
-
-  var game = games[id];
-  var move = libgo.json2Move(moveJson);
-
-  var newBoard = game.play(move);
-
-  //return newBoard;
-  return game;
-
-}
-
 function socketMove(socket,data) {
 
   console.log('data', data);
+  console.log('username',socket.handshake.username);
+  var username = socket.handshake.username;
   var gameId = data.gameId;
-  console.log(socket);
-  var move = data.move;
-  var ev = { index: games[gameId].moves.length, move: move };
-  playTo(gameId,move);
+  var moveJson = data.move;
+  var ev = { index: games[gameId].moves.length, move: moveJson };
+  var game = games[gameId];
+  var player = moveJson.stone == BLACK ? 'black' :
+               moveJson.stone == WHITE ? 'white' : null;
+
+  if (player === null) throw new Error('Invalid stone.');
+  
+  var expectedUsername = game[player].name;
+  
+  if (username != expectedUsername) throw new Error(
+    username + ' is not allowed to play moves of ' + expectedUsername);
+
+  var move = libgo.json2Move(moveJson);
+  game.play(move);
   socket.emit('event',ev);
 
 }
@@ -71,12 +72,12 @@ function socketGetGame(socket,id) {
 
   var game = getGameById(id);
   var out = _.extend({},game,{boards:[]});
-  console.log('game',out);
   socket.emit('game',out);
 
 }
 
-function setupConnection(socket) {
+function setupConnection(socket,x) {
+  console.log('here',socket.handshake.username);
 
   function bindToSocket(f) { return function (data) { f(socket,data); }; }
 
@@ -93,9 +94,6 @@ exports.get = function(req, res){
 };
 exports.newGame = function(req, res){
     res.send(newGame());
-};
-exports.play = function(req, res){
-    res.send(JSON.stringify(playTo(req.params.id,req.body)));
 };
 exports.list = function(req, res){
     res.send(JSON.stringify(getGameIds()));
