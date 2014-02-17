@@ -54,8 +54,10 @@ function socketMove(socket,data) {
 
   if (game.myColor(username) !== moveJson.stone) {
 
-    var color = libgo.longColor(game.turn);
-    var expected = game[color].name;
+    var color = libgo.longColor(game.getTurn());
+    console.log(game.getTurn(), color);
+    var player = game[color] || {};
+    var expected = player.name;
     var msg = username + ' is not allowed to play moves of ' + expected;
     socket.emit('error', msg);
 
