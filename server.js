@@ -4,9 +4,8 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , game = require('./routes/game')
+  , user = require('./lib/user')
+  , game = require('./lib/game')
   , http = require('http')
   , cors = require('cors')
   , path = require('path');
@@ -32,7 +31,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/api/game/:id', game.get);
 app.post('/api/game', game.newGame);
