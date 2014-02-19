@@ -1,7 +1,12 @@
-/* Space out content a bit */
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
 }
 
 .header,
@@ -20,6 +25,35 @@ body {
   color: #777;
   border-top: 1px solid #e5e5e5;
 }
+
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+
+
 
 /* Customize container */
 @media (min-width: 768px) {
@@ -43,7 +77,13 @@ body {
   .header {
     margin-bottom: 30px;
   }
+  .container {
+      max-width: 730px;
+  }
 }
+
+
+
 
 .webgo-board {
     width: auto;
@@ -92,15 +132,13 @@ body {
     background-image: url('../images/grid-hoshi.png');
 }
 
-.webgo-coord,
-.webgo-stone {
-    width:32px;
-    height:32px;
-    background-size: 100%;
-    background-repeat: no-repeat;
+.webgo-coord {
+  overflow: hidden;
 }
 
 .webgo-stone {
+    background-size: 100%;
+    background-repeat: no-repeat;
     cursor: pointer;
 }
 
