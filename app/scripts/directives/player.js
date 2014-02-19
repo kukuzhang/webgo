@@ -6,7 +6,7 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{ngModel.name}} {{timeLeft}} </div>',
+      template: '<div class="{{playerClass}}"> {{ngModel.name}} "{{timeLeft}}" </div>',
       restrict: 'E',
       scope: {
         ngModel: '=',
@@ -15,14 +15,6 @@ angular.module('aApp')
 
       link: function (scope,elem,attrs) {
 
-        console.log(attrs);
-        console.log(scope);
-        /*
-        scope.$watch('timeLeft', function () {
-          $scope.TimeLeft = 
-          $scope.timeLeft
-        });
-        */
         scope.$watch('ngModel', function () {
 
           var player = scope.ngModel || {};
