@@ -8,13 +8,18 @@ angular.module('aApp')
 
       link: function (scope,elem, attrs) {
         
-        var coord = attrs.coord;
+        var coord = scope[attrs.coord] + 1;
+        var display = scope[attrs.display];
         var size = scope[attrs.size] || 32;
-        var $d = $('<div class="webgo-coord" />')
+        var $d = $('<div/>')
           .css('width',size)
-          .css('height',size)
-          .html(coord);
+          .css('height',size);
         elem.html($d);
+        elem.addClass('webgo-coord');
+
+        if (isNaN(coord)) {coord = '';}
+        
+        if (display) { $d.html(coord); }
 
       },
 

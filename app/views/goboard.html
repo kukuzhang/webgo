@@ -1,10 +1,10 @@
 <table ng-table="tableParams" class="table webgo-board">
   <tr>
-    <td coord=" " size="stoneSize" /></td>
-    <td ng-repeat="row in stones track by $index" coord="{{coords ? $index+1 : ' '}}" size="stoneSize" /></td>
+    <td coord="" size="stoneSize" /></td>
+    <td ng-repeat="row in stones track by $index" coord="$index" display="coords" size="stoneSize" /></td>
   </tr>
   <tr ng-repeat="row in stones track by $index">
-    <td coord="{{coords ? $index+1 : ' '}}" size="stoneSize" /></td>
+    <td coord="$index" display="coords" size="stoneSize" /></td>
     <td ng-repeat="cell in row track by $index"
         ng-click="cbPlay({row:$parent.$index,col:$index})"
         ng-mouseover="cbHover({row:$parent.$index,col:$index})"
@@ -13,10 +13,10 @@
     <div class="webgo-stone {{cell|stoneClass}}"
       ng-style="{width:stoneSize||32,height:stoneSize||32}" />
     </td>
-    <td coord="{{coords ? $index+1 : ' '}}" size="stoneSize" /></td>
+    <td coord="$index" display="coords" size="stoneSize" /></td>
   </tr>
   <tr>
-    <td coord=" " size="stoneSize" /></td>
-    <td ng-repeat="row in stones track by $index" coord="{{coords ? $index+1 : ' '}}" size="stoneSize" /></td>
+    <td coord="" size="stoneSize" /></td>
+    <td ng-repeat="row in stones track by $index" coord="$index" display="coords" ? $index+1 : ' '}}" size="stoneSize" /></td>
   </tr>
 </table>

@@ -178,7 +178,7 @@ angular.module('aApp')
     var socket = initSocketIO();
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
-    $scope.action = function (action) { apiPlay({type:action}); }
+    $scope.action = function (action) { apiPlay({type:action}); };
     $scope.play = function (row,column) { apiPlay({row:row,column:column}); };
     $scope.actions = [
       {name:'pass',label:'Pass'},

@@ -36,15 +36,6 @@ angular.module('aApp')
 
     }
 
-    function updateGame (data) {
-
-      $scope.error = null;
-      console.log('received game', data);
-      game = libgo.newGame(data);
-      $scope.$apply(game2Scope);
-
-    }
-
     $http.get('http://localhost:3000/game/'+$routeParams.gameId)
       .success(function (data) { console.log('ok',data); })
       .error(function (data) { console.log('error',data); });
@@ -52,7 +43,7 @@ angular.module('aApp')
     game2Scope();
     $scope.showCoords = true;
     $scope.connection = 'disconnected';
-    $scope.action = function (action) { apiPlay({type:action}); }
+    $scope.action = function () {  };
     $scope.actions = [
       {name:'prev',label:'<'},
       {name:'next',label:'>'}
