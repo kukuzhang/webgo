@@ -6,21 +6,31 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{ngModel.name}} </div>',
+      template: '<div class="{{playerClass}}"> {{ngModel.name}} {{timeLeft}} </div>',
       restrict: 'E',
-      scope: { ngModel: '=' },
+      scope: {
+        ngModel: '=',
+        timeLeft: '='
+      },
 
-      link: function (scope) {
+      link: function (scope,elem,attrs) {
 
-        function setClasses() {
+        console.log(attrs);
+        console.log(scope);
+        /*
+        scope.$watch('timeLeft', function () {
+          $scope.TimeLeft = 
+          $scope.timeLeft
+        });
+        */
+        scope.$watch('ngModel', function () {
 
           var player = scope.ngModel || {};
           scope.playerClass = 'webgo-' + player.color +
             (player.turn ?  ' webgo-myturn' : '');
 
-        }
+        });
 
-        scope.$watch('ngModel', setClasses);
 
       }
 

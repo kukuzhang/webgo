@@ -5,6 +5,22 @@ angular.module('aApp')
           'underscore','socketio',
   function ($scope, $routeParams, libgo, _, io) {
 
+    function setTimings() {
+
+      $scope.blackTime = game.remainingTime(libgo.BLACK);
+      $scope.whiteTime = game.remainingTime(libgo.WHITE);
+      /*
+      console.log('black',$scope.blackTime);
+      console.log('white',$scope.whiteTime);
+      */
+      var interval = Math.min( [
+        $scope.blackTime % 1000,
+        $scope.whiteTime % 1000 ] );
+      interval = 1000;
+      setTimeout(function () {$scope.$apply(function() {setTimings();})}, interval);
+
+    }
+
     function initSocketIO() {
 
       var auth = $routeParams.auth || 'juho:123';
@@ -173,6 +189,7 @@ angular.module('aApp')
     //var newGameStream = Bacon.fromPromise(wre);
     var game = libgo.newGame();
     game2Scope();
+    setTimings();
     $scope.showCoords = true;
     $scope.connection = 'disconnected';
     var socket = initSocketIO();
