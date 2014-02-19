@@ -33,7 +33,7 @@ if ('development' == app.get('env')) {
 
 app.get('/users', user.list);
 app.get('/api/game/:id', game.get);
-app.post('/api/game', game.newGame);
+app.post('/api/game', game.createGame);
 app.get('/api/game', game.list);
 
 server.listen(app.get('port'), function(){
@@ -41,7 +41,9 @@ server.listen(app.get('port'), function(){
 });
 
 io.configure(function() {
+  //io.set('log', 'info');
   io.set('authorization', socketAuth);
+  io.set('log level', 2);
 });
 io.sockets.on('connection', game.setupConnection);
 

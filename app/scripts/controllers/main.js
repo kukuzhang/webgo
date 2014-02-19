@@ -11,7 +11,6 @@ angular.module('aApp')
       $scope.games = data;
     })
     .error(function (data, status) {
-
       console.log('error ' + status);
     });
 

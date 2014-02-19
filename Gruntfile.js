@@ -46,14 +46,14 @@ module.exports = function (grunt) {
       prod: {
         options: {
           script: 'dist/server.js',
-          'node_env': 'production'
+          node_env: 'production'
         }
       }
     },
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js','lib/*.js'],
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.js','lib/libgo.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: true
@@ -165,12 +165,14 @@ module.exports = function (grunt) {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
+      server: {
+        options: {
+          jshintrc: 'lib/.jshintrc'
+        },
+        src: [ 'lib/{,*/}*.js']
+      },
       all: [
-        'Gruntfile.js',
         '<%= yeoman.app %>/scripts/{,*/}*.js'
-      ],
-      backend: [
-        'server/app.js server/route/*.js'
       ],
       test: {
         options: {

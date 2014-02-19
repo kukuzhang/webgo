@@ -8,7 +8,7 @@
 <h4>Ongoing games</h4>
 <ul>
     <li ng-repeat="game in games" >
-        <a href="#/game/{{game.id}}"> {{game.id}} </a>
+        <a href="#/game/{{game._id}}"> {{game._id}} </a> ({{game.black}} vs. {{game.white}})
     </li>
 </ul>
 
