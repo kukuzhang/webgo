@@ -6,7 +6,7 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{ngModel.name}} "{{timeLeft}}" </div>',
+      template: '<div class="{{playerClass}}"> {{ngModel.name}} ({{timeLeft}}) </div>',
       restrict: 'E',
       scope: {
         ngModel: '=',

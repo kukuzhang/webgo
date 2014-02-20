@@ -41,7 +41,6 @@ server.listen(app.get('port'), function(){
 });
 
 io.configure(function() {
-  //io.set('log', 'info');
   io.set('authorization', socketAuth);
   io.set('log level', 2);
 });

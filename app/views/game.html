@@ -14,9 +14,9 @@
 <ul class="webgo-players">
   <li><player ng-model="black" time-left="blackTime"/></li>
   <li><player ng-model="white" time-left="whiteTime"/></li>
+  <li><div class="webgo-error" ng-show="error" >{{error}}</div></li>
 </ul>
 
-<div class="webgo-error" ng-show="error" >{{error}}</div>
 
 <goboard stones="stones"
          stone-size="24"

@@ -7,16 +7,15 @@ angular.module('aApp')
 
     function setTimings() {
 
-      $scope.blackTime = game.remainingTime(libgo.BLACK);
-      $scope.whiteTime = game.remainingTime(libgo.WHITE);
-      /*
-      console.log('black',$scope.blackTime);
-      console.log('white',$scope.whiteTime);
-      */
-      var interval = Math.min( [
-        $scope.blackTime % 1000,
-        $scope.whiteTime % 1000 ] );
-      interval = 1000;
+      var remBlack = game.remainingMilliSeconds(libgo.BLACK);
+      var remWhite = game.remainingMilliSeconds(libgo.WHITE);
+      var interval = (game.getTurn() === libgo.BLACK ?  remBlack : remWhite) % 1000;
+      $scope.blackTime = Math.floor(remBlack / 1000);
+      $scope.whiteTime = Math.floor(remWhite / 1000);
+      //console.log(interval, remBlack % 1000, remWhite % 1000 );
+
+      if (!interval) {interval = 1000;}
+
       setTimeout(function () {$scope.$apply(function() {setTimings();})}, interval);
 
     }
@@ -47,22 +46,22 @@ angular.module('aApp')
 
     function setConnectionStatus() {
 
+      var s = this.socket;
+
       /* jshint validthis:true */
-      $scope.$apply(function () { $scope.connection = connectionStatus(); });
+      $scope.$apply(function () { $scope.connection = connectionStatus(s); });
       setTurn(null);
 
-      if (this.socket.connected === true) {
+      if (s.connected === true) {
 
-        console.log('=> game', $routeParams.gameId);
+        console.log('=> refresh game', $routeParams.gameId);
         this.emit('game', $routeParams.gameId);
 
       }
 
     }
 
-    function connectionStatus() {
-
-      var s = socket.socket;
+    function connectionStatus(s) {
 
       if (!s.connected) { return 'disconnected'; }
 
@@ -160,7 +159,6 @@ angular.module('aApp')
 
     function hoverIn (row,column) {
 
-      console.log ($scope.turn, game.myColor($scope.username), $scope.turn);
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
