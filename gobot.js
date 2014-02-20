@@ -7,27 +7,69 @@
 
 var io = require('socket.io-client'),
   libgo = require('./lib/libgo'),
-  gameId = process.argv[2],
-  myColor = process.argv[3],
-  q = 'auth=' + process.argv[4],
+  gameId, myColor, socket, game, q;
+
+
+function main() {
+
+  var cmd = process.argv[2];
+
+  console.log(cmd);
+  if (cmd === 'new') {
+
+    newGame();
+
+  } else {
+
+    q = 'auth=' + process.argv[5];
+    gameId = process.argv[3];
+    myColor = process.argv[4];
+    playGame();
+
+  }
+
+}
+
+function newGame() {
+
+  var http = require('http');
+  var options = {
+      host: 'localhost',
+      port: 3000,
+      method: 'POST',
+      path: '/api/game'
+  };
+
+  var req = http.request(options, function(resp){
+      resp.on('data', function(chunk){
+        console.log(chunk.toString());
+      });
+  }).on("error", function(e){
+      console.log("Got error: " + e.message);
+  });
+  req.end();
+
+}
+
+function playGame() {
+
   socket = io.connect('localhost', { port: 3000,query:q }),
   game = libgo.newGame();
+  socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
+  socket.on('game', updateGame);
+  socket.on('event',updateByEvent);
+  socket.on('error',updateByError);
+  socket.on('connect_failed',setConnectionStatus);
+  socket.on('connect',setConnectionStatus);
+  socket.on('disconnect',setConnectionStatus);
+  socket.on('connecting', setConnectionStatus);
+  socket.on('reconnect_failed', setConnectionStatus);
+  socket.on('reconnect', setConnectionStatus);
+  socket.on('reconnecting', setConnectionStatus);
+  //socket.on('error', function () {}) - "error" is emitted when an error occurs and it cannot be handled by the other event types.
+  //socket.on('message', function (message, callback) {}) - "message" is emitted when a message sent with socket.send is received. message is the sent message, and callback is an optional acknowledgement function.
 
-console.log(process.argv);
-socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
-socket.on('game', updateGame);
-socket.on('event',updateByEvent);
-socket.on('error',updateByError);
-socket.on('connect_failed',setConnectionStatus);
-socket.on('connect',setConnectionStatus);
-socket.on('disconnect',setConnectionStatus);
-socket.on('connecting', setConnectionStatus);
-socket.on('reconnect_failed', setConnectionStatus);
-socket.on('reconnect', setConnectionStatus);
-socket.on('reconnecting', setConnectionStatus);
-
-//socket.on('error', function () {}) - "error" is emitted when an error occurs and it cannot be handled by the other event types.
-//socket.on('message', function (message, callback) {}) - "message" is emitted when a message sent with socket.send is received. message is the sent message, and callback is an optional acknowledgement function.
+}
 
 function setConnectionStatus() {
 
@@ -80,7 +122,7 @@ function updateByEvent (data) {
   console.log('received move', data);
   if (data.index === game.moves.length) {
 
-    var move = libgo.json2Move(data.move);
+    var move = libgo.newMove(data.move);
     game.play(move);
 
   } else {
@@ -100,7 +142,7 @@ function randomMove (tries) {
 
   for (var i = 0; i < tries; i++) {
 
-    var move = libgo.json2Move({
+    var move = libgo.newMove({
       type: 'stone',
       stone: myColor,
       row: randomCoord(),
@@ -111,7 +153,7 @@ function randomMove (tries) {
 
   }
 
-  return libgo.json2Move({ type:'pass', stone:myColor });
+  return libgo.newMove({ type:'pass', stone:myColor });
 
 }
 
@@ -149,3 +191,4 @@ function playIfPossible(data) {
 
 };
 
+main();

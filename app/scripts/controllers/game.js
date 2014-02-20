@@ -129,7 +129,7 @@ angular.module('aApp')
       console.log('received move', data);
       if (data.index === game.moves.length) {
 
-        var move = libgo.json2Move(data.move);
+        var move = libgo.newMove(data.move);
         game.play(move);
         $scope.$apply(game2Scope);
 
@@ -162,8 +162,8 @@ angular.module('aApp')
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
-      var json = {type:'stone',stone:$scope.turn,row:row,column:column};
-      var move = libgo.json2Move(json);
+      var obj = {type:'stone',stone:$scope.turn,row:row,column:column};
+      var move = libgo.newMove(obj);
       var canPlay = game.isMoveOk(move);
       
       if (canPlay) {
