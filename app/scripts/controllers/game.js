@@ -5,6 +5,30 @@ angular.module('aApp')
           'underscore','socketio',
   function ($scope, $routeParams, libgo, _, io) {
 
+    function action (actionId) {
+
+      if (actionId === 'done') { agreeOnScoring(); }
+
+      else if (actionId === 'back-to-game') { backToGame(); }
+
+      else { apiPlay({type:actionId}); }
+
+    }
+
+    function backToGame() {
+
+    }
+
+    function agreeOnScoring() {
+      
+      var scoring = {};
+      var myColor = game.myColor($scope.username);
+      var myAttr = libgo.longColor(myColor) + 'Agree';
+      scoring[myAttr] = true;
+      socket.emit('score',{gameId:$routeParams.gameId, score:scoring});
+
+    }
+
     function setTimings() {
 
       var remBlack = game.remainingMilliSeconds(libgo.BLACK);
@@ -12,11 +36,10 @@ angular.module('aApp')
       var interval = (game.getTurn() === libgo.BLACK ?  remBlack : remWhite) % 1000;
       $scope.blackTime = Math.floor(remBlack / 1000);
       $scope.whiteTime = Math.floor(remWhite / 1000);
-      //console.log(interval, remBlack % 1000, remWhite % 1000 );
 
       if (!interval) {interval = 1000;}
 
-      setTimeout(function () {$scope.$apply(function() {setTimings();})}, interval);
+      setTimeout(function () {$scope.$apply(function() {setTimings();});}, interval);
 
     }
 
@@ -46,9 +69,9 @@ angular.module('aApp')
 
     function setConnectionStatus() {
 
-      var s = this.socket;
-
       /* jshint validthis:true */
+
+      var s = this.socket;
       $scope.$apply(function () { $scope.connection = connectionStatus(s); });
       setTurn(null);
 
@@ -73,7 +96,6 @@ angular.module('aApp')
 
     function setTurn(turn) {
 
-      console.log(turn);
       $scope.turn = turn;
       $scope.black = {
         name: game.black.name,
@@ -90,15 +112,62 @@ angular.module('aApp')
 
     }
 
+    function play2Point(row,column) { apiPlay({row:row,column:column}); }
+
+    function togglePrisoner(row,column) {
+
+      var g = game.markOrUnmarkAsPrisoner(row,column);
+      console.log(g);
+      stones2Scope();
+
+    }
+
     function game2Scope () {
 
       $scope.stones = game.getBoard().stones;
-      setTurn(game.getTurn());
-      console.log('Last move: ', game.moves[game.moves.length - 1]);
-      console.log('Turn: ', $scope.turn);
-      var board = game.getBoard();
-      $scope.stones = board.stones.map(function (row) {
-        return row.map(function(col) { return col; });
+      var state = game.getState();
+      console.log('state now',state);
+      setTurn(state.turn);
+
+      if (state.state === 'scoring') {
+
+        $scope.clickAction = togglePrisoner;
+
+        if (!game.scoring.groups) {
+          game.scoring.groups = game.getBoard().getInitialScoringGroups();
+        }
+        $scope.actions = [
+          {name:'done',label:'Done'},
+          {name:'back-to-game',label:'Back to game'}
+        ];
+
+
+      } else {
+
+        $scope.clickAction = play2Point;
+        $scope.actions = [
+          {name:'pass',label:'Pass'},
+          {name:'resign',label:'Resign'}
+        ];
+
+      }
+
+      stones2Scope();
+
+    }
+
+    function stones2Scope() {
+
+      $scope.stones = game.getBoard().stones.map(function (row,i) {
+        return row.map(function(cell,j) {
+
+          var score = game.scorePoint(i,j);
+
+          if (!score) { return cell; }
+
+          else { return score; }
+
+        });
       });
 
     }
@@ -151,7 +220,6 @@ angular.module('aApp')
       },options);
       var msg = { gameId: $routeParams.gameId, move: move };
       if (!move.stone) { throw new Error('Invalid stone',move.stone); }
-      console.log('move',msg);
       socket.emit('move',msg);
       setTurn(null);
 
@@ -193,11 +261,7 @@ angular.module('aApp')
     var socket = initSocketIO();
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
-    $scope.action = function (action) { apiPlay({type:action}); };
-    $scope.play = function (row,column) { apiPlay({row:row,column:column}); };
-    $scope.actions = [
-      {name:'pass',label:'Pass'},
-      {name:'resign',label:'Resign'}
-    ];
+    $scope.action = action;
+    $scope.actions = [];
 
   }]);

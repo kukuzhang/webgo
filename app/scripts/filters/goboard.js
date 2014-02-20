@@ -9,20 +9,12 @@ angular.module('aApp')
     map[libgo.WHITE] = 'white';
     map[libgo.BLACK_HOVER] = 'black-hover';
     map[libgo.WHITE_HOVER] = 'white-hover';
+    map[libgo.BLACK_POINT] = 'black-point';
+    map[libgo.WHITE_POINT] = 'white-point';
+    map[libgo.BLACK_DEAD] = 'black-dead';
+    map[libgo.WHITE_DEAD] = 'white-dead';
 
     return function (content) { return 'webgo-stone-' + map[content]; };
-
-  }])
-  .filter('stoneUrl', ['libgo',function (libgo) {
-
-    var map = {};
-    map[libgo.EMPTY] = 'images/empty.png';
-    map[libgo.BLACK] = 'images/black.png';
-    map[libgo.WHITE] = 'images/white.png';
-    map[libgo.BLACK_HOVER] = 'images/black-hover.png';
-    map[libgo.WHITE_HOVER] = 'images/white-hover.png';
-
-    return function (content) { return map[content]; };
 
   }])
   .filter('stoneCount', ['libgo',function (libgo) {

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('aApp')
-  .directive('coord', function () {
+  .directive('coord', ['jquery', function ($) {
     return {
 
       restrict: 'A',
@@ -24,7 +24,7 @@ angular.module('aApp')
       },
 
     };
-  })
+  }])
   .directive('goboard', function () {
 
     return {
@@ -43,6 +43,7 @@ angular.module('aApp')
 
       link: function (scope) {
         
+        console.log(scope);
         scope.cellClass = function (row,col) {
 
           var boardSize = scope.stones.length;

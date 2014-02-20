@@ -13,7 +13,7 @@ angular.module('aApp')
         timeLeft: '='
       },
 
-      link: function (scope,elem,attrs) {
+      link: function (scope) {
 
         scope.$watch('ngModel', function () {
 

@@ -9,6 +9,9 @@ angular.module('aApp', [
   .factory('socketio',function () {
     return window.io;
   })
+  .factory('jquery',function () {
+    return window.$;
+  })
   .factory('underscore',function () {
     return window._;
   })

@@ -177,6 +177,35 @@ body {
 
 }
 
+.webgo-stone-white-point {
+
+    background-image: url('../images/white-hover.png');
+
+}
+
+.webgo-stone-black-point {
+
+    background-size: 95%;
+    background-position: 1px 2px;
+    background-image: url('../images/black-hover.png');
+
+}
+
+.webgo-stone-white-dead {
+
+    background-size: 95%;
+    background-position: 1px 2px;
+    background-image: url('../images/point-and-prisoner.png');
+
+}
+
+.webgo-stone-black-dead {
+
+    background-size: 95%;
+    background-position: 1px 2px;
+    background-image: url('../images/point-and-prisoner.png');
+
+}
 
 a.webgo-action {
     cursor: pointer;
