@@ -168,7 +168,11 @@ angular.module('aApp')
 
       }
 
+      $scope.blackPrisoners = game.blackPrisoners;
+      $scope.whitePrisoners = game.whitePrisoners;
       stones2Scope();
+      console.log($scope.blackPrisoners, game.blackPrisoners);
+      console.log($scope.whitePrisoners, game.whitePrisoners);
 
     }
 
@@ -260,7 +264,7 @@ angular.module('aApp')
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
-      var obj = {type:'stone',stone:$scope.turn,row:row,column:column};
+      var obj = {timestamp: new Date().getTime(), type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.newMove(obj);
       var canPlay = game.isMoveOk(move);
       

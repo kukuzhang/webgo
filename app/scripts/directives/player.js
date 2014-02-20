@@ -6,11 +6,12 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{ngModel.name}} ({{timeLeft}}) </div>',
+      template: '<div class="{{playerClass}}"> {{ngModel.name}} ({{timeLeft}}) ({{prisoners}}) </div>',
       restrict: 'E',
       scope: {
         ngModel: '=',
-        timeLeft: '='
+        timeLeft: '=',
+        prisoners: '='
       },
 
       link: function (scope) {
