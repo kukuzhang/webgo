@@ -133,8 +133,8 @@ angular.module('aApp')
 
         $scope.clickAction = togglePrisoner;
 
-        if (!game.scoring.groups) {
-          game.scoring.groups = game.getBoard().getInitialScoringGroups();
+        if (!game.scoring.points) {
+          game.scoring.points = game.getInitialScoring();
         }
         $scope.actions = [
           {name:'done',label:'Done'},
