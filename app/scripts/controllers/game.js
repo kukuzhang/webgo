@@ -7,7 +7,7 @@ angular.module('aApp')
 
     function action (actionId) {
 
-      if (actionId === 'done') { agreeOnScoring(); }
+      if (actionId === 'done') { emitScoring(true); }
 
       else if (actionId === 'back-to-game') { backToGame(); }
 
@@ -19,15 +19,28 @@ angular.module('aApp')
 
     }
 
-    function agreeOnScoring() {
+    function emitScoring(agree) {
       
-      var scoring = {};
       var myColor = game.myColor($scope.username);
       var myAttr = libgo.longColor(myColor) + 'Agree';
-      scoring[myAttr] = true;
-      socket.emit('score',{gameId:$routeParams.gameId, score:scoring});
+      var data = {
+        gameId:$routeParams.gameId,
+        points:game.scoring.points
+      };
+      data[myAttr] = agree;
+      console.log('emitting',data);
+      socket.emit('score',data);
 
     }
+
+    function togglePrisoner(row,column) {
+
+      var g = game.markOrUnmarkAsPrisoner(row,column);
+      stones2Scope();
+      emitScoring(false);
+
+    }
+
 
     function setTimings() {
 
@@ -45,7 +58,7 @@ angular.module('aApp')
 
     function initSocketIO() {
 
-      var auth = $routeParams.auth || 'juho:123';
+      var auth = $routeParams.auth || 'black:123';
       $scope.username = auth.split(':')[0];
       var q = 'auth=' + auth;
       var s = io.connect('http://localhost:3000/', {query:q});
@@ -114,17 +127,8 @@ angular.module('aApp')
 
     function play2Point(row,column) { apiPlay({row:row,column:column}); }
 
-    function togglePrisoner(row,column) {
-
-      var g = game.markOrUnmarkAsPrisoner(row,column);
-      console.log(g);
-      stones2Scope();
-
-    }
-
     function game2Scope () {
 
-      $scope.stones = game.getBoard().stones;
       var state = game.getState();
       console.log('state now',state);
       setTurn(state.turn);
@@ -136,11 +140,23 @@ angular.module('aApp')
         if (!game.scoring.points) {
           game.scoring.points = game.getInitialScoring();
         }
+
         $scope.actions = [
           {name:'done',label:'Done'},
           {name:'back-to-game',label:'Back to game'}
         ];
 
+      } else if (state.state === 'end') {
+
+        var how = state.reason == 'resign' ? 'resignation' :
+          state.reason == 'time' ? 'time' :
+          state.reason == 'points' ? state.points + " points (" + state.black + " - "
+                                     + state.white + ")":
+          state.reason;
+
+        $scope.clickAction = function () {};
+        $scope.actions = [ ];
+        $scope.error = "Game over. " + libgo.longColor(state.winner) + " won by " + how;
 
       } else {
 
@@ -195,18 +211,32 @@ angular.module('aApp')
     function updateByEvent (data) {
 
       $scope.error = null;
-      console.log('received move', data);
-      if (data.index === game.moves.length) {
 
-        var move = libgo.newMove(data.move);
-        game.play(move);
+      console.log('received event', data);
+
+      if (data.type === 'move') {
+
+        if (data.index === game.moves.length) {
+
+          var move = libgo.newMove(data.move);
+          game.play(move);
+          $scope.$apply(game2Scope);
+
+        } else {
+
+          console.log(game.moves);
+          console.log('Moves not in sync???');
+          socket.emit('game', $routeParams.gameId);
+
+        }
+
+      } else if (data.type == 'score') {
+
+        console.log('got scoring', data);
+        game.scoring.points = data.points;
+        game.scoring.blackAgree = data.blackAgree;
+        game.scoring.whiteAgree = data.whiteAgree;
         $scope.$apply(game2Scope);
-
-      } else {
-
-        console.log(game.moves);
-        console.log('Moves not in sync???');
-        socket.emit('game', $routeParams.gameId);
 
       }
 
