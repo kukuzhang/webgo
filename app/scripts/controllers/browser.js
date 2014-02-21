@@ -47,9 +47,9 @@ angular.module('aApp')
 
         for (var column=0; column < board.boardSize; column++) {
 
-            var score = game.scorePoint(board.point2Index(row,column));
-            var stone = board.getStone(row,column);
-            $scope.stones[row][column] = score || stone;
+          var score = game.scorePoint(board.point2Index(row,column));
+          var stone = board.getStone(row,column);
+          $scope.stones[row][column] = score || stone;
 
         }
 

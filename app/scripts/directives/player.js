@@ -6,21 +6,22 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{ngModel.name}} ({{timeLeft}}) ({{prisoners}}) </div>',
+      template: '<div class="{{playerClass}}"> {{ngModel}} ({{timeLeft}}) ({{prisoners}}) </div>',
       restrict: 'E',
       scope: {
         ngModel: '=',
+        color: '=',
         timeLeft: '=',
+        turn: '=',
         prisoners: '='
       },
 
       link: function (scope) {
 
-        scope.$watch('ngModel', function () {
+        scope.$watch('turn', function () {
 
-          var player = scope.ngModel || {};
-          scope.playerClass = 'webgo-' + player.color +
-            (player.turn ?  ' webgo-myturn' : '');
+          scope.playerClass = 'webgo-' + scope.color +
+            (scope.turn ?  ' webgo-myturn' : '');
 
         });
 

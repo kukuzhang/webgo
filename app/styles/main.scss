@@ -253,3 +253,20 @@ a.webgo-action {
   border-width: 3px;
 }
 
+.webgo-configure {
+
+  margin: 1em;
+  border: 1px solid grey;
+  text-align: center;
+  padding:0.5em;
+
+  label,select,button,input {
+    width: 40%;
+  }
+  button.small {
+
+    width:10%;
+  }
+
+}
+

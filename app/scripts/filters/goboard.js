@@ -20,21 +20,18 @@ angular.module('aApp')
   .filter('stoneCount', ['libgo',function (libgo) {
 
     var occupied = {};
-    occupied[libgo.BLACK]= true;
-    occupied[libgo.WHITE]= true;
+    occupied[libgo.BLACK] = true;
+    occupied[libgo.WHITE] = true;
 
     return function (stones) {
 
+      if (!stones) return 0;
       var sum = 0;
       var boardSize = stones.length;
 
-      for (var i=0; i<boardSize;i++) {
+      for (var i=0; i<boardSize*boardSize;i++) {
 
-        for (var j=0; j<boardSize;j++) {
-
-          sum += occupied[stones[i][j]] ? 1 : 0;
-
-        }
+        sum += occupied[stones[i]] ? 1 : 0;
 
       }
 

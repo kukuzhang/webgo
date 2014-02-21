@@ -32,7 +32,19 @@ angular.module('aApp', [
         templateUrl: 'views/game.html',
         controller: 'GameCtrl'
       })
-      .when('/game/:gameId/:moveIndex', {
+      .when('/game/:gameId/configure', {
+        templateUrl: 'views/game.html',
+        controller: 'ConfigureCtrl'
+      })
+      .when('/game/:gameId/score', {
+        templateUrl: 'views/game.html',
+        controller: 'ScoreCtrl'
+      })
+      .when('/game/:gameId/play', {
+        templateUrl: 'views/game.html',
+        controller: 'GameCtrl'
+      })
+      .when('/game/:gameId/browse/:moveIndex', {
         templateUrl: 'views/game.html',
         controller: 'BrowserCtrl'
       })

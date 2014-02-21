@@ -35,7 +35,7 @@ angular.module('aApp')
 
     function togglePrisoner(row,column) {
 
-      var g = game.markOrUnmarkAsPrisoner(row,column);
+      game.markOrUnmarkAsPrisoner(row,column);
       stones2Scope();
       emitScoring(false);
 
@@ -110,18 +110,8 @@ angular.module('aApp')
     function setTurn(turn) {
 
       $scope.turn = turn;
-      $scope.black = {
-        name: game.black.name,
-        timing: game.black.timing,
-        color: 'black',
-        turn: turn === libgo.BLACK
-      };
-      $scope.white = {
-        name: game.white.name,
-        timing: game.white.timing,
-        color: 'white',
-        turn: turn === libgo.WHITE
-      };
+      $scope.blackTurn = turn === libgo.BLACK;
+      $scope.whiteTurn = turn === libgo.WHITE;
 
     }
 
@@ -130,8 +120,21 @@ angular.module('aApp')
     function game2Scope () {
 
       var state = game.getState();
-      console.log('state now',state);
+      console.log('state now',state.state);
       setTurn(state.turn);
+      
+      $scope.white = game.white;
+      $scope.black = game.black;
+      $scope.boardSize = game.boardSize;
+      $scope.komi = game.komi;
+      $scope.handicaps = game.handicaps;
+      $scope.timeMain = game.timeMain;
+      $scope.timeExtraPeriods = game.timeExtraPeriods;
+      $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
+      $scope.timePeriodLength = game.timePeriodLength;
+      $scope.configured = true;
+      $scope.configurationOkBlack = game.configurationOkBlack;
+      $scope.configurationOkWhite = game.configurationOkWhite;
 
       if (state.state === 'scoring') {
 
@@ -146,17 +149,20 @@ angular.module('aApp')
           {name:'back-to-game',label:'Back to game'}
         ];
 
+      } else if (state.state === 'configuring') {
+
+        $scope.configured = false;
+
       } else if (state.state === 'end') {
 
-        var how = state.reason == 'resign' ? 'resignation' :
-          state.reason == 'time' ? 'time' :
-          state.reason == 'points' ? state.points + " points (" + state.black + " - "
-                                     + state.white + ")":
-          state.reason;
+        var how = state.reason === 'resign' ? 'resignation' :
+          state.reason === 'time' ? 'time' :
+          state.reason === 'points' ? state.points + ' points (' +
+              state.black + ' - ' + state.white + ')': state.reason;
 
         $scope.clickAction = function () {};
         $scope.actions = [ ];
-        $scope.error = "Game over. " + libgo.longColor(state.winner) + " won by " + how;
+        $scope.error = 'Game over. ' + libgo.longColor(state.winner) + ' won by ' + how;
 
       } else {
 
@@ -171,8 +177,6 @@ angular.module('aApp')
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
       stones2Scope();
-      console.log($scope.blackPrisoners, game.blackPrisoners);
-      console.log($scope.whitePrisoners, game.whitePrisoners);
 
     }
 
@@ -187,9 +191,9 @@ angular.module('aApp')
 
         for (var column=0; column < board.boardSize; column++) {
 
-            var score = game.scorePoint(board.point2Index(row,column));
-            var stone = board.getStone(row,column);
-            $scope.stones[row][column] = score || stone;
+          var score = game.scorePoint(board.point2Index(row,column));
+          var stone = board.getStone(row,column);
+          $scope.stones[row][column] = score || stone;
 
         }
 
@@ -239,12 +243,12 @@ angular.module('aApp')
 
         }
 
-      } else if (data.type == 'score') {
+      } else if (data.type === 'score') {
 
         console.log('got scoring', data);
-        game.scoring.points = data.points;
-        game.scoring.blackAgree = data.blackAgree;
-        game.scoring.whiteAgree = data.whiteAgree;
+        game.scoreBoard = data.points;
+        game.scoreOkBlack = data.blackAgree;
+        game.scoreOkWhite = data.whiteAgree;
         $scope.$apply(game2Scope);
 
       }
@@ -291,16 +295,75 @@ angular.module('aApp')
 
     }
 
-    //var newGameStream = Bacon.fromPromise(wre);
-    var game = libgo.newGame();
-    game2Scope();
-    setTimings();
-    $scope.showCoords = true;
-    $scope.connection = 'disconnected';
+    var configurationAttributes = {
+      'white':1,
+      'black':1,
+      'boardSize':1,
+      'komi':1,
+      'handicaps':1,
+      'timeMain':1,
+      'timeExtraPeriods':1,
+      'timeStonesPerPeriod':1,
+      'timePeriodLength':1,
+      'accept':1
+    };
+
+    var game = null;
     var socket = initSocketIO();
+    //game2Scope();
+    //setTimings();
+    $scope.showCoords = true;
+    $scope.configured = false;
+    $scope.connection = 'disconnected';
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
     $scope.action = action;
     $scope.actions = [];
+    $scope.komis = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5];
+    $scope.handicapss = [0,2,3,4,5,6,7,8,9];
+
+    function reconfig (newValue,oldValue,scope,forceConfigure) {
+
+      var ev = { type : 'configure', gameId : $routeParams.gameId };
+      var changed = forceConfigure ? true : false;
+      console.log(newValue,oldValue,forceConfigure);
+
+      if (!game) { return; }
+
+      for (var attr in configurationAttributes) {
+
+        ev[attr] = $scope[attr];
+
+        if (ev[attr] != game[attr]) {
+          changed = true;
+        }
+
+      }
+
+      ev.accept = $scope.accept;
+
+      if (changed) {
+
+        console.log('configure', ev);
+        socket.emit('configure', ev);
+
+      } else {
+
+        console.log('nothing changed.');
+
+      }
+
+    }
+
+    $scope.acceptConfiguration = function () {
+
+      console.log('accepting');
+      $scope.accept = $scope.accept ? false : true;
+      reconfig(null,null,null,true);
+
+    };
+
+    var expr = '[white,black,boardSize,komi,handicaps,timeMain,timeExtraPeriods,timeStonesPerPeriod,timePeriodLength]';
+    $scope.$watchCollection(expr,reconfig);
 
   }]);
