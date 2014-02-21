@@ -7,6 +7,7 @@
 
 var io = require('socket.io-client'),
   libgo = require('./lib/libgo'),
+  fs = require('fs'),
   gameId, myColor, socket, game, q;
 
 
@@ -15,9 +16,18 @@ function main() {
   var cmd = process.argv[2];
 
   console.log(cmd);
+
   if (cmd === 'new') {
 
     newGame();
+
+  } else if (cmd === 'sgf') {
+
+    sgf = readFileSync(process.args[3]);
+    q = 'auth=' + process.argv[6];
+    gameId = process.argv[4];
+    myColor = process.argv[5];
+    playGame();
 
   } else {
 
@@ -53,6 +63,7 @@ function newGame() {
 
 function playGame() {
 
+  console.log('gobot: Start playing');
   socket = io.connect('localhost', { port: 3000,query:q }),
   game = libgo.newGame();
   socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
@@ -97,14 +108,14 @@ function connectionStatus(s) {
 
 function end() {
 
-  console.log(game.getState());
+  console.log('Ending in state:', game.getState());
   socket.disconnect();
 
 }
 
 function updateGame (data) {
 
-  console.log('received game'); //, data);
+  console.log('gobot: received game'); //, data);
   game = libgo.newGame(data);
   playIfPossible();
 
@@ -112,7 +123,7 @@ function updateGame (data) {
 
 function updateByError (data) {
 
-  console.log('error from server',data);
+  console.log('gobot: error from server',data);
   end();
 
 }
@@ -140,11 +151,14 @@ function randomCoord () { return Math.floor(Math.random() * game.boardSize); }
 
 function randomMove (tries) {
 
+  var now = new Date().getTime();
+
   for (var i = 0; i < tries; i++) {
 
     var move = libgo.newMove({
       type: 'stone',
       stone: myColor,
+      timestamp: now,
       row: randomCoord(),
       column: randomCoord()
     });

@@ -25,7 +25,7 @@ angular.module('aApp')
 
     function game2Scope () {
 
-      $scope.stones = game.getBoard().stones;
+      stones2Scope();
       setTurn(game.getTurn());
       console.log('Last move: ', game.moves[game.moves.length - 1]);
       console.log('Turn: ', $scope.turn);
@@ -33,6 +33,27 @@ angular.module('aApp')
       $scope.stones = board.stones.map(function (row) {
         return row.map(function(col) { return col; });
       });
+
+    }
+
+    function stones2Scope() {
+
+      var board = game.getBoard();
+      $scope.stones = [];
+
+      for (var row=0; row < board.boardSize; row++) {
+
+        $scope.stones[row] = [];
+
+        for (var column=0; column < board.boardSize; column++) {
+
+            var score = game.scorePoint(board.point2Index(row,column));
+            var stone = board.getStone(row,column);
+            $scope.stones[row][column] = score || stone;
+
+        }
+
+      }
 
     }
 

@@ -25,7 +25,7 @@ angular.module('aApp')
       var myAttr = libgo.longColor(myColor) + 'Agree';
       var data = {
         gameId:$routeParams.gameId,
-        points:game.scoring.points
+        points:game.scorePoints
       };
       data[myAttr] = agree;
       console.log('emitting',data);
@@ -178,17 +178,22 @@ angular.module('aApp')
 
     function stones2Scope() {
 
-      $scope.stones = game.getBoard().stones.map(function (row,i) {
-        return row.map(function(cell,j) {
+      var board = game.getBoard();
+      $scope.stones = [];
 
-          var score = game.scorePoint(i,j);
+      for (var row=0; row < board.boardSize; row++) {
 
-          if (!score) { return cell; }
+        $scope.stones[row] = [];
 
-          else { return score; }
+        for (var column=0; column < board.boardSize; column++) {
 
-        });
-      });
+            var score = game.scorePoint(board.point2Index(row,column));
+            var stone = board.getStone(row,column);
+            $scope.stones[row][column] = score || stone;
+
+        }
+
+      }
 
     }
 
@@ -282,7 +287,7 @@ angular.module('aApp')
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
-      $scope.stones[row][column] = game.getBoard().stones[row][column];
+      $scope.stones[row][column] = game.getBoard().getStone(row,column);
 
     }
 
