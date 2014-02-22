@@ -13,7 +13,6 @@ angular.module('aApp')
     function updateGame () {
 
       game = socket.getGame();
-      $scope.error = null;
       $scope.$apply(function() {
 
         $scope.white = game.white;
@@ -31,12 +30,6 @@ angular.module('aApp')
         $scope.whitePrisoners = game.whitePrisoners;
 
       });
-
-    }
-
-    function updateByError (data) {
-
-      $scope.$apply(function () { $scope.error = data; });
 
     }
 
@@ -94,7 +87,6 @@ angular.module('aApp')
 
     var listeners = {
       'game': updateGame,
-      'error':updateByError,
       //'message': null.
     };
 

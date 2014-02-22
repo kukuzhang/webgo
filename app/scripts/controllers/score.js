@@ -109,7 +109,6 @@ angular.module('aApp')
 
     function updateGame () {
 
-      $scope.error = null;
       game = socket.getGame();
       $scope.$apply(game2Scope);
 
@@ -117,17 +116,6 @@ angular.module('aApp')
         console.log('wierd sb');
         game.getInitialScoring();
       }
-
-    }
-
-    function updateByError (data) {
-
-      $scope.$apply(function() {
-
-        $scope.error = data;
-        game2Scope();
-        
-      });
 
     }
 
@@ -161,7 +149,6 @@ angular.module('aApp')
     var game = null;
     var listeners = {
       'game': updateGame,
-      'error':updateByError,
       //'message': null.
     };
 

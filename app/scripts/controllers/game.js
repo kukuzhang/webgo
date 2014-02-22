@@ -79,27 +79,12 @@ angular.module('aApp')
 
     function updateGame () {
 
-      $scope.error = null;
       game = socket.getGame();
       $scope.$apply(game2Scope);
 
     }
 
-    function updateByError (data) {
-
-      $scope.$apply(function() {
-
-        $scope.error = data;
-        game2Scope();
-        
-      });
-
-    }
-
     function updateByEvent (data) {
-
-      $scope.error = null;
-      console.log('received event', data);
 
       if (data.type !== 'move') {
 
@@ -167,7 +152,6 @@ angular.module('aApp')
     var listeners = {
       'game': updateGame,
       'event':updateByEvent,
-      'error':updateByError,
       //'message': null.
     };
     var game = null;

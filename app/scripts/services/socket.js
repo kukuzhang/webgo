@@ -11,6 +11,12 @@ angular.module('aApp')
     var game;
     var self = this;
 
+    function updateByError (data) {
+
+      $rootScope.$apply(function() { $rootScope.error = data; });
+
+    }
+
     function receiveGame(data) {
       
       game = libgo.newGame(data);
@@ -102,6 +108,7 @@ angular.module('aApp')
     this.emit = function (ev,data) {
 
       console.log('emiting', ev);
+      $rootScope.$apply(function() { $rootScope.error = data; });
       return mySocket.emit(ev,data);
 
     };
@@ -187,6 +194,7 @@ angular.module('aApp')
       mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
 
       var listeners = {
+        'error':updateByError,
         'game':receiveGame,
         'connect_failed':setConnectionStatus,
         'connect':setConnectionStatus,
