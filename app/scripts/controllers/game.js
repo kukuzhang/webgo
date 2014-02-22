@@ -2,45 +2,10 @@
 
 angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'Socket',
+          'underscore', 'GameSocket',
   function ($scope, $routeParams, libgo, _, socket) {
 
-    function action (actionId) {
-
-      if (actionId === 'done') { emitScoring(true); }
-
-      else if (actionId === 'back-to-game') { backToGame(); }
-
-      else { apiPlay({type:actionId}); }
-
-    }
-
-    function backToGame() {
-
-    }
-
-    function emitScoring(agree) {
-      
-      var myColor = game.myColor($scope.username);
-      var myAttr = libgo.longColor(myColor) + 'Agree';
-      var data = {
-        gameId:$routeParams.gameId,
-        points:game.scorePoints
-      };
-      data[myAttr] = agree;
-      console.log('emitting',data);
-      socket.emit('score',data);
-
-    }
-
-    function togglePrisoner(row,column) {
-
-      game.markOrUnmarkAsPrisoner(row,column);
-      stones2Scope();
-      emitScoring(false);
-
-    }
-
+    function action (actionId) { apiPlay({type:actionId}); }
 
     function setTimings() {
 
@@ -70,9 +35,7 @@ angular.module('aApp')
     function game2Scope () {
 
       var state = game.getState();
-      console.log('state now',state.state);
       setTurn(state.turn);
-      
       $scope.white = game.white;
       $scope.black = game.black;
       $scope.boardSize = game.boardSize;
@@ -82,41 +45,6 @@ angular.module('aApp')
       $scope.timeExtraPeriods = game.timeExtraPeriods;
       $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
       $scope.timePeriodLength = game.timePeriodLength;
-
-      if (state.state === 'scoring') {
-
-        $scope.clickAction = togglePrisoner;
-
-        if (!game.scoring.points) {
-          game.scoring.points = game.getInitialScoring();
-        }
-
-        $scope.actions = [
-          {name:'done',label:'Done'},
-          {name:'back-to-game',label:'Back to game'}
-        ];
-
-      } else if (state.state === 'end') {
-
-        var how = state.reason === 'resign' ? 'resignation' :
-          state.reason === 'time' ? 'time' :
-          state.reason === 'points' ? state.points + ' points (' +
-              state.black + ' - ' + state.white + ')': state.reason;
-
-        $scope.clickAction = function () {};
-        $scope.actions = [ ];
-        $scope.error = 'Game over. ' + libgo.longColor(state.winner) + ' won by ' + how;
-
-      } else {
-
-        $scope.clickAction = play2Point;
-        $scope.actions = [
-          {name:'pass',label:'Pass'},
-          {name:'resign',label:'Resign'}
-        ];
-
-      }
-
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
       stones2Scope();
@@ -147,8 +75,7 @@ angular.module('aApp')
     function updateGame (data) {
 
       $scope.error = null;
-      console.log('received game', data);
-      game = libgo.newGame(data);
+      game = socket.getGame();
       $scope.$apply(game2Scope);
 
     }
@@ -167,32 +94,27 @@ angular.module('aApp')
     function updateByEvent (data) {
 
       $scope.error = null;
-
       console.log('received event', data);
 
-      if (data.type === 'move') {
+      if (data.type != 'move') {
 
-        if (data.index === game.moves.length) {
+        console.log('not handling event', data.type);
 
-          var move = libgo.newMove(data.move);
-          game.play(move);
-          $scope.$apply(game2Scope);
+        return;
 
-        } else {
+      }
 
-          console.log(game.moves);
-          console.log('Moves not in sync???');
-          socket.emit('game', $routeParams.gameId);
+      if (data.index === game.moves.length) {
 
-        }
-
-      } else if (data.type === 'score') {
-
-        console.log('got scoring', data);
-        game.scoreBoard = data.points;
-        game.scoreOkBlack = data.blackAgree;
-        game.scoreOkWhite = data.whiteAgree;
+        var move = libgo.newMove(data.move);
+        game.play(move);
         $scope.$apply(game2Scope);
+
+      } else {
+
+        console.log(game.moves);
+        console.log('Moves not in sync???');
+        socket.requestGame();
 
       }
 
@@ -204,9 +126,8 @@ angular.module('aApp')
         stone: $scope.turn,
         type: 'stone'
       },options);
-      var msg = { gameId: $routeParams.gameId, move: move };
       if (!move.stone) { throw new Error('Invalid stone',move.stone); }
-      socket.emit('move',msg);
+      socket.move(move);
       setTurn(null);
 
     }
@@ -274,21 +195,18 @@ angular.module('aApp')
       $scope.username = socket.getUserName();
       setTurn(null);
 
-      if (socket.isConnected()) {
+      if (socket.isConnected()) { socket.requestGame(); }
 
-        console.log('=> refresh game', $routeParams.gameId);
-        socket.emit('game', $routeParams.gameId);
-
-      }
     }
 
     var game = null;
-    //game2Scope();
-    //setTimings();
     $scope.showCoords = true;
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
     $scope.action = action;
-    $scope.actions = [];
-
+    $scope.clickAction = play2Point;
+    $scope.actions = [
+      {name:'pass',label:'Pass'},
+      {name:'resign',label:'Resign'}
+    ];
   }]);

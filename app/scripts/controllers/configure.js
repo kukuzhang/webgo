@@ -1,68 +1,40 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('ConfigureCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'Socket', '$location',
-  function ($scope, $routeParams, libgo, _, socket, $location) {
+  .controller('ConfigureCtrl', ['$scope', 'libgo', 'underscore', 'GameSocket',
+  function ($scope, libgo, _, socket) {
 
     function action (actionId) {
-
-      if (actionId === 'done') { emitScoring(true); }
-
-      else if (actionId === 'back-to-game') { backToGame(); }
-
-      else { apiPlay({type:actionId}); }
-
-    }
-
-    function backToGame() {
-
-    }
-
-    function game2Scope () {
-
-      $scope.white = game.white;
-      $scope.black = game.black;
-      $scope.boardSize = game.boardSize;
-      $scope.komi = game.komi;
-      $scope.handicaps = game.handicaps;
-      $scope.timeMain = game.timeMain;
-      $scope.timeExtraPeriods = game.timeExtraPeriods;
-      $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
-      $scope.timePeriodLength = game.timePeriodLength;
-      $scope.configurationOkBlack = game.configurationOkBlack;
-      $scope.configurationOkWhite = game.configurationOkWhite;
-      $scope.blackPrisoners = game.blackPrisoners;
-      $scope.whitePrisoners = game.whitePrisoners;
-
-    }
-
-    function routeByGameState(state) {
-
-      console.log('state now',state.state);
-      
-      if (state.state !== 'configure') {
-
-        $location.path('/game/' + $routeParams.gameId);
-
-      }
 
     }
 
     function updateGame (data) {
 
-      console.log('received game', data);
-      game = libgo.newGame(data);
-      routeByGameState(game.getState());
+      game = socket.getGame();
       $scope.error = null;
-      $scope.$apply(game2Scope);
+      $scope.$apply(function() {
+
+        $scope.white = game.white;
+        $scope.black = game.black;
+        $scope.boardSize = game.boardSize;
+        $scope.komi = game.komi;
+        $scope.handicaps = game.handicaps;
+        $scope.timeMain = game.timeMain;
+        $scope.timeExtraPeriods = game.timeExtraPeriods;
+        $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
+        $scope.timePeriodLength = game.timePeriodLength;
+        $scope.configurationOkBlack = game.configurationOkBlack;
+        $scope.configurationOkWhite = game.configurationOkWhite;
+        $scope.blackPrisoners = game.blackPrisoners;
+        $scope.whitePrisoners = game.whitePrisoners;
+
+      });
 
     }
 
     function updateByError (data) {
 
-      $scope.error = data;
-      $scope.$apply(game2Scope);
+      $scope.$apply(function () { $scope.error = data; });
 
     }
 
@@ -113,12 +85,8 @@ angular.module('aApp')
       $scope.connection = socket.getConnectionStatus();
       $scope.username = socket.getUserName();
 
-      if (socket.isConnected()) {
+      if (socket.isConnected()) { socket.requestGame(); }
 
-        console.log('=> refresh game', $routeParams.gameId);
-        socket.emit('game', $routeParams.gameId);
-
-      }
     }
 
     var game = null;
@@ -129,27 +97,26 @@ angular.module('aApp')
 
     function reconfig (newValue,oldValue,scope,forceConfigure) {
 
-      var ev = { type : 'configure', gameId : $routeParams.gameId };
+      var config = {};
       var changed = forceConfigure ? true : false;
 
       if (!game) { return; }
 
       for (var attr in configurationAttributes) {
 
-        ev[attr] = $scope[attr];
+        config[attr] = $scope[attr];
 
-        if (ev[attr] != game[attr]) {
+        if (config[attr] != game[attr]) {
           changed = true;
         }
 
       }
 
-      ev.accept = $scope.accept;
+      config.accept = $scope.accept;
 
       if (changed) {
 
-        console.log('configure', ev);
-        socket.emit('configure', ev);
+        socket.configure(config);
 
       } else {
 

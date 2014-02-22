@@ -33,11 +33,11 @@ angular.module('aApp', [
         controller: 'GameCtrl'
       })
       .when('/game/:gameId/configure', {
-        templateUrl: 'views/game.html',
+        templateUrl: 'views/configure.html',
         controller: 'ConfigureCtrl'
       })
       .when('/game/:gameId/score', {
-        templateUrl: 'views/game.html',
+        templateUrl: 'views/score.html',
         controller: 'ScoreCtrl'
       })
       .when('/game/:gameId/play', {

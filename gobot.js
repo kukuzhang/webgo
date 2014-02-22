@@ -18,7 +18,34 @@ function sgfMove () {
 
   var i = game.moves.length;
 
-  return sgfMoves[i];
+  var now = new Date().getTime();
+
+  for (; i < sgfMoves.length; i ++) {
+
+    var ob = sgfMoves[i];
+    ob.timestamp = now;
+    var move = libgo.newMove(ob);
+
+    try {
+
+      game.assertMoveSanity(move);
+      var newBoard = game.getBoard().playStone(move);
+
+    } catch (e) {
+
+      console.log(e);
+
+      continue;
+
+    }
+
+    return move;
+
+  }
+
+  console.log('out of moves => pass');
+
+  return {type: 'pass', stone: myColor};
 
 }
 
@@ -38,7 +65,7 @@ function sgfParse(buf) {
     var color = line[1].toLowerCase();
 
     if (line[3] == ']') {
-      
+
       move = { type: 'pass', stone: color }; 
 
     } else {
