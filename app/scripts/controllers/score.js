@@ -31,7 +31,9 @@ angular.module('aApp')
 
     function togglePrisoner(row,column) {
 
+      console.log('marking',row,column);
       game.markOrUnmarkAsPrisoner(row,column);
+      console.log('new sb',game.scoreBoard);
       stones2Scope();
       emitScoring(false);
 
@@ -95,7 +97,7 @@ angular.module('aApp')
 
           var score = game.scorePoint(board.point2Index(row,column));
           var stone = board.getStone(row,column);
-          $scope.stones[row][column] = score || stone;
+          $scope.stones[row][column] = score !== libgo.EMPTY ? score : stone;
 
         }
 
@@ -108,6 +110,11 @@ angular.module('aApp')
       $scope.error = null;
       game = socket.getGame();
       $scope.$apply(game2Scope);
+
+      if (game.scoreBoard.length < 100) {
+        console.log('wierd sb');
+        game.getInitialScoring();
+      }
 
     }
 
