@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore','socketio',
-  function ($scope, $routeParams, libgo, _, io) {
+          'underscore', 'Socket',
+  function ($scope, $routeParams, libgo, _, socket) {
 
     function action (actionId) {
 
@@ -53,57 +53,6 @@ angular.module('aApp')
       if (!interval) {interval = 1000;}
 
       setTimeout(function () {$scope.$apply(function() {setTimings();});}, interval);
-
-    }
-
-    function initSocketIO() {
-
-      var auth = $routeParams.auth || 'black:123';
-      $scope.username = auth.split(':')[0];
-      var q = 'auth=' + auth;
-      var s = io.connect('http://localhost:3000/', {query:q});
-      s.on('game', updateGame);
-      s.on('event',updateByEvent);
-      s.on('error',updateByError);
-      s.on('connect_failed',setConnectionStatus);
-      s.on('connect',setConnectionStatus);
-      s.on('disconnect',setConnectionStatus);
-      s.on('connecting', setConnectionStatus);
-      s.on('reconnect_failed', setConnectionStatus);
-      s.on('reconnect', setConnectionStatus);
-      s.on('reconnecting', setConnectionStatus);
-
-      //socket.on('error', function () {}) - "error" is emitted when an error occurs and it cannot be handled by the other event types.
-      //socket.on('message', function (message, callback) {}) - "message" is emitted when a message sent with socket.send is received. message is the sent message, and callback is an optional acknowledgement function.
-
-      return s;
-
-    }
-
-    function setConnectionStatus() {
-
-      /* jshint validthis:true */
-
-      var s = this.socket;
-      $scope.$apply(function () { $scope.connection = connectionStatus(s); });
-      setTurn(null);
-
-      if (s.connected === true) {
-
-        console.log('=> refresh game', $routeParams.gameId);
-        this.emit('game', $routeParams.gameId);
-
-      }
-
-    }
-
-    function connectionStatus(s) {
-
-      if (!s.connected) { return 'disconnected'; }
-
-      if (s.connecting) { return 'connecting'; }
-
-      return s.transport.name;
 
     }
 
@@ -308,13 +257,54 @@ angular.module('aApp')
       'accept':1
     };
 
+    var listeners = {
+      'game': updateGame,
+      'event':updateByEvent,
+      'error':updateByError,
+      'connect_failed':setConnectionStatus,
+      'connect':setConnectionStatus,
+      'disconnect':setConnectionStatus,
+      'connecting': setConnectionStatus,
+      'reconnect_failed': setConnectionStatus,
+      'reconnect': setConnectionStatus,
+      'reconnecting': setConnectionStatus,
+      //'error': null,
+      //'message': null.
+    };
+
+    for (var ev in listeners) { socket.on(ev,listeners[ev]); }
+
+    $scope.$on('destroy', function() {
+      for (var ev in listeners) { socket.off(ev,listeners[ev]); }
+    });
+
+    internalSetConnectionStatus();
+
+    function setConnectionStatus() {
+
+      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
+      $scope.$apply(internalSetConnectionStatus);
+
+    }
+
+    function internalSetConnectionStatus () {
+
+      $scope.connection = socket.getConnectionStatus();
+      setTurn(null);
+
+      if (socket.isConnected()) {
+
+        console.log('=> refresh game', $routeParams.gameId);
+        socket.emit('game', $routeParams.gameId);
+
+      }
+    }
+
     var game = null;
-    var socket = initSocketIO();
     //game2Scope();
     //setTimings();
     $scope.showCoords = true;
     $scope.configured = false;
-    $scope.connection = 'disconnected';
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
     $scope.action = action;
@@ -326,7 +316,6 @@ angular.module('aApp')
 
       var ev = { type : 'configure', gameId : $routeParams.gameId };
       var changed = forceConfigure ? true : false;
-      console.log(newValue,oldValue,forceConfigure);
 
       if (!game) { return; }
 

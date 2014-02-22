@@ -8,8 +8,53 @@
 var io = require('socket.io-client'),
   libgo = require('./lib/libgo'),
   fs = require('fs'),
-  gameId, myColor, socket, game, q;
+  sgf, gameId, myColor, socket, game, q,
+  pickAMove;
 
+
+var sgfMoves = [];
+
+function sgfMove () {
+
+  var i = game.moves.length;
+
+  return sgfMoves[i];
+
+}
+
+function sgfParse(buf) {
+
+  var s = buf.toString();
+  var lines = s.split('\n');
+  var base = 'a'.charCodeAt(0);
+
+  console.log(lines.length);
+  for (var i = 0; i < lines.length; i++) {
+
+    var line = lines[i], move;
+
+    if (line[0] !== ';') continue
+
+    var color = line[1].toLowerCase();
+
+    if (line[3] == ']') {
+      
+      move = { type: 'pass', stone: color }; 
+
+    } else {
+
+      var row = line[3].toLowerCase().charCodeAt(0)-base;
+      var column = line[4].toLowerCase().charCodeAt(0)-base;
+      move = { type: 'stone', stone: color, row: row, column: column };
+
+    }
+
+    console.log(move);
+    sgfMoves.push(move);
+
+  }
+
+}
 
 function main() {
 
@@ -19,23 +64,30 @@ function main() {
 
   if (cmd === 'new') {
 
+    console.log('new game');
     newGame();
 
   } else if (cmd === 'sgf') {
 
-    sgf = readFileSync(process.args[3]);
+    console.log('sgf bot');
+    sgf = sgfParse(fs.readFileSync(process.argv[3]));
     q = 'auth=' + process.argv[6];
     gameId = process.argv[4];
     myColor = process.argv[5];
+    pickAMove = sgfMove;
     playGame();
 
-  } else {
+  } else if (cmd === 'play') {
 
+    console.log('random bot');
     q = 'auth=' + process.argv[5];
     gameId = process.argv[3];
     myColor = process.argv[4];
+    pickAMove = function () { return randomMove(3); };
     playGame();
 
+  } else {
+    console.log('invalid command');
   }
 
 }
@@ -185,7 +237,7 @@ function playIfPossible(data) {
     
     if (state.turn === myColor) {
 
-      var move = randomMove(5);
+      var move = pickAMove();
       var msg = {gameId: gameId, move: move};
       console.log('playing', state);
       socket.emit('move',msg);
