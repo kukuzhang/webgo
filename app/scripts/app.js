@@ -37,7 +37,7 @@ angular.module('aApp', [
         controller: 'ConfigureCtrl'
       })
       .when('/game/:gameId/score', {
-        templateUrl: 'views/score.html',
+        templateUrl: 'views/game.html',
         controller: 'ScoreCtrl'
       })
       .when('/game/:gameId/play', {

@@ -123,6 +123,7 @@ angular.module('aApp')
       
       console.log('received game', data);
       game = libgo.newGame(data);
+      console.log(game.scoreBoard);
       routeByGameState(game.getState());
       
     });

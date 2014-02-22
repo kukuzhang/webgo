@@ -293,6 +293,30 @@ function playIfPossible(data) {
 
     }
 
+  } else if (state.state == 'scoring') {
+
+    var attr = myColor == libgo.BLACK ?
+      'scoreOkBlack' :
+      'scoreOkWhite';
+
+    if (game[attr] === true) {
+
+      console.log('waiting for opponent to accept score.');
+
+    } else {
+
+      console.log('accepting score.');
+      var data = {
+        'scoreBoard':game.scoreBoard,
+        'scoreOkBlack':game.scoreOkBlack,
+        'scoreOkWhite':game.scoreOkWhite,
+        'gameId':gameId
+      };
+      data[attr] = true;
+      socket.emit('score',data);
+
+    }
+    
 
   } else {
 

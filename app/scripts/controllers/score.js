@@ -23,9 +23,9 @@ angular.module('aApp')
       
       var myColor = game.myColor($scope.username);
       var myAttr = libgo.longColor(myColor) + 'Agree';
-      var data = { points:game.scorePoints };
+      var data = { scoreBoard:game.scoreBoard };
       data[myAttr] = agree;
-      socket(score,data);
+      socket.score(data);
 
     }
 
@@ -40,7 +40,6 @@ angular.module('aApp')
     function game2Scope () {
 
       var state = game.getState();
-      setTurn(state.turn);
       $scope.white = game.white;
       $scope.black = game.black;
       $scope.boardSize = game.boardSize;
@@ -55,8 +54,8 @@ angular.module('aApp')
 
         $scope.clickAction = togglePrisoner;
 
-        if (!game.scoring.points) {
-          game.scoring.points = game.getInitialScoring();
+        if (!game.scoreBoard) {
+          game.scoreBoard = game.getInitialScoring();
         }
 
         $scope.actions = [
@@ -123,28 +122,6 @@ angular.module('aApp')
 
     }
 
-    function updateByEvent (data) {
-
-      $scope.error = null;
-
-      console.log('received event', data);
-
-      if (data.type != 'score') {
-
-        console.log('not handling event', data.type);
-
-        return;
-
-      }
-
-      console.log('got scoring', data);
-      game.scoreBoard = data.points;
-      game.scoreOkBlack = data.blackAgree;
-      game.scoreOkWhite = data.whiteAgree;
-      $scope.$apply(game2Scope);
-
-    }
-
     function hoverIn (row,column) {
 
       if (!$scope.turn ||
@@ -174,7 +151,6 @@ angular.module('aApp')
 
     var listeners = {
       'game': updateGame,
-      'event':updateByEvent,
       'error':updateByError,
       'connect_failed':setConnectionStatus,
       'connect':setConnectionStatus,
@@ -206,7 +182,6 @@ angular.module('aApp')
 
       $scope.connection = socket.getConnectionStatus();
       $scope.username = socket.getUserName();
-      setTurn(null);
 
       if (socket.isConnected()) { socket.requestGame(); }
 
