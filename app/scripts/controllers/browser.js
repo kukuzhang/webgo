@@ -14,7 +14,7 @@ angular.module('aApp')
 
     function game2Scope (game) {
 
-      if (!game) return;
+      if (!game) { return; }
 
       var state = game.getState();
       setTurn(state.turn);
@@ -40,9 +40,15 @@ angular.module('aApp')
 
       var i = $routeParams.moveIndex;
 
-      if (i>=0 && i<game.moves.length) board = game.getBoard(i);
+      if (i>=0 && i<game.moves.length) {
+        
+        board = game.getBoard(i);
 
-      else board = game.getBoard();
+      } else {
+
+        board = game.getBoard();
+
+      }
 
       for (var row=0; row < board.boardSize; row++) {
 
@@ -65,9 +71,9 @@ angular.module('aApp')
     $scope.connection = 'disconnected';
     $scope.action = function (a) {
       var i = $routeParams.moveIndex;
-      if (a == 'prev') {
+      if (a === 'prev') {
         i--;
-      } else if (a == 'next') {
+      } else if (a === 'next') {
         i++;
       } else {
         console.log(a);

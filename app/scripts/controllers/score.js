@@ -5,6 +5,22 @@ angular.module('aApp')
           'underscore', 'GameSocket',
   function ($scope, $routeParams, libgo, _, socket) {
 
+    function setConnectionStatus() {
+
+      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
+      $scope.$apply(internalSetConnectionStatus);
+
+    }
+
+    function internalSetConnectionStatus () {
+
+      $scope.connection = socket.getConnectionStatus();
+      $scope.username = socket.getUserName();
+
+      if (socket.isConnected()) { socket.requestGame(); }
+
+    }
+
     function action (actionId) {
 
       if (actionId === 'done') { emitScoring(true); }
@@ -105,7 +121,7 @@ angular.module('aApp')
 
     }
 
-    function updateGame (data) {
+    function updateGame () {
 
       $scope.error = null;
       game = socket.getGame();
@@ -177,22 +193,6 @@ angular.module('aApp')
     });
 
     internalSetConnectionStatus();
-
-    function setConnectionStatus() {
-
-      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
-      $scope.$apply(internalSetConnectionStatus);
-
-    }
-
-    function internalSetConnectionStatus () {
-
-      $scope.connection = socket.getConnectionStatus();
-      $scope.username = socket.getUserName();
-
-      if (socket.isConnected()) { socket.requestGame(); }
-
-    }
 
     var game = null;
     $scope.showCoords = true;

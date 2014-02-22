@@ -5,15 +5,38 @@ angular.module('aApp')
           'underscore', 'GameSocket',
   function ($scope, $routeParams, libgo, _, socket) {
 
+    function setConnectionStatus() {
+
+      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
+      $scope.$apply(internalSetConnectionStatus);
+
+    }
+
+    function internalSetConnectionStatus () {
+
+      $scope.connection = socket.getConnectionStatus();
+      $scope.username = socket.getUserName();
+      setTurn(null);
+
+      if (socket.isConnected()) { socket.requestGame(); }
+
+    }
+
     function action (actionId) { apiPlay({type:actionId}); }
 
     function setTimings() {
 
-      var remBlack = game.remainingMilliSeconds(libgo.BLACK);
-      var remWhite = game.remainingMilliSeconds(libgo.WHITE);
-      var interval = (game.getTurn() === libgo.BLACK ?  remBlack : remWhite) % 1000;
-      $scope.blackTime = Math.floor(remBlack / 1000);
-      $scope.whiteTime = Math.floor(remWhite / 1000);
+      var interval;
+
+      if (game) {
+
+        var remBlack = game.remainingMilliSeconds(libgo.BLACK);
+        var remWhite = game.remainingMilliSeconds(libgo.WHITE);
+        interval = (game.getTurn() === libgo.BLACK ?  remBlack : remWhite) % 1000;
+        $scope.blackTime = Math.floor(remBlack / 1000);
+        $scope.whiteTime = Math.floor(remWhite / 1000);
+
+      }
 
       if (!interval) {interval = 1000;}
 
@@ -70,7 +93,7 @@ angular.module('aApp')
 
     }
 
-    function updateGame (data) {
+    function updateGame () {
 
       $scope.error = null;
       game = socket.getGame();
@@ -94,7 +117,7 @@ angular.module('aApp')
       $scope.error = null;
       console.log('received event', data);
 
-      if (data.type != 'move') {
+      if (data.type !== 'move') {
 
         console.log('not handling event', data.type);
 
@@ -180,24 +203,8 @@ angular.module('aApp')
 
     internalSetConnectionStatus();
 
-    function setConnectionStatus() {
-
-      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
-      $scope.$apply(internalSetConnectionStatus);
-
-    }
-
-    function internalSetConnectionStatus () {
-
-      $scope.connection = socket.getConnectionStatus();
-      $scope.username = socket.getUserName();
-      setTurn(null);
-
-      if (socket.isConnected()) { socket.requestGame(); }
-
-    }
-
     var game = null;
+    setTimings();
     $scope.showCoords = true;
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;

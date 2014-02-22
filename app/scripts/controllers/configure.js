@@ -4,11 +4,29 @@ angular.module('aApp')
   .controller('ConfigureCtrl', ['$scope', 'libgo', 'underscore', 'GameSocket',
   function ($scope, libgo, _, socket) {
 
-    function action (actionId) {
+    function setConnectionStatus() {
+
+      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
+      $scope.$apply(internalSetConnectionStatus);
 
     }
 
-    function updateGame (data) {
+    function internalSetConnectionStatus () {
+
+      $scope.connection = socket.getConnectionStatus();
+      $scope.username = socket.getUserName();
+
+      if (socket.isConnected()) { socket.requestGame(); }
+
+    }
+
+    function action (actionId) {
+
+      console.log(actionId);
+
+    }
+
+    function updateGame () {
 
       game = socket.getGame();
       $scope.error = null;
@@ -73,22 +91,6 @@ angular.module('aApp')
 
     internalSetConnectionStatus();
 
-    function setConnectionStatus() {
-
-      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
-      $scope.$apply(internalSetConnectionStatus);
-
-    }
-
-    function internalSetConnectionStatus () {
-
-      $scope.connection = socket.getConnectionStatus();
-      $scope.username = socket.getUserName();
-
-      if (socket.isConnected()) { socket.requestGame(); }
-
-    }
-
     var game = null;
     $scope.action = action;
     $scope.actions = [];
@@ -106,7 +108,7 @@ angular.module('aApp')
 
         config[attr] = $scope[attr];
 
-        if (config[attr] != game[attr]) {
+        if (config[attr] !== game[attr]) {
           changed = true;
         }
 

@@ -6,11 +6,11 @@ angular.module('aApp')
       template: '<button ng-click="change()" {{disabled}}>{{msg}}</button>',
       restrict: 'E',
       scope : {
-          'ngModel': '=',
-          'active': '=',
-          'change': '&'
+        'ngModel': '=',
+        'active': '=',
+        'change': '&'
       },
-      link: function postLink(scope, element, attrs) {
+      link: function postLink(scope) {
         // console.log(scope.ngModel);
         // console.log(scope.change);
         // console.log(scope.active);

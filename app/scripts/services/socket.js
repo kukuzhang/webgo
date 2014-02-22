@@ -39,7 +39,7 @@ angular.module('aApp')
       console.log('set gameId', gameId);
       this.gameId = gameId;
 
-    }
+    };
 
     this.getConnectionStatus = function () {
 
@@ -49,7 +49,7 @@ angular.module('aApp')
 
       return mySocket.socket.transport.name;
 
-    }
+    };
 
     this.isConnected = function () { return mySocket.socket.connected; };
 
@@ -59,21 +59,21 @@ angular.module('aApp')
       console.log('listening to', ev);
       return mySocket.on(ev,cb);
 
-    }
+    };
 
     this.off = function (ev,cb) {
 
       console.log('unlistening to', ev);
       return mySocket.removeListener(ev,cb);
 
-    }
+    };
 
     this.emit = function (ev,data) {
 
       console.log('emiting', ev);
       return mySocket.emit(ev,data);
 
-    }
+    };
 
     this.score = function (options) {
 
@@ -110,14 +110,17 @@ angular.module('aApp')
 
       return game;
 
-    }
-    this.getUserName = function (usename) { return this.userName; };
+    };
+
+    this.getUserName = function () { return this.userName; };
     var auth = $routeParams.auth || 'black:123';
     this.userName = auth.split(':')[0];
     var mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
     var game;
 
     this.connect = function (gameId) {
+
+      console.log(gameId);
 
     };
 
@@ -127,7 +130,7 @@ angular.module('aApp')
 
         cb(game);
 
-      } else { 
+      } else {
 
         var url = 'http://localhost:3000/api/game/'+gameId;
 

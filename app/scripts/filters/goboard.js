@@ -25,7 +25,7 @@ angular.module('aApp')
 
     return function (stones) {
 
-      if (!stones) return 0;
+      if (!stones) { return 0; }
       var sum = 0;
       var boardSize = stones.length;
 
