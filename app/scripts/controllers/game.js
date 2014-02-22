@@ -15,7 +15,6 @@ angular.module('aApp')
     function internalSetConnectionStatus () {
 
       $scope.connection = socket.getConnectionStatus();
-      $scope.username = socket.getUserName();
       setTurn(null);
 
       if (socket.isConnected()) { socket.requestGame(); }
@@ -27,12 +26,13 @@ angular.module('aApp')
     function setTimings() {
 
       var interval;
+      var game = socket.getGame();
 
       if (game) {
 
         var remBlack = game.remainingMilliSeconds(libgo.BLACK);
         var remWhite = game.remainingMilliSeconds(libgo.WHITE);
-        interval = (game.getTurn() === libgo.BLACK ?  remBlack : remWhite) % 1000;
+        interval = (game.getTurn() === libgo.BLACK ? remBlack : remWhite) % 1000;
         $scope.blackTime = Math.floor(remBlack / 1000);
         $scope.whiteTime = Math.floor(remWhite / 1000);
 
@@ -194,7 +194,11 @@ angular.module('aApp')
       //'error': null,
       //'message': null.
     };
-
+    var game = null;
+    var auth = $routeParams.auth || 'black:123';
+    var parts = auth.split(':');
+    $scope.username = parts[0];
+    socket.connectTo($routeParams.gameId,parts[0],parts[1]);
     for (var ev in listeners) { socket.on(ev,listeners[ev]); }
 
     $scope.$on('destroy', function() {
@@ -202,8 +206,6 @@ angular.module('aApp')
     });
 
     internalSetConnectionStatus();
-
-    var game = null;
     setTimings();
     $scope.showCoords = true;
     $scope.hover = hoverIn;
@@ -214,4 +216,5 @@ angular.module('aApp')
       {name:'pass',label:'Pass'},
       {name:'resign',label:'Resign'}
     ];
+
   }]);

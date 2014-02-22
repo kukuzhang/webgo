@@ -11,7 +11,7 @@ describe('Directive: player', function () {
 
   beforeEach(inject(function ($rootScope,$compile) {
     scope = $rootScope.$new();
-    scope.black = 'Juho'
+    scope.black = 'Juho';
     scope.blackTurn = true;
     scope.blackTime = 1000;
     scope.blackPrisoners = 5;

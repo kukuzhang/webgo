@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('aApp')
-  .service('GameSocket', ['socketio', '$routeParams', 'libgo', '$location', 'underscore', '$http',
-      function Socket(io,$routeParams, libgo, $location,_,$http) {
+  .service('GameSocket', ['socketio', 'libgo', '$location', 'underscore', '$http',
+      function Socket(io, libgo, $location,_,$http) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+
+    var mySocket;
+    var myGameId;
+    var game;
 
     function routeByGameState(state) {
 
@@ -13,19 +17,19 @@ angular.module('aApp')
       
       if (state.state === 'configuring') {
 
-        url = '/game/' + $routeParams.gameId + '/configure';
+        url = '/game/' + myGameId + '/configure';
 
       }  else if (state.state === 'playing') {
 
-        url = '/game/' + $routeParams.gameId;
+        url = '/game/' + myGameId;
 
       }  else if (state.state === 'scoring') {
 
-        url = '/game/' + $routeParams.gameId + '/score';
+        url = '/game/' + myGameId + '/score';
 
       }  else if (state.state === 'end') {
 
-        url = '/game/' + $routeParams.gameId + '/score';
+        url = '/game/' + myGameId + '/score';
 
       }
 
@@ -77,7 +81,7 @@ angular.module('aApp')
 
     this.score = function (options) {
 
-      var dflt = { type : 'configure', gameId : $routeParams.gameId };
+      var dflt = { type : 'configure', gameId : myGameId };
       var data = _.extend(dflt,options);
       console.log('emitting',data);
       mySocket.emit('score',data);
@@ -85,13 +89,13 @@ angular.module('aApp')
     };
 
     this.requestGame = function () {
-      console.log('=> refresh game', $routeParams.gameId);
-      mySocket.emit('game', $routeParams.gameId);
+      console.log('=> refresh game', myGameId);
+      mySocket.emit('game', myGameId);
     };
 
     this.configure = function (options) {
 
-      var dflt = { type : 'configure', gameId : $routeParams.gameId };
+      var dflt = { type : 'configure', gameId : myGameId };
       var config = _.extend(dflt,options);
       console.log('configure', config);
       mySocket.emit('configure', config);
@@ -100,7 +104,7 @@ angular.module('aApp')
 
     this.move = function (move) {
 
-      var msg = { gameId: $routeParams.gameId, move: move };
+      var msg = { gameId: myGameId, move: move };
       console.log('emit move',move);
       mySocket.emit('move',msg);
 
@@ -111,12 +115,6 @@ angular.module('aApp')
       return game;
 
     };
-
-    this.getUserName = function () { return this.userName; };
-    var auth = $routeParams.auth || 'black:123';
-    this.userName = auth.split(':')[0];
-    var mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
-    var game;
 
     this.connect = function (gameId) {
 
@@ -145,15 +143,31 @@ angular.module('aApp')
 
     };
 
-    console.log('connecting websocket:', this.userName);
+    this.connectTo = function (gameId, user, pwd) {
 
-    mySocket.on('game', function (data) {
-      
-      console.log('received game', data);
-      game = libgo.newGame(data);
-      console.log(game.scoreBoard);
-      routeByGameState(game.getState());
-      
-    });
+      var auth = user + ":" + pwd;
+      console.log('connecting websocket:', gameId,user);
+
+      if (myGameId) {
+
+        if (myGameId == gameId) { return; }
+
+        throw new Error('Already connected to ' + myGameId + '.');
+
+      }
+
+      myGameId = gameId;
+      mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
+
+      mySocket.on('game', function (data) {
+        
+        game = libgo.newGame(data);
+        console.log(game.scoreBoard);
+        routeByGameState(game.getState());
+        
+      });
+
+    }
+
 
   }]);

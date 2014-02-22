@@ -7,7 +7,6 @@ angular.module('aApp')
 
     function setConnectionStatus() {
 
-      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
       $scope.$apply(internalSetConnectionStatus);
 
     }
@@ -15,7 +14,6 @@ angular.module('aApp')
     function internalSetConnectionStatus () {
 
       $scope.connection = socket.getConnectionStatus();
-      $scope.username = socket.getUserName();
 
       if (socket.isConnected()) { socket.requestGame(); }
 
@@ -32,6 +30,8 @@ angular.module('aApp')
     }
 
     function backToGame() {
+
+      console.log('should go back to game.');
 
     }
 
@@ -172,6 +172,7 @@ angular.module('aApp')
 
     }
 
+    var game = null;
     var listeners = {
       'game': updateGame,
       'error':updateByError,
@@ -186,6 +187,11 @@ angular.module('aApp')
       //'message': null.
     };
 
+    var auth = $routeParams.auth || 'black:123';
+    var parts = auth.split(':');
+    $scope.username = parts[0];
+    socket.connectTo($routeParams.gameId,parts[0],parts[1]);
+
     for (var ev in listeners) { socket.on(ev,listeners[ev]); }
 
     $scope.$on('destroy', function() {
@@ -193,8 +199,6 @@ angular.module('aApp')
     });
 
     internalSetConnectionStatus();
-
-    var game = null;
     $scope.showCoords = true;
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
