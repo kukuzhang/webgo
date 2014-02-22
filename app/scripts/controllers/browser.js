@@ -1,45 +1,48 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('BrowserCtrl', ['$scope', '$routeParams', '$http', 'libgo',
-  function ($scope, $routeParams, $http, libgo) {
+  .controller('BrowserCtrl', ['$scope', '$routeParams', 'libgo', '$location', 'GameSocket',
+  function ($scope, $routeParams, libgo, $location, socket) {
 
     function setTurn(turn) {
 
-      console.log(turn);
       $scope.turn = turn;
-      $scope.black = {
-        name: game.black.name,
-        timing: game.black.timing,
-        color: 'black',
-        turn: turn === libgo.BLACK
-      };
-      $scope.white = {
-        name: game.white.name,
-        timing: game.white.timing,
-        color: 'white',
-        turn: turn === libgo.WHITE
-      };
+      $scope.blackTurn = turn === libgo.BLACK;
+      $scope.whiteTurn = turn === libgo.WHITE;
 
     }
 
-    function game2Scope () {
+    function game2Scope (game) {
 
-      stones2Scope();
-      setTurn(game.getTurn());
-      console.log('Last move: ', game.moves[game.moves.length - 1]);
-      console.log('Turn: ', $scope.turn);
-      var board = game.getBoard();
-      $scope.stones = board.stones.map(function (row) {
-        return row.map(function(col) { return col; });
-      });
+      if (!game) return;
+
+      var state = game.getState();
+      setTurn(state.turn);
+      $scope.white = game.white;
+      $scope.black = game.black;
+      $scope.boardSize = game.boardSize;
+      $scope.komi = game.komi;
+      $scope.handicaps = game.handicaps;
+      $scope.timeMain = game.timeMain;
+      $scope.timeExtraPeriods = game.timeExtraPeriods;
+      $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
+      $scope.timePeriodLength = game.timePeriodLength;
+      $scope.blackPrisoners = game.blackPrisoners;
+      $scope.whitePrisoners = game.whitePrisoners;
+      stones2Scope(game);
 
     }
 
-    function stones2Scope() {
+    function stones2Scope(game) {
 
-      var board = game.getBoard();
+      var board;
       $scope.stones = [];
+
+      var i = $routeParams.moveIndex;
+
+      if (i>=0 && i<game.moves.length) board = game.getBoard(i);
+
+      else board = game.getBoard();
 
       for (var row=0; row < board.boardSize; row++) {
 
@@ -47,9 +50,7 @@ angular.module('aApp')
 
         for (var column=0; column < board.boardSize; column++) {
 
-          var score = game.scorePoint(board.point2Index(row,column));
-          var stone = board.getStone(row,column);
-          $scope.stones[row][column] = score || stone;
+          $scope.stones[row][column] = board.getStone(row,column);
 
         }
 
@@ -57,14 +58,22 @@ angular.module('aApp')
 
     }
 
-    $http.get('http://localhost:3000/game/'+$routeParams.gameId)
-      .success(function (data) { console.log('ok',data); })
-      .error(function (data) { console.log('error',data); });
-    var game = libgo.newGame();
-    game2Scope();
+    socket.retrieve($routeParams.gameId,function () {
+      game2Scope(socket.getGame());
+    });
     $scope.showCoords = true;
     $scope.connection = 'disconnected';
-    $scope.action = function () {  };
+    $scope.action = function (a) {
+      var i = $routeParams.moveIndex;
+      if (a == 'prev') {
+        i--;
+      } else if (a == 'next') {
+        i++;
+      } else {
+        console.log(a);
+      }
+      $location.path('/game/' + $routeParams.gameId + '/browse/' + i);
+    };
     $scope.actions = [
       {name:'prev',label:'<'},
       {name:'next',label:'>'}

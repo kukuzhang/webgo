@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('aApp')
-  .service('GameSocket', ['socketio', '$routeParams', 'libgo', '$location', 'underscore',
-      function Socket(io,$routeParams, libgo, $location,_) {
+  .service('GameSocket', ['socketio', '$routeParams', 'libgo', '$location', 'underscore', '$http',
+      function Socket(io,$routeParams, libgo, $location,_,$http) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     function routeByGameState(state) {
@@ -116,6 +116,31 @@ angular.module('aApp')
     this.userName = auth.split(':')[0];
     var mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
     var game;
+
+    this.connect = function (gameId) {
+
+    };
+
+    this.retrieve = function (gameId,cb) {
+
+      if (game) {
+
+        cb(game);
+
+      } else { 
+
+        var url = 'http://localhost:3000/api/game/'+gameId;
+
+        return $http.get(url,{cache:true})
+          .success(function (data) {
+            game = libgo.newGame(data);
+            cb(game);
+          })
+          .error(function (data) { console.log('error',data); });
+
+      }
+
+    };
 
     console.log('connecting websocket:', this.userName);
 
