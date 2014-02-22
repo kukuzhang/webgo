@@ -29,9 +29,13 @@ angular.module('aApp')
       var sum = 0;
       var boardSize = stones.length;
 
-      for (var i=0; i<boardSize*boardSize;i++) {
+      for (var i=0; i<boardSize;i++) {
 
-        sum += occupied[stones[i]] ? 1 : 0;
+        for (var j=0; j<boardSize;j++) {
+
+          sum += occupied[stones[i][j]] ? 1 : 0;
+
+        }
 
       }
 
