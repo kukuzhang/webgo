@@ -4,21 +4,6 @@ angular.module('aApp')
   .controller('ConfigureCtrl', ['$scope', 'libgo', 'underscore', '$routeParams', 'GameSocket',
   function ($scope, libgo, _, $routeParams, socket) {
 
-    function setConnectionStatus() {
-
-      console.log('set c',socket.isConnected(),socket.getConnectionStatus());
-      $scope.$apply(internalSetConnectionStatus);
-
-    }
-
-    function internalSetConnectionStatus () {
-
-      $scope.connection = socket.getConnectionStatus();
-
-      if (socket.isConnected()) { socket.requestGame(); }
-
-    }
-
     function action (actionId) {
 
       console.log(actionId);
@@ -110,14 +95,6 @@ angular.module('aApp')
     var listeners = {
       'game': updateGame,
       'error':updateByError,
-      'connect_failed':setConnectionStatus,
-      'connect':setConnectionStatus,
-      'disconnect':setConnectionStatus,
-      'connecting': setConnectionStatus,
-      'reconnect_failed': setConnectionStatus,
-      'reconnect': setConnectionStatus,
-      'reconnecting': setConnectionStatus,
-      //'error': null,
       //'message': null.
     };
 
@@ -134,7 +111,6 @@ angular.module('aApp')
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
-    internalSetConnectionStatus();
     var game = null;
     $scope.action = action;
     $scope.actions = [];

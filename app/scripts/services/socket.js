@@ -1,13 +1,36 @@
 'use strict';
 
 angular.module('aApp')
-  .service('GameSocket', ['socketio', 'libgo', '$location', 'underscore', '$http',
-      function Socket(io, libgo, $location,_,$http) {
+  .service('GameSocket', ['socketio', 'libgo', '$location', 'underscore',
+      '$http', '$rootScope',
+      function Socket(io, libgo, $location, _, $http, $rootScope) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     var mySocket;
     var myGameId;
     var game;
+    var self = this;
+
+    function receiveGame(data) {
+      
+      game = libgo.newGame(data);
+      console.log(game.scoreBoard);
+      routeByGameState(game.getState());
+      
+    }
+    function setConnectionStatus() {
+
+      $rootScope.$apply(internalSetConnectionStatus);
+
+    }
+
+    function internalSetConnectionStatus () {
+
+      $rootScope.connection = self.getConnectionStatus();
+
+      if (self.isConnected()) { self.requestGame(); }
+
+    }
 
     function routeByGameState(state) {
 
@@ -47,6 +70,8 @@ angular.module('aApp')
 
     this.getConnectionStatus = function () {
 
+      if (!mySocket) { return 'no socket'; }
+
       if (!mySocket.socket.connected) { return 'disconnected'; }
 
       if (mySocket.socket.connecting) { return 'connecting'; }
@@ -55,7 +80,9 @@ angular.module('aApp')
 
     };
 
-    this.isConnected = function () { return mySocket.socket.connected; };
+    this.isConnected = function () {
+      return mySocket && mySocket.socket.connected;
+    };
 
 
     this.on = function (ev,cb) {
@@ -159,15 +186,21 @@ angular.module('aApp')
       myGameId = gameId;
       mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
 
-      mySocket.on('game', function (data) {
-        
-        game = libgo.newGame(data);
-        console.log(game.scoreBoard);
-        routeByGameState(game.getState());
-        
-      });
+      var listeners = {
+        'game':receiveGame,
+        'connect_failed':setConnectionStatus,
+        'connect':setConnectionStatus,
+        'disconnect':setConnectionStatus,
+        'connecting': setConnectionStatus,
+        'reconnect_failed': setConnectionStatus,
+        'reconnect': setConnectionStatus,
+        'reconnecting': setConnectionStatus
+      };
+
+      for (var ev in listeners) { mySocket.on(ev,listeners[ev]); }
 
     }
 
+    internalSetConnectionStatus();
 
   }]);

@@ -5,20 +5,6 @@ angular.module('aApp')
           'underscore', 'GameSocket',
   function ($scope, $routeParams, libgo, _, socket) {
 
-    function setConnectionStatus() {
-
-      $scope.$apply(internalSetConnectionStatus);
-
-    }
-
-    function internalSetConnectionStatus () {
-
-      $scope.connection = socket.getConnectionStatus();
-
-      if (socket.isConnected()) { socket.requestGame(); }
-
-    }
-
     function action (actionId) {
 
       if (actionId === 'done') { emitScoring(true); }
@@ -176,14 +162,6 @@ angular.module('aApp')
     var listeners = {
       'game': updateGame,
       'error':updateByError,
-      'connect_failed':setConnectionStatus,
-      'connect':setConnectionStatus,
-      'disconnect':setConnectionStatus,
-      'connecting': setConnectionStatus,
-      'reconnect_failed': setConnectionStatus,
-      'reconnect': setConnectionStatus,
-      'reconnecting': setConnectionStatus,
-      //'error': null,
       //'message': null.
     };
 
@@ -198,7 +176,6 @@ angular.module('aApp')
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
-    internalSetConnectionStatus();
     $scope.showCoords = true;
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
