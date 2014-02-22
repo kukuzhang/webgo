@@ -25,21 +25,11 @@ function sgfMove () {
     var ob = sgfMoves[i];
     ob.timestamp = now;
     var move = libgo.newMove(ob);
+    var e = game.getMoveError(move);
 
-    try {
+    if (!e) return move;
 
-      game.assertMoveSanity(move);
-      var newBoard = game.getBoard().playStone(move);
-
-    } catch (e) {
-
-      console.log(e);
-
-      continue;
-
-    }
-
-    return move;
+    console.log(e);
 
   }
 
@@ -55,7 +45,6 @@ function sgfParse(buf) {
   var lines = s.split('\n');
   var base = 'a'.charCodeAt(0);
 
-  console.log(lines.length);
   for (var i = 0; i < lines.length; i++) {
 
     var line = lines[i], move;
@@ -76,7 +65,6 @@ function sgfParse(buf) {
 
     }
 
-    console.log(move);
     sgfMoves.push(move);
 
   }
@@ -86,8 +74,6 @@ function sgfParse(buf) {
 function main() {
 
   var cmd = process.argv[2];
-
-  console.log(cmd);
 
   if (cmd === 'new') {
 
@@ -114,7 +100,7 @@ function main() {
     playGame();
 
   } else {
-    console.log('invalid command');
+    console.log('invalid command', cmd);
   }
 
 }
@@ -260,6 +246,38 @@ function playIfPossible(data) {
 
     end();
 
+  } else if (state.state == 'configuring') {
+
+    var attr = myColor == libgo.BLACK ?
+      'configurationOkBlack' :
+      'configurationOkWhite'
+
+    if (game[attr] === true) {
+
+      console.log('waiting for opponent to accept configuration.');
+
+    } else {
+
+      console.log('accepting configuration.');
+      var data = {
+        'white':game.white,
+        'black':game.black,
+        'boardSize':game.boardSize,
+        'komi':game.komi,
+        'handicaps':game.handicaps,
+        'timeMain':game.timeMain,
+        'timeExtraPeriods':game.timeExtraPeriods,
+        'timeStonesPerPeriod':game.timeStonesPerPeriod,
+        'timePeriodLength':game.timePeriodLength,
+        'accept':true,
+        'type':'configure',
+        'gameId':gameId
+      };
+      socket.emit('configure',data);
+
+
+    }
+    
   } else if (state.state == 'playing') {
     
     if (state.turn === myColor) {
