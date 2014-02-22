@@ -47,7 +47,7 @@ describe('Controller: GameCtrl', function () {
 
   beforeEach(module(function ($provide) {
     $provide.value('libgo', libgoMock);
-  }))
+  }));
 
   beforeEach(module(function ($provide) {
     $provide.value('$routeParams', routeParamsMock);
