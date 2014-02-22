@@ -17,36 +17,7 @@
   <li><div class="webgo-error" ng-show="error" >{{error}}</div></li>
 </ul>
 
-
-<div ng-show="!configured" class="webgo-configure">
-  <form>
-    <label for="black">black</label>
-    <input name="black" disabled type="text" value="black"/> <br />
-    <label for="switch"></label>
-    <button name="switchPlayers" class="small">switch</button> <br/>
-    <label for="white">white</label>
-    <input name="white" disabled type="text" value="white"/> <br />
-    <br />
-    <label for="komi">komi</label>
-    <select name="komi" ng-model="komi" ng-options="k for k in komis" /> <br />
-    <label for="handicaps">handicaps</label>
-    <select name="handicaps" ng-model="handicaps" ng-options="h for h in handicapss" /> <br />
-    <label for="boardSize">boardSize</label>
-    <input name="boardSize" ng-model="boardSize" type="number" ng-min="5" ng-max="29"/> <br />
-    <label for="timeMain">timeMain</label>
-    <input name="timeMain" ng-model="timeMain" type="number" ng-min="0" ng-max="3600"/> <br />
-    <label for="timeExtraPeriods">timeExtraPeriods</label>
-    <input name="timeExtraPeriods" ng-model="timeExtraPeriods" type="number" /> <br />
-    <label for="timeStonesPerPeriod">timeStonesPerPeriod</label>
-    <input name="timeStonesPerPeriod" ng-model="timeStonesPerPeriod" type="number" /> <br />
-    <label for="timePeriodLength">timePeriodLength</label>
-    <input name="timePeriodLength" ng-model="timePeriodLength" type="number" /> <br />
-    <acceptor ng-model="configurationOkBlack" active="username==black" change="acceptConfiguration()"/>
-    <acceptor ng-model="configurationOkWhite" active="username==white" change="acceptConfiguration()"/>
-  </form>
-</div>
-<goboard ng-show="configured"
-         stones="stones"
+<goboard stones="stones"
          stone-size="24"
          cb-hover="hover(row,col)"
          cb-hover-out="hoverOut(row,col)"
