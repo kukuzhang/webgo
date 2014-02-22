@@ -59,6 +59,7 @@ angular.module('aApp')
     function setTurn(turn) {
 
       $scope.turn = turn;
+      console.log('turn',turn);
       $scope.blackTurn = turn === libgo.BLACK;
       $scope.whiteTurn = turn === libgo.WHITE;
 
@@ -290,6 +291,7 @@ angular.module('aApp')
     function internalSetConnectionStatus () {
 
       $scope.connection = socket.getConnectionStatus();
+      $scope.username = socket.getUserName();
       setTurn(null);
 
       if (socket.isConnected()) {

@@ -45,10 +45,11 @@ angular.module('aApp')
 
     }
 
+    this.getUserName = function (usename) { return this.userName; };
 
     var auth = $routeParams.auth || 'black:123';
-    this.username = auth.split(':')[0];
+    this.userName = auth.split(':')[0];
     var mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
-    console.log('connecting websocket:', this.username);
+    console.log('connecting websocket:', this.userName);
 
   }]);
