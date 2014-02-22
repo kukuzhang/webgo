@@ -11,8 +11,10 @@ describe('Service: Socket', function () {
     Socket = _Socket_;
   }));
 
+  /*
   it('should do something', function () {
     expect(!!Socket).toBe(true);
   });
+  */
 
 });
