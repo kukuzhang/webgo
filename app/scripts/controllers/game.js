@@ -57,6 +57,7 @@ angular.module('aApp')
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
       stones2Scope($scope,game.getBoard());
+      window.g=game;
 
     }
 
