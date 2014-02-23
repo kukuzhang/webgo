@@ -20,7 +20,6 @@ angular.module('aApp')
     function receiveGame(data) {
       
       game = libgo.newGame(data);
-      console.log(game.scoreBoard);
       routeByGameState(game.getState());
       
     }

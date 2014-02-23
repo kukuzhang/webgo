@@ -1,22 +1,14 @@
-<div class="header">
-  <ul class="nav nav-pills pull-right">
-    <li ng-repeat="a in actions">
-    <a class="webgo-action" ng-click="action(a.name)">{{a.label}}</a>
-    </li>
+<div class="board-container">
+
+  <h4>Ongoing games</h4>
+  <ul>
+      <li ng-repeat="game in games" >
+          <a href="#/game/{{game._id}}"> {{game._id}} </a> ({{game.black}} vs. {{game.white}})
+      </li>
   </ul>
-  <h3 class="text-muted">webgo</h3>
-  &lt;{{connection}}&gt;
-  &lt;{{stones | stoneCount}}&gt;
-  <input type="checkbox" ng-model="showCoords" /> coordinates
-</div>
-
-<h4>Ongoing games</h4>
-<ul>
-    <li ng-repeat="game in games" >
-        <a href="#/game/{{game._id}}"> {{game._id}} </a> ({{game.black}} vs. {{game.white}})
-    </li>
-</ul>
 
 </div>
+
+<div class="webgo-control-container"> <header /></div>
 
 <div class="footer"> </div>

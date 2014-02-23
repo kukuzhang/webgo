@@ -1,27 +1,14 @@
-<div class="header">
-  <ul class="nav nav-pills pull-right">
-    <li ng-repeat="a in actions">
-    <a class="webgo-action" ng-click="action(a.name)">{{a.label}}</a>
-    </li>
-  </ul>
-  <h3 class="text-muted">webgo</h3>
-  &lt;{{connection}}&gt;
-  &lt;{{stones | stoneCount}}&gt;
-  <input type="checkbox" ng-model="showCoords" /> coordinates
-</div>
+<div class="board-container">
+  <goboard stones="stones"
+           stone-size="24"
+           cb-hover="hover(row,col)"
+           cb-hover-out="hoverOut(row,col)"
+           cb-play="clickAction(row,col)"
+           coords="showCoords"/>
 </div>
 
-<ul class="webgo-players">
-  <li><player ng-model="black" color="'black'" turn="blackTurn" time-left="blackTime" prisoners="blackPrisoners"/></li>
-  <li><player ng-model="white" color="'white'" turn="whiteTurn" time-left="whiteTime" prisoners="whitePrisoners"/></li>
-  <li><div class="webgo-error" ng-show="error" >{{error}}</div></li>
-</ul>
-
-<goboard stones="stones"
-         stone-size="24"
-         cb-hover="hover(row,col)"
-         cb-hover-out="hoverOut(row,col)"
-         cb-play="clickAction(row,col)"
-         coords="showCoords"/>
+<div class="webgo-control-container">
+  <header />
+</div>
 
 <div class="footer"> </div>

@@ -3,23 +3,32 @@
 angular.module('aApp')
   .directive('coord', ['jquery', function ($) {
     return {
+      scope: {
+        coord: '=',
+        size: '=',
+        display: '='
+      },
 
       restrict: 'A',
 
       link: function (scope,elem, attrs) {
         
-        var coord = scope[attrs.coord] + 1;
-        var display = scope[attrs.display];
-        var size = scope[attrs.size] || 32;
+        var coord = scope.coord + 1;
+        var size = scope.size || 32;
         var $d = $('<div/>')
           .css('width',size)
           .css('height',size);
         elem.html($d);
         elem.addClass('webgo-coord');
+        scope.$watch('display',function (x) {console.log('1',x);});
+        $d.html(coord);
+
+
+        scope.$watch('display', function (val) {
+          $d.css('visibility',val ? 'visible' : 'hidden');
+        });
 
         if (isNaN(coord)) {coord = '';}
-        
-        if (display) { $d.html(coord); }
 
       },
 

@@ -80,6 +80,11 @@ function main() {
     console.log('new game');
     newGame();
 
+  } else if (cmd === 'pair') {
+
+    console.log('launch a pair of random bots');
+    throw 'not done yet';
+
   } else if (cmd === 'sgf') {
 
     console.log('sgf bot');

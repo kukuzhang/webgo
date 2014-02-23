@@ -80,7 +80,10 @@ angular.module('aApp')
     function updateGame () {
 
       game = socket.getGame();
+      var d1 = new Date();
       $scope.$apply(game2Scope);
+      var d2 = new Date();
+      console.log ((d2-d1), 'milliseconds applying game2scope');
 
     }
 
@@ -167,11 +170,12 @@ angular.module('aApp')
 
     setTurn(null);
     setTimings();
-    $scope.showCoords = true;
+    $scope.showCoords = false;
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;
     $scope.action = action;
     $scope.clickAction = play2Point;
+    $scope.$watch('showCoords',function (x) {console.log('2',x);});
     $scope.actions = [
       {name:'pass',label:'Pass'},
       {name:'resign',label:'Resign'}

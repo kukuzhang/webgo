@@ -1,24 +1,4 @@
-<div class="header">
-  <ul class="nav nav-pills pull-right">
-    <li ng-repeat="a in actions">
-    <a class="webgo-action" ng-click="action(a.name)">{{a.label}}</a>
-    </li>
-  </ul>
-  <h3 class="text-muted">webgo</h3>
-  &lt;{{connection}}&gt;
-  &lt;{{stones | stoneCount}}&gt;
-  <input type="checkbox" ng-model="showCoords" /> coordinates
-</div>
-</div>
-
-<ul class="webgo-players">
-  <li><player ng-model="black" color="'black'" turn="blackTurn" time-left="blackTime" prisoners="blackPrisoners"/></li>
-  <li><player ng-model="white" color="'white'" turn="whiteTurn" time-left="whiteTime" prisoners="whitePrisoners"/></li>
-  <li><div class="webgo-error" ng-show="error" >{{error}}</div></li>
-</ul>
-
-
-<div ng-show="!configured" class="webgo-configure">
+<div class="webgo-configure board-container">
   <form>
     <label for="black">black</label>
     <input name="black" disabled type="text" value="black"/> <br />
@@ -45,5 +25,7 @@
     <acceptor ng-model="configurationOkWhite" active="username==white" change="acceptConfiguration()"/>
   </form>
 </div>
+
+<div class="webgo-control-container"> <header /></div>
 
 <div class="footer"> </div>

@@ -33,7 +33,6 @@ describe('Service: Socket', function () {
   }));
 
   it('should connect to gameId', function () {
-    expect(!!GameSocket).toBe(true);
     expect(typeof GameSocket.connectTo).toBe('function');
     GameSocket.connectTo(12345,'nimi','salasana');
     expect(connectUrl).toBe('http://localhost:3000/');

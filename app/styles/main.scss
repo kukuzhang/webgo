@@ -2,58 +2,74 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import 'sass-bootstrap/lib/bootstrap';
 
-.browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
-}
 
-.header,
-.footer {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-/* Custom page header */
-.header {
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 2em;
-}
-/* Custom page footer */
-.footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
-}
 
 
 /* Space out content a bit */
 body {
     padding-top: 20px;
     padding-bottom: 20px;
+  .header, .footer {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  /* Custom page header */
+  .board-container { display:inline-block; }
+  .webgo-control-container {
+    float: right;
+  }
+  .webgo-control {
+
+    margin: 0.5em;
+    border: 1px solid grey;
+    padding: 0.5em;
+
+
+    a.webgo-action {
+        cursor: pointer;
+    }
+
+    &.webgo-error {
+
+      border: 1px solid red;
+      background-color: #faa;
+
+    }
+
+    &.webgo-player {
+      border: none;
+      margin: 0.5em;
+      padding: 0;
+
+      div {
+        display: inline;
+        border: 1px solid red;
+        background-color: #faa;
+        padding: 0.5em;
+      }
+
+      .webgo-black {
+        border-color: black;
+        background-color: gray;
+      }
+
+      .webgo-white {
+        border-color: gray;
+        background-color: white;
+      }
+
+      .webgo-myturn {
+        border-width: 3px;
+      }
+
+    }
+
+  }
+  /* Custom page footer */
+  .footer { }
 }
 
 /* Make the masthead heading the same height as the navigation */
-.header h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
-}
-
-/* Custom page footer */
-.footer {
-    padding-top: 19px;
-    color: #777;
-    border-top: 1px solid #e5e5e5;
-}
-
-.container-narrow > hr {
-    margin: 30px 0;
-}
-
-
 
 
 /* Customize container */
@@ -61,9 +77,6 @@ body {
   .container {
     max-width: 730px;
   }
-}
-.container-narrow > hr {
-  margin: 30px 0;
 }
 
 /* Responsive: Portrait tablets and up */
@@ -91,167 +104,104 @@ body {
     background: url('../images/wood1.jpg');
     background-size:100%;
     box-shadow: 0 0 10px;
-}
-.webgo-board tbody tr td {
 
-    border-top:none;
-    text-align: center;
-    vertical-align: middle;
-    padding:0;
-    background-image: url('../images/grid-middle.png');
-    background-size: 100%;
-}
+    tbody tr {
+        td {
 
-.webgo-board tbody tr td.webgo-coord {
-    background-image: none;
-}
-.webgo-board tbody tr td.top {
-    background-image: url('../images/grid-t.png');
-}
-.webgo-board tbody tr td.right {
-    background-image: url('../images/grid-r.png');
-}
-.webgo-board tbody tr td.bottom {
-    background-image: url('../images/grid-b.png');
-}
-.webgo-board tbody tr td.left {
-    background-image: url('../images/grid-l.png');
-}
-.webgo-board tbody tr td.top.right {
-    background-image: url('../images/grid-tr.png');
-}
-.webgo-board tbody tr td.bottom.right {
-    background-image: url('../images/grid-br.png');
-}
-.webgo-board tbody tr td.bottom.left {
-    background-image: url('../images/grid-bl.png');
-}
-.webgo-board tbody tr td.top.left {
-    background-image: url('../images/grid-tl.png');
-}
-.webgo-board tbody tr td.hoshi {
-    background-image: url('../images/grid-hoshi.png');
-}
+            border-top:none;
+            text-align: center;
+            vertical-align: middle;
+            padding:0;
+            background-image: url('../images/grid-middle.png');
+            background-size: 100%;
+        }
+        td.webgo-coord { background-image: none; }
+        td.top { background-image: url('../images/grid-t.png'); }
+        td.right { background-image: url('../images/grid-r.png'); }
+        td.bottom { background-image: url('../images/grid-b.png'); }
+        td.left { background-image: url('../images/grid-l.png'); }
+        td.top.right { background-image: url('../images/grid-tr.png'); }
+        td.bottom.right { background-image: url('../images/grid-br.png'); }
+        td.bottom.left { background-image: url('../images/grid-bl.png'); }
+        td.top.left { background-image: url('../images/grid-tl.png'); }
+        td.hoshi { background-image: url('../images/grid-hoshi.png'); }
+    }
 
-.webgo-coord div {
-  overflow: hidden;
-}
+    .webgo-coord div {
+      overflow: hidden;
+    }
+    .webgo-stone {
+        background-size: 100%;
+        background-repeat: no-repeat;
+        cursor: pointer;
+    }
 
-.webgo-stone {
-    background-size: 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
+    .webgo-stone-empty {
 
-.webgo-stone-empty {
+        background-image: none;
 
-    background-image: none;
+    }
 
-}
+    .webgo-stone-white {
 
-.webgo-stone-white {
+        background-image: url('../images/white.png');
 
-    background-image: url('../images/white.png');
+    }
 
-}
+    .webgo-stone-black {
 
-.webgo-stone-black {
+        background-size: 95%;
+        background-position: 1px 2px;
+        background-image: url('../images/black.png');
 
-    background-size: 95%;
-    background-position: 1px 2px;
-    background-image: url('../images/black.png');
+    }
 
-}
+    .webgo-stone-white-hover {
 
-.webgo-stone-white-hover {
+        background-image: url('../images/white-hover.png');
 
-    background-image: url('../images/white-hover.png');
+    }
 
-}
+    .webgo-stone-black-hover {
 
-.webgo-stone-black-hover {
+        background-size: 95%;
+        background-position: 1px 2px;
+        background-image: url('../images/black-hover.png');
 
-    background-size: 95%;
-    background-position: 1px 2px;
-    background-image: url('../images/black-hover.png');
+    }
 
-}
+    .webgo-stone-white-point {
 
-.webgo-stone-white-point {
+        background-image: url('../images/white-hover.png');
 
-    background-image: url('../images/white-hover.png');
+    }
 
-}
+    .webgo-stone-black-point {
 
-.webgo-stone-black-point {
+        background-size: 95%;
+        background-position: 1px 2px;
+        background-image: url('../images/black-hover.png');
 
-    background-size: 95%;
-    background-position: 1px 2px;
-    background-image: url('../images/black-hover.png');
+    }
+
+    .webgo-stone-white-dead {
+
+        background-size: 95%;
+        background-position: 1px 2px;
+        background-image: url('../images/point-and-prisoner.png');
+
+    }
+
+    .webgo-stone-black-dead {
+
+        background-size: 95%;
+        background-position: 1px 2px;
+        background-image: url('../images/point-and-prisoner.png');
+
+    }
 
 }
 
-.webgo-stone-white-dead {
-
-    background-size: 95%;
-    background-position: 1px 2px;
-    background-image: url('../images/point-and-prisoner.png');
-
-}
-
-.webgo-stone-black-dead {
-
-    background-size: 95%;
-    background-position: 1px 2px;
-    background-image: url('../images/point-and-prisoner.png');
-
-}
-
-a.webgo-action {
-    cursor: pointer;
-}
-
-.webgo-players {
-  margin-bottom: 2em;
-}
-
-.webgo-players li {
-
-  display: inline;
-  list-style-type: none;
-  margin-right: 1em;
-  border: red;
-  background-color: #faa;
-
-}
-
-.webgo-error {
-
-  border: 1px solid red;
-  background-color: #faa;
-  padding: 0.5em;
-  margin: 1em 0;
-
-}
-
-.webgo-players li div {
-  display: inline;
-  border: 1px solid red;
-  background-color: #faa;
-  padding: 0.5em;
-}
-
-.webgo-players li .webgo-black {
-  border-color: black;
-  background-color: gray;
-}
-.webgo-players li .webgo-white {
-  border-color: gray;
-  background-color: white;
-}
-.webgo-players li .webgo-myturn {
-  border-width: 3px;
-}
 
 .webgo-configure {
 

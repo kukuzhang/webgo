@@ -1,0 +1,21 @@
+<div class="webgo-control">{{username}}</div>
+<div class="webgo-control">{{stones | stoneCount}}</div>
+<div class="webgo-control">{{connection}}</div>
+<div class="webgo-control">
+  <input type="checkbox" ng-model="showCoords" ></input> coordinates
+</div>
+
+<div class="webgo-control webgo-player">
+  <player ng-model="black" color="'black'" turn="blackTurn"
+          time-left="blackTime" prisoners="blackPrisoners"/>
+</div>
+<div class="webgo-control webgo-player">
+  <player ng-model="white" color="'white'" turn="whiteTurn"
+          time-left="whiteTime" prisoners="whitePrisoners"/>
+</div>
+<div class="webgo-control" class="webgo-error" ng-show="error" >{{error}}</div>
+
+<div ng-repeat="a in actions" class="webgo-control">
+  <a class="webgo-action" ng-click="action(a.name)">{{a.label}}</a>
+</div>
+
