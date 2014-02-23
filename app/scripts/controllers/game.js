@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'GameSocket',
-  function ($scope, $routeParams, libgo, _, socket) {
+          'underscore', 'GameSocket', 'stones2Scope',
+  function ($scope, $routeParams, libgo, _, socket, stones2Scope) {
 
     function action (actionId) { apiPlay({type:actionId}); }
 
@@ -41,6 +41,8 @@ angular.module('aApp')
 
     function game2Scope () {
 
+      var game = socket.getGame();
+      if (!game) return;
       var state = game.getState();
       setTurn(state.turn);
       $scope.white = game.white;
@@ -54,32 +56,12 @@ angular.module('aApp')
       $scope.timePeriodLength = game.timePeriodLength;
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
-      stones2Scope();
-
-    }
-
-    function stones2Scope() {
-
-      var board = game.getBoard();
-      $scope.stones = [];
-
-      for (var row=0; row < board.boardSize; row++) {
-
-        $scope.stones[row] = [];
-
-        for (var column=0; column < board.boardSize; column++) {
-
-          $scope.stones[row][column] = board.getStone(row,column);
-
-        }
-
-      }
+      stones2Scope($scope,game.getBoard());
 
     }
 
     function updateGame () {
 
-      game = socket.getGame();
       var d1 = new Date();
       $scope.$apply(game2Scope);
       var d2 = new Date();
@@ -88,6 +70,8 @@ angular.module('aApp')
     }
 
     function updateByEvent (data) {
+
+      var game = socket.getGame();
 
       if (data.type !== 'move') {
 
@@ -100,7 +84,7 @@ angular.module('aApp')
       if (data.index === game.moves.length) {
 
         var move = libgo.newMove(data.move);
-        game.play(move);
+        socket.getGame().play(move);
         $scope.$apply(game2Scope);
 
       } else {
@@ -108,6 +92,7 @@ angular.module('aApp')
         console.log(game.moves);
         console.log('Moves not in sync???');
         socket.requestGame();
+        socket.routeByGameState();
 
       }
 
@@ -127,6 +112,8 @@ angular.module('aApp')
 
     function hoverIn (row,column) {
 
+      var game = socket.getGame();
+
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
@@ -145,6 +132,8 @@ angular.module('aApp')
 
     function hoverOut(row,column) {
 
+      var game = socket.getGame();
+
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
@@ -157,7 +146,6 @@ angular.module('aApp')
       'event':updateByEvent,
       //'message': null.
     };
-    var game = null;
     var auth = $routeParams.auth || 'black:123';
     var parts = auth.split(':');
     $scope.username = parts[0];
@@ -168,6 +156,7 @@ angular.module('aApp')
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
+    socket.routeByGameState();
     setTurn(null);
     setTimings();
     $scope.showCoords = false;
@@ -180,5 +169,6 @@ angular.module('aApp')
       {name:'pass',label:'Pass'},
       {name:'resign',label:'Resign'}
     ];
+    game2Scope();
 
   }]);

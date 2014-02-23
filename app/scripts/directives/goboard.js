@@ -20,7 +20,6 @@ angular.module('aApp')
           .css('height',size);
         elem.html($d);
         elem.addClass('webgo-coord');
-        scope.$watch('display',function (x) {console.log('1',x);});
         $d.html(coord);
 
 

@@ -8,7 +8,7 @@ angular.module('aApp')
 
     var mySocket;
     var myGameId;
-    var game;
+    var game = null;
     var self = this;
 
     function updateByError (data) {
@@ -20,7 +20,7 @@ angular.module('aApp')
     function receiveGame(data) {
       
       game = libgo.newGame(data);
-      routeByGameState(game.getState());
+      routeByGameState();
       
     }
     function setConnectionStatus() {
@@ -37,8 +37,16 @@ angular.module('aApp')
 
     }
 
-    function routeByGameState(state) {
+    function routeByGameState() {
 
+      if (game === null) {
+
+        console.log('No game, cannot route yet');
+        return;
+
+      }
+
+      var state = game.getState()
       console.log('game state now',state.state);
 
       var url = null;
@@ -65,6 +73,7 @@ angular.module('aApp')
       $location.path(url);
 
     }
+    this.routeByGameState = routeByGameState;
 
     this.setGameId = function (gameId) {
 

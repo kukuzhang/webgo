@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('BrowserCtrl', ['$scope', '$routeParams', 'libgo', '$location', 'GameSocket',
-  function ($scope, $routeParams, libgo, $location, socket) {
+  .controller('BrowserCtrl', ['$scope', '$routeParams', 'libgo', '$location', 'GameSocket', 'stones2Scope',
+  function ($scope, $routeParams, libgo, $location, socket, stones2Scope) {
 
     function setTurn(turn) {
 
@@ -12,7 +12,9 @@ angular.module('aApp')
 
     }
 
-    function game2Scope (game) {
+    function game2Scope () {
+
+      var game = socket.getGame();
 
       if (!game) { return; }
 
@@ -29,15 +31,7 @@ angular.module('aApp')
       $scope.timePeriodLength = game.timePeriodLength;
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
-      stones2Scope(game);
-
-    }
-
-    function stones2Scope(game) {
-
       var board;
-      $scope.stones = [];
-
       var i = $routeParams.moveIndex;
 
       if (i>=0 && i<game.moves.length) {
@@ -49,24 +43,11 @@ angular.module('aApp')
         board = game.getBoard();
 
       }
-
-      for (var row=0; row < board.boardSize; row++) {
-
-        $scope.stones[row] = [];
-
-        for (var column=0; column < board.boardSize; column++) {
-
-          $scope.stones[row][column] = board.getStone(row,column);
-
-        }
-
-      }
+      stones2Scope($scope,board);
 
     }
 
-    socket.retrieve($routeParams.gameId,function () {
-      game2Scope(socket.getGame());
-    });
+    socket.retrieve($routeParams.gameId,game2Scope);
     $scope.showCoords = true;
     $scope.connection = 'disconnected';
     $scope.action = function (a) {

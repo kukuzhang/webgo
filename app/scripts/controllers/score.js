@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('ScoreCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'GameSocket',
-  function ($scope, $routeParams, libgo, _, socket) {
+          'underscore', 'GameSocket', 'stones2Scope',
+  function ($scope, $routeParams, libgo, _, socket, stones2Scope) {
 
     function action (actionId) {
 
@@ -23,6 +23,7 @@ angular.module('aApp')
 
     function emitScoring(agree) {
       
+      var game = socket.getGame();
       var myColor = game.myColor($scope.username);
       var myAttr = libgo.longColor(myColor) + 'Agree';
       var data = { scoreBoard:game.scoreBoard };
@@ -33,16 +34,19 @@ angular.module('aApp')
 
     function togglePrisoner(row,column) {
 
+      var game = socket.getGame();
       console.log('marking',row,column);
       game.markOrUnmarkAsPrisoner(row,column);
       console.log('new sb',game.scoreBoard);
-      stones2Scope();
+      var board = game.getBoard();
+      stones2Scope($scope,board,game.scoreBoard);
       emitScoring(false);
 
     }
 
     function game2Scope () {
 
+      var game = socket.getGame();
       var state = game.getState();
       $scope.white = game.white;
       $scope.black = game.black;
@@ -57,10 +61,6 @@ angular.module('aApp')
       if (state.state === 'scoring') {
 
         $scope.clickAction = togglePrisoner;
-
-        if (!game.scoreBoard) {
-          game.scoreBoard = game.getInitialScoring();
-        }
 
         $scope.actions = [
           {name:'done',label:'Done'},
@@ -82,44 +82,19 @@ angular.module('aApp')
 
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
-      stones2Scope();
-
-    }
-
-    function stones2Scope() {
-
-      var board = game.getBoard();
-      $scope.stones = [];
-
-      for (var row=0; row < board.boardSize; row++) {
-
-        $scope.stones[row] = [];
-
-        for (var column=0; column < board.boardSize; column++) {
-
-          var score = game.scorePoint(board.point2Index(row,column));
-          var stone = board.getStone(row,column);
-          $scope.stones[row][column] = score !== libgo.EMPTY ? score : stone;
-
-        }
-
-      }
+      stones2Scope($scope.game.getBoard(),game.scoreBoard);
 
     }
 
     function updateGame () {
 
-      game = socket.getGame();
       $scope.$apply(game2Scope);
-
-      if (game.scoreBoard.length < 100) {
-        console.log('wierd sb');
-        game.getInitialScoring();
-      }
 
     }
 
     function hoverIn (row,column) {
+
+      var game = socket.getGame();
 
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
@@ -139,6 +114,8 @@ angular.module('aApp')
 
     function hoverOut(row,column) {
 
+      var game = socket.getGame();
+
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
@@ -146,7 +123,6 @@ angular.module('aApp')
 
     }
 
-    var game = null;
     var listeners = {
       'game': updateGame,
       //'message': null.
@@ -156,6 +132,7 @@ angular.module('aApp')
     var parts = auth.split(':');
     $scope.username = parts[0];
     socket.connectTo($routeParams.gameId,parts[0],parts[1]);
+    socket.routeByGameState();
 
     for (var ev in listeners) { socket.on(ev,listeners[ev]); }
 
@@ -168,5 +145,6 @@ angular.module('aApp')
     $scope.hoverOut = hoverOut;
     $scope.action = action;
     $scope.actions = [];
+    game2Scope();
 
   }]);

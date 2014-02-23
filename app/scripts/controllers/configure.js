@@ -10,26 +10,31 @@ angular.module('aApp')
 
     }
 
+    function game2Scope() {
+
+      var game = socket.getGame();
+
+      if (!game) return;
+
+      $scope.white = game.white;
+      $scope.black = game.black;
+      $scope.boardSize = game.boardSize;
+      $scope.komi = game.komi;
+      $scope.handicaps = game.handicaps;
+      $scope.timeMain = game.timeMain;
+      $scope.timeExtraPeriods = game.timeExtraPeriods;
+      $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
+      $scope.timePeriodLength = game.timePeriodLength;
+      $scope.configurationOkBlack = game.configurationOkBlack;
+      $scope.configurationOkWhite = game.configurationOkWhite;
+      $scope.blackPrisoners = game.blackPrisoners;
+      $scope.whitePrisoners = game.whitePrisoners;
+
+    }
+
     function updateGame () {
 
-      game = socket.getGame();
-      $scope.$apply(function() {
-
-        $scope.white = game.white;
-        $scope.black = game.black;
-        $scope.boardSize = game.boardSize;
-        $scope.komi = game.komi;
-        $scope.handicaps = game.handicaps;
-        $scope.timeMain = game.timeMain;
-        $scope.timeExtraPeriods = game.timeExtraPeriods;
-        $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
-        $scope.timePeriodLength = game.timePeriodLength;
-        $scope.configurationOkBlack = game.configurationOkBlack;
-        $scope.configurationOkWhite = game.configurationOkWhite;
-        $scope.blackPrisoners = game.blackPrisoners;
-        $scope.whitePrisoners = game.whitePrisoners;
-
-      });
+      $scope.$apply( game2Scope );
 
     }
 
@@ -37,6 +42,7 @@ angular.module('aApp')
 
       var config = {};
       var changed = forceConfigure ? true : false;
+      var game = socket.getGame();
 
       if (!game) { return; }
 
@@ -103,10 +109,11 @@ angular.module('aApp')
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
-    var game = null;
     $scope.action = action;
     $scope.actions = [];
     $scope.komis = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5];
     $scope.handicapss = [0,2,3,4,5,6,7,8,9];
+    socket.routeByGameState();
+    game2Scope();
 
   }]);
