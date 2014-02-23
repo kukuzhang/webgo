@@ -13,6 +13,7 @@ describe('Controller: GameCtrl', function () {
     routeParamsMock = {auth:'nimi:salasana',gameId:'40005'},
     gameSocketMock = {
 
+      routeByGameState: function () { return; },
       connectTo: function (gameId, user, pwd) {
 
         console.log('connectTTo!!!',gameId,user,pwd);
