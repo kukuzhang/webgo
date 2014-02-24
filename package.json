@@ -50,7 +50,8 @@
     "karma-ng-html2js-preprocessor": "~0.1.0",
     "grunt-karma": "~0.6.2",
     "compass": "~0.1.0",
-    "istanbul": "~0.2.4"
+    "istanbul": "~0.2.4",
+    "protractor": "~0.19.0"
   },
   "engines": {
     "node": ">=0.8.0"

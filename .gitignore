@@ -1,7 +1,9 @@
 coverage
 node_modules
 dist
+koe.js
 .tmp
 .sass-cache
 .*.swp
 app/bower_components
+selenium

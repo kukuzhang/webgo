@@ -8,8 +8,8 @@ var express = require('express')
   , game = require('./lib/game')
   , http = require('http')
   , cors = require('cors')
-  , sessionStore = require('connect-socket-store'),
-  , passportSocketIo = require("passport.socketio");
+//  , sessionStore = require('connect-socket-store')
+//  , passportSocketIo = require("passport.socketio")
   , path = require('path');
 
 var app = express();
