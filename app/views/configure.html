@@ -1,11 +1,9 @@
 <div class="webgo-configure board-container">
   <form>
-    <label for="black">black</label>
-    <input name="black" disabled type="text" value="black"/> <br />
-    <label for="switch"></label>
-    <button name="switchPlayers" class="small">switch</button> <br/>
-    <label for="white">white</label>
-    <input name="white" disabled type="text" value="white"/> <br />
+    <label for="my-color">My color</label>
+    <select name="handicaps" ng-model="color" ng-options="c for c in color" /> <br />
+    <label for="opponent">Opponent</label>
+    <input name="opponent" disabled type="text" value=""/> <br />
     <br />
     <label for="komi">komi</label>
     <select name="komi" ng-model="komi" ng-options="k for k in komis" /> <br />
