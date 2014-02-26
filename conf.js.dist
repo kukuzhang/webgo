@@ -1,6 +1,6 @@
 // example conf.js
 
-var conf = require('conf.defaults.js');
+var conf = require('./conf.defaults');
 
 conf.cookieSecret = 'override';
 conf.googleOAuth.clientId = "...";

@@ -95,41 +95,6 @@ server.listen(app.get('port'), function(){
 
 io.sockets.on('connection', game.setupConnection);
 io.set('log level', 2);
-
-/*
-io.set('authorization', socketAuth);
-function socketAuth(data, accept) {
-
-  var token = data.query.auth;
-  var parts = token.split(/:/);
-  var username = parts[0];
-  var password = parts[1];
-  data.username = null;
-  console.log('auth',username,"...",password);
-  // var auth = new Buffer(token||"", 'base64').toString();
-
-  if (!username) {
-
-    accept("No username",false);
-    console.log('bad u',username);
-
-  } else if (password !== '123') {
-    
-    accept("Wrong password", false);
-    console.log('bad p',password);
-
-  } else {
-
-    data.username = username;
-    console.log('ok');
-    accept(null, true);
-
-  }
-
-}
-*/
-
-
 var utils = require ('./node_modules/express/node_modules/connect/lib/utils');
 // set authorization for socket.io
 io.set('authorization', myAuthorizer(passportSocketIo.authorize({
@@ -182,17 +147,6 @@ function onAuthorizeFail(data, message, error, accept) {
 
 }
 
-passport.serializeUser(function(user, done) {
-    var serial = user.provider + '-' + user.id;
-    console.log('serialize',serial);
-    done(null, serial);
-});
-
-passport.deserializeUser(function(s, done) {
-    console.log('deserialize',s);
-    var parts = s.split('-');
-    User.findOne({'provider':parts[0],'id':parts[1]},  function (err, user) {
-      done(err, user);
-    });
-});
+passport.serializeUser(auth.serializeUser);
+passport.deserializeUser(auth.deserializeUser);
 
