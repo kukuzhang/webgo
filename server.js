@@ -113,13 +113,21 @@ function myAuthorizer (fn) {
 
     return function(data, accept) {
       
-      var sid = data.query.session_id;
+      // There is a bug in connect that make + int ' ' in cookies.
+      // var sid = query.session_id;
+      // workaround:
+      "/socket.io/1/?session_id=s:9watfbDjRha_IkJG0EpWBuOe.SrbK3r7IG+Yvg/pCmGu2RGoWKs5O9HftSehugmkg3uA&t=1393450474684"
+      var sid = (data.url.split('session_id=')[1]).split('&t=')[0];
 
       if (sid && sid.substring(0,2) == 's:') {
 
+        
         data.query.session_id = utils.parseSignedCookie(sid,conf.cookieSecret);
 
       }
+      console.log('socket io auth',sid);
+      console.log('=>',data.query.session_id);
+
 
       return fn(data, accept);
 

@@ -201,6 +201,7 @@ angular.module('aApp')
 
       myGameId = gameId;
       window.$c = $cookies;
+      console.log('http://localhost:3000/', 'session_id=', $cookies['connect.sid']);
       mySocket = io.connect('http://localhost:3000/', {query:'session_id=' + $cookies['connect.sid']});
 
       var listeners = {

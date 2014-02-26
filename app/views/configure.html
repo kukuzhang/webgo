@@ -1,7 +1,7 @@
 <div class="webgo-configure board-container">
   <form>
-    <label for="my-color">My color</label>
-    <select name="handicaps" ng-model="color" ng-options="c for c in color" /> <br />
+    <label for="myColor">My color</label>
+    <select name="myColor" ng-model="myColor" ng-options="c.value as c.label for c in colors" /> <br />
     <label for="opponent">Opponent</label>
     <input name="opponent" disabled type="text" value=""/> <br />
     <br />
@@ -19,8 +19,8 @@
     <input name="timeStonesPerPeriod" ng-model="timeStonesPerPeriod" type="number" /> <br />
     <label for="timePeriodLength">timePeriodLength</label>
     <input name="timePeriodLength" ng-model="timePeriodLength" type="number" /> <br />
-    <acceptor ng-model="configurationOkBlack" active="username==black" change="acceptConfiguration()"/>
-    <acceptor ng-model="configurationOkWhite" active="username==white" change="acceptConfiguration()"/>
+    <acceptor ng-model="configurationOkBlack" active="myColor=='black'" change="acceptConfiguration()"/>
+    <acceptor ng-model="configurationOkWhite" active="myColor=='white'" change="acceptConfiguration()"/>
   </form>
 </div>
 

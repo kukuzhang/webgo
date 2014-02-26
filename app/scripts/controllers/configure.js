@@ -17,7 +17,9 @@ angular.module('aApp')
 
       if (!game) return;
 
-      $scope.myColor = identity.myColor(game);
+      $scope.myColor = identity.myColor(game) || '';
+      console.log($scope);
+      console.log(game);
       $scope.boardSize = game.boardSize;
       $scope.komi = game.komi;
       $scope.handicaps = game.handicaps;
@@ -56,6 +58,45 @@ angular.module('aApp')
 
       }
 
+    function bIfAIsMeOrNull (a,b) {
+
+      if (identity.isThisMe(a)) { a = null; }
+
+      if (identity.isThisMe(b)) { b = null; }
+
+      if (!a) { return b; }
+
+      if (!b) { return a; }
+
+      if (isThisMe(a)) { return b; }
+
+      return a;
+
+    }
+
+      var oldBlack = game.black;
+      var oldWhite = game.white;
+
+      if ($scope.myColor === 'black') {
+
+        game.black = identity.me();
+        game.white = bIfAIsMeOrNull(game.white,game.black);
+        console.log('b', game);
+
+      } else if ($scope.myColor === 'white') {
+
+        game.white = identity.me();
+        game.black = bIfAIsMeOrNull(game.black,game.white);
+        console.log('w', game);
+
+      } else {
+        console.log('x', identity.me());
+      }
+      config.black = game.black;
+      config.white = game.white;
+      if (!identity.equals(game.black,oldBlack)
+          || !identity.equals(game.black,oldBlack)) changed = true;
+
       config.accept = $scope.accept;
 
       if (changed) {
@@ -79,8 +120,6 @@ angular.module('aApp')
     };
 
     var configurationAttributes = {
-      'white':1,
-      'black':1,
       'boardSize':1,
       'komi':1,
       'handicaps':1,
@@ -96,7 +135,7 @@ angular.module('aApp')
       //'message': null.
     };
 
-    var expr = '[white,black,boardSize,komi,handicaps,timeMain,timeExtraPeriods,timeStonesPerPeriod,timePeriodLength]';
+    var expr = '[myColor,boardSize,komi,handicaps,timeMain,timeExtraPeriods,timeStonesPerPeriod,timePeriodLength]';
     $scope.$watchCollection(expr,reconfig);
     var auth = $routeParams.auth || 'black:123';
     var parts = auth.split(':');
@@ -111,7 +150,10 @@ angular.module('aApp')
 
     $scope.action = action;
     $scope.actions = [];
-    $scope.colors = ['black','white',''];
+    $scope.colors = [ // 'black', 'white', null ];
+      {label: 'Black', value: 'black'},
+      {label: 'White', value: 'white'},
+      {label: 'Not playing', value: ''} ];
     $scope.komis = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5];
     $scope.handicapss = [0,2,3,4,5,6,7,8,9];
     socket.routeByGameState();

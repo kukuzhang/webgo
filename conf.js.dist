@@ -3,7 +3,7 @@
 var conf = require('./conf.defaults');
 
 conf.cookieSecret = 'override';
-conf.googleOAuth.clientId = "...";
+conf.googleOAuth.clientID = "...";
 conf.googleOAuth.clientSecret = "lll";
 
 module.exports = conf;

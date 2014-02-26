@@ -2,8 +2,8 @@
 
 //angular.module('aApp', ['webgoFilters']);
 angular.module('aApp')
-  .controller('MainCtrl', ['$scope', '$http', '$location',
-      function ($scope, $http, $location) {
+  .controller('MainCtrl', ['$scope', '$http', '$location','identity',
+      function ($scope, $http, $location, identity) {
 
   var creating = false;
   var apiUrl = '/api/game';
