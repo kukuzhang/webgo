@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('aApp')
-  .service('GameSocket', ['socketio', 'libgo', '$location', 'underscore',
+  .service('GameSocket', ['socketio', 'libgo', '$location', 'underscore', '$cookies',
       '$http', '$rootScope',
-      function Socket(io, libgo, $location, _, $http, $rootScope) {
+      function Socket(io, libgo, $location, _, $cookies, $http, $rootScope) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     var mySocket;
@@ -199,7 +199,8 @@ angular.module('aApp')
       }
 
       myGameId = gameId;
-      mySocket = io.connect('http://localhost:3000/', {query:'auth=' + auth});
+      window.$c = $cookies;
+      mySocket = io.connect('http://localhost:3000/', {query:'session_id=' + $cookies['connect.sid']});
 
       var listeners = {
         'error':updateByError,

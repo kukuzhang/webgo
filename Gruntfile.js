@@ -92,8 +92,16 @@ module.exports = function (grunt) {
           https: false,
           changeOrigin: false,
           xforward: false,
-          headers: {
-          }
+          headers: { }
+        },
+        {
+          context: '/auth',
+          host: 'localhost',
+          port: 3000,
+          https: false,
+          changeOrigin: false,
+          xforward: false,
+          headers: { }
         },
         {
           context: '/api',
@@ -102,8 +110,7 @@ module.exports = function (grunt) {
           https: false,
           changeOrigin: false,
           xforward: false,
-          headers: {
-          }
+          headers: { }
         }
       ],
       livereload: {
