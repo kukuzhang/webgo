@@ -23,6 +23,7 @@ angular.module('aApp')
       routeByGameState();
       
     }
+
     function setConnectionStatus() {
 
       $rootScope.$apply(internalSetConnectionStatus);

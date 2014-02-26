@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('ConfigureCtrl', ['$scope', 'libgo', 'underscore', '$routeParams', 'GameSocket',
-  function ($scope, libgo, _, $routeParams, socket) {
+  .controller('ConfigureCtrl', ['$scope', 'libgo', 'underscore', '$routeParams',
+    'GameSocket','identity',
+  function ($scope, libgo, _, $routeParams, socket, identity) {
 
     function action (actionId) {
 

@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'GameSocket', 'stones2Scope',
-  function ($scope, $routeParams, libgo, _, socket, stones2Scope) {
+          'underscore', 'GameSocket', 'stones2Scope', 'identity',
+  function ($scope, $routeParams, libgo, _, socket, stones2Scope, identity) {
 
     function action (actionId) { apiPlay({type:actionId}); }
 
@@ -57,7 +57,6 @@ angular.module('aApp')
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
       stones2Scope($scope,game.getBoard());
-      window.g=game;
 
     }
 
