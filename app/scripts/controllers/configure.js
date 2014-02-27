@@ -11,6 +11,8 @@ angular.module('aApp')
 
     }
 
+    function opposite (c) { return c==='black' ? 'white' : 'black'; }
+
     function game2Scope() {
 
       var game = socket.getGame();
@@ -18,8 +20,7 @@ angular.module('aApp')
       if (!game) return;
 
       $scope.myColor = identity.myColor(game) || '';
-      console.log($scope);
-      console.log(game);
+      $scope.opponent = game[opposite($scope.myColor)];
       $scope.boardSize = game.boardSize;
       $scope.komi = game.komi;
       $scope.handicaps = game.handicaps;
@@ -27,10 +28,22 @@ angular.module('aApp')
       $scope.timeExtraPeriods = game.timeExtraPeriods;
       $scope.timeStonesPerPeriod = game.timeStonesPerPeriod;
       $scope.timePeriodLength = game.timePeriodLength;
-      $scope.configurationOkBlack = game.configurationOkBlack;
-      $scope.configurationOkWhite = game.configurationOkWhite;
       $scope.blackPrisoners = game.blackPrisoners;
       $scope.whitePrisoners = game.whitePrisoners;
+
+      if ($scope.myColor === 'black') {
+
+        console.log('black', game.configurationOkBlack,  game.configurationOkWhite);
+        $scope.accept = game.configurationOkBlack;
+        $scope.opponentAccepted = game.configurationOkWhite;
+
+      } else {
+
+        console.log('white',  game.configurationOkWhite, game.configurationOkBlack);
+        $scope.accept = game.configurationOkWhite;
+        $scope.opponentAccepted = game.configurationOkBlack;
+
+      }
 
     }
 
@@ -40,10 +53,11 @@ angular.module('aApp')
 
     }
 
-    function reconfig (newValue,oldValue,scope,forceConfigure) {
+    function reconfig (newValue,oldValue,scope) {
 
+      $scope.otherColor = opposite($scope.myColor);
       var config = {};
-      var changed = forceConfigure ? true : false;
+      var changed = false;
       var game = socket.getGame();
 
       if (!game) { return; }
@@ -53,26 +67,27 @@ angular.module('aApp')
         config[attr] = $scope[attr];
 
         if (config[attr] !== game[attr]) {
+          console.log(attr,'=>', config[attr]);
           changed = true;
         }
 
       }
 
-    function bIfAIsMeOrNull (a,b) {
+      function bIfAIsMeOrNull (a,b) {
 
-      if (identity.isThisMe(a)) { a = null; }
+        if (identity.isThisMe(a)) { a = null; }
 
-      if (identity.isThisMe(b)) { b = null; }
+        if (identity.isThisMe(b)) { b = null; }
 
-      if (!a) { return b; }
+        if (!a) { return b; }
 
-      if (!b) { return a; }
+        if (!b) { return a; }
 
-      if (isThisMe(a)) { return b; }
+        if (isThisMe(a)) { return b; }
 
-      return a;
+        return a;
 
-    }
+      }
 
       var oldBlack = game.black;
       var oldWhite = game.white;
@@ -81,26 +96,25 @@ angular.module('aApp')
 
         game.black = identity.me();
         game.white = bIfAIsMeOrNull(game.white,game.black);
-        console.log('b', game);
 
       } else if ($scope.myColor === 'white') {
 
         game.white = identity.me();
         game.black = bIfAIsMeOrNull(game.black,game.white);
-        console.log('w', game);
 
       } else {
-        console.log('x', identity.me());
       }
       config.black = game.black;
       config.white = game.white;
       if (!identity.equals(game.black,oldBlack)
-          || !identity.equals(game.black,oldBlack)) changed = true;
-
-      config.accept = $scope.accept;
+            || !identity.equals(game.white,oldWhite)) {
+          console.log('roles changed');
+          changed = true;
+        }
 
       if (changed) {
 
+        console.log('config =>', config);
         socket.configure(config);
 
       } else {
@@ -110,14 +124,6 @@ angular.module('aApp')
       }
 
     }
-
-    $scope.acceptConfiguration = function () {
-
-      console.log('accepting');
-      $scope.accept = $scope.accept ? false : true;
-      reconfig(null,null,null,true);
-
-    };
 
     var configurationAttributes = {
       'boardSize':1,
@@ -135,7 +141,7 @@ angular.module('aApp')
       //'message': null.
     };
 
-    var expr = '[myColor,boardSize,komi,handicaps,timeMain,timeExtraPeriods,timeStonesPerPeriod,timePeriodLength]';
+    var expr = '[accept,myColor,boardSize,komi,handicaps,timeMain,timeExtraPeriods,timeStonesPerPeriod,timePeriodLength]';
     $scope.$watchCollection(expr,reconfig);
     var auth = $routeParams.auth || 'black:123';
     var parts = auth.split(':');
@@ -151,7 +157,7 @@ angular.module('aApp')
     $scope.action = action;
     $scope.actions = [];
     $scope.colors = [ // 'black', 'white', null ];
-      {label: 'Black', value: 'black'},
+    {label: 'Black', value: 'black'},
       {label: 'White', value: 'white'},
       {label: 'Not playing', value: ''} ];
     $scope.komis = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5];

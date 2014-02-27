@@ -20,6 +20,8 @@ angular.module('aApp')
     function receiveGame(data) {
       
       game = libgo.newGame(data);
+      console.log('received game',data);
+      console.log('=>',game);
       routeByGameState();
       
     }
@@ -186,7 +188,7 @@ angular.module('aApp')
 
     };
 
-    this.connectTo = function (gameId, user, pwd) {
+    this.connectTo = function (gameId, user, pwd, sessionID) {
 
       var auth = user + ":" + pwd;
       console.log('connecting websocket:', gameId,user);
@@ -201,8 +203,10 @@ angular.module('aApp')
 
       myGameId = gameId;
       window.$c = $cookies;
-      console.log('http://localhost:3000/', 'session_id=', $cookies['connect.sid']);
-      mySocket = io.connect('http://localhost:3000/', {query:'session_id=' + $cookies['connect.sid']});
+      sessionID = sessionID || $cookies['connect.sid'];
+      var opts = {query:'session_id=' + $cookies['connect.sid']};
+      console.log('http://localhost:3000/', opts);
+      mySocket = io.connect('http://localhost:3000/', opts);
 
       var listeners = {
         'error':updateByError,
