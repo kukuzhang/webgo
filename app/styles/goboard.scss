@@ -1,0 +1,102 @@
+.webgo-board-container {
+	display:inline-block;
+
+	.webgo-board {
+		width: auto;
+		background: url('../images/wood1.jpg');
+		background-size:100%;
+		box-shadow: 0 0 10px;
+
+		tbody tr {
+			td {
+				border-top:none;
+				text-align: center;
+				vertical-align: middle;
+				padding:0;
+				background-image: url('../images/grid-middle.png');
+				background-size: 100%;
+			}
+			td.webgo-coord { background-image: none; }
+			td.top { background-image: url('../images/grid-t.png'); }
+			td.right { background-image: url('../images/grid-r.png'); }
+			td.bottom { background-image: url('../images/grid-b.png'); }
+			td.left { background-image: url('../images/grid-l.png'); }
+			td.top.right { background-image: url('../images/grid-tr.png'); }
+			td.bottom.right { background-image: url('../images/grid-br.png'); }
+			td.bottom.left { background-image: url('../images/grid-bl.png'); }
+			td.top.left { background-image: url('../images/grid-tl.png'); }
+			td.hoshi { background-image: url('../images/grid-hoshi.png'); }
+		}
+
+		&.without-coordinates .webgo-coord div { visibility: hidden; }
+		.webgo-coord div {
+			overflow: hidden;
+		}
+
+		.webgo-stone {
+			background-size: 100%;
+			background-repeat: no-repeat;
+			cursor: pointer;
+		}
+
+		.webgo-stone-empty {
+			background-image: none;
+		}
+
+		.webgo-stone-white {
+			background-image: url('../images/white.png');
+		}
+
+		.webgo-stone-black {
+			background-size: 95%;
+			background-position: 1px 2px;
+			background-image: url('../images/black.png');
+		}
+
+		.webgo-stone-white-hover {
+			background-image: url('../images/white-hover.png');
+		}
+
+		.webgo-stone-black-hover {
+			background-size: 95%;
+			background-position: 1px 2px;
+			background-image: url('../images/black-hover.png');
+		}
+
+		.webgo-stone-white-point {
+			background-image: url('../images/white-hover.png');
+		}
+
+		.webgo-stone-black-point {
+			background-size: 95%;
+			background-position: 1px 2px;
+			background-image: url('../images/black-hover.png');
+		}
+
+		.webgo-stone-white-dead {
+			background-size: 95%;
+			background-position: 1px 2px;
+			background-image: url('../images/point-and-prisoner.png');
+		}
+
+		.webgo-stone-black-dead {
+			background-size: 95%;
+			background-position: 1px 2px;
+			background-image: url('../images/point-and-prisoner.png');
+		}
+
+		.webgo-configure {
+			margin: 1em;
+			border: 1px solid grey;
+			text-align: center;
+			padding:0.5em;
+
+			label,select,button,input {
+				width: 40%;
+			}
+
+		}
+
+	}
+
+}

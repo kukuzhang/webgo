@@ -3,31 +3,32 @@
 angular.module('aApp')
   .directive('coord', ['jquery', function ($) {
     return {
+	  template: '<div style="myStyle">{{visibleCoord}}</div>',
       scope: {
         coord: '=',
-        size: '=',
-        display: '='
+        size: '='
       },
 
       restrict: 'A',
 
       link: function (scope,elem, attrs) {
         
-        var coord = scope.coord + 1;
-        var size = scope.size || 32;
-        var $d = $('<div/>')
-          .css('width',size)
-          .css('height',size);
-        elem.html($d);
-        elem.addClass('webgo-coord');
-        $d.html(coord);
-
-
-        scope.$watch('display', function (val) {
-          $d.css('visibility',val ? 'visible' : 'hidden');
-        });
-
-        if (isNaN(coord)) {coord = '';}
+        if (isNaN(scope.coord)) {
+			
+			scope.visibleCoord = '';
+			
+		} else {
+			
+			scope.visibleCoord = scope.coord + 1;
+			
+		}
+		elem.addClass('webgo-coord');
+        scope.$watch('size', function (val,old) {
+			var size = scope.sSize;
+			scope.myStyle = {width:size,height:size};
+			console.log('size change here', old,val);
+		});
+		
 
       },
 
@@ -49,9 +50,18 @@ angular.module('aApp')
         cbHoverOut: '&'
       },
 
-      link: function (scope) {
-        
-        scope.cellClass = function (row,col) {
+      link: function (scope, elem) {
+
+		scope.$watch('coords', function (x) {
+			scope.boardCoordClass = x ? "with-coordinates" : "without-coordinates";
+		});
+		scope.$watch('stoneSize', function () {
+			scope.sSize = scope.stoneSize || 32;
+			console.log('stonestize change here',scope.sSize);
+			scope.sizeStyle = {width:scope.sSize,height:scope.sSize};
+
+		});
+            scope.cellClass = function (row,col) {
 
           var boardSize = scope.stones.length;
           var classes = [];

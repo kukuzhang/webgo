@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('ConfigureCtrl', ['$scope', 'libgo', 'underscore', '$routeParams',
-    'GameSocket','identity',
-  function ($scope, libgo, _, $routeParams, socket, identity) {
+    'GameSocket', 'Geometry', 'identity',
+  function ($scope, libgo, _, $routeParams, socket, Geometry, identity) {
 
     function action (actionId) {
 
@@ -19,6 +19,8 @@ angular.module('aApp')
 
       if (!game) return;
 
+	  $scope.black = game.black;
+	  $scope.white = game.white;
       $scope.myColor = identity.myColor(game) || '';
       $scope.opponent = game[opposite($scope.myColor)];
       $scope.boardSize = game.boardSize;

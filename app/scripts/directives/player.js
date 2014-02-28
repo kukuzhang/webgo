@@ -6,8 +6,8 @@ angular.module('aApp')
 
     return {
 
-      template: '<div class="{{playerClass}}"> {{ngModel}} ({{timeLeft}}) ({{prisoners}}) </div>',
-      restrict: 'E',
+      templateUrl: 'views/player.html',
+      restrict: 'A',
       scope: {
         ngModel: '=',
         color: '=',
@@ -16,12 +16,19 @@ angular.module('aApp')
         prisoners: '='
       },
 
-      link: function (scope) {
+      link: function (scope, elem) {
 
         scope.$watch('turn', function () {
 
-          scope.playerClass = 'webgo-' + scope.color +
-            (scope.turn ?  ' webgo-myturn' : '');
+          if (scope.turn) {
+            
+            elem.addClass('webgo-myturn');
+            
+          } else {
+
+            elem.removeClass('webgo-myturn');
+
+          }
 
         });
 

@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('ScoreCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'GameSocket', 'stones2Scope',
-  function ($scope, $routeParams, libgo, _, socket, stones2Scope) {
+          'underscore', 'GameSocket','Geometry', 'stones2Scope',
+  function ($scope, $routeParams, libgo, _, socket, Geometry, stones2Scope) {
 
     function action (actionId) {
 

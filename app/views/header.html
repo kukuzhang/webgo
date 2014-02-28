@@ -1,23 +1,23 @@
 <div ng-show="!user" class="webgo-control">
   <a href="/auth/google">Login via Google</a>
 </div>
-<div ng-show="user" class="webgo-control">
+<div ng-show="false && user" class="webgo-control">
   <img class="webgo-profile" src="{{user.picture}}" />
   {{user.name}}
 </div>
-<div class="webgo-control">{{stones | stoneCount}}</div>
-<div class="webgo-control">{{connection}}</div>
 <div class="webgo-control">
+  <div>{{stones | stoneCount}}</div>
+  <div>{{connection}}</div>
   <input type="checkbox" ng-model="showCoords" ></input> coordinates
 </div>
 
-<div class="webgo-control webgo-player">
-  <player ng-model="black" color="'black'" turn="blackTurn"
-          time-left="blackTime" prisoners="blackPrisoners"/>
+<div class="webgo-control webgo-player webgo-black" player
+  ng-model="black" turn="blackTurn"
+  time-left="blackTime" prisoners="blackPrisoners">
 </div>
-<div class="webgo-control webgo-player">
-  <player ng-model="white" color="'white'" turn="whiteTurn"
-          time-left="whiteTime" prisoners="whitePrisoners"/>
+<div class="webgo-control webgo-player webgo-white" player
+  ng-model="white" turn="whiteTurn" time-left="whiteTime"
+  prisoners="whitePrisoners">
 </div>
 <div class="webgo-control" class="webgo-error" ng-show="error" >{{error}}</div>
 

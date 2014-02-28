@@ -1,0 +1,70 @@
+.container {
+	.webgo-control-container {
+		float: right;
+		 
+		.webgo-control {
+			margin: 0.5em;
+			border: 1px solid grey;
+			padding: 0.5em;
+
+			a.webgo-action {
+				cursor: pointer;
+			}
+
+			&.webgo-error {
+				border: 1px solid red;
+				background-color: #faa;
+			}
+
+			.webgo-profile {
+				max-width: 100px;
+				max-height: 100px;
+			}
+
+			&.webgo-player {
+				border: 1px solid red;
+				background-color: #faa;
+				padding: 0.5em;
+			}
+
+			&.webgo-black {
+				border-color: black;
+				background-color: gray;
+			}
+
+			&.webgo-white {
+				border-color: gray;
+				background-color: white;
+			}
+
+			&.webgo-myturn {
+				border-width: 3px;
+			}
+	 
+		}
+	  
+	 }
+	 
+	 &.horizontal .webgo-control-container {
+	 
+		.webgo-control {
+			display: block;
+			
+			div,img { display: block; }
+		
+		}
+	 
+	 }
+	 
+	 &.vertical .webgo-control-container {
+	 
+		.webgo-control {
+			display: inline-block;
+		
+			div,img { display: inline-block; }
+		
+		}
+	 
+	 }
+	 
+}

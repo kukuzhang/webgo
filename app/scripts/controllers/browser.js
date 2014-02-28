@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('aApp')
-  .controller('BrowserCtrl', ['$scope', '$routeParams', 'libgo', '$location', 'GameSocket', 'stones2Scope',
+  .controller('BrowserCtrl', ['$scope', '$routeParams', 'libgo', '$location', 'GameSocket', 'Geometry', 'stones2Scope',
   function ($scope, $routeParams, libgo, $location, socket, stones2Scope) {
 
     function setTurn(turn) {

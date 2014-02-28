@@ -1,7 +1,7 @@
-<table class="table webgo-board">
+<table class="table webgo-board {{boardCoordClass}}">
   <tr>
-    <td coord="" size="stoneSize" /></td>
-    <td ng-repeat="row in stones track by $index" coord="$index" display="coords" size="stoneSize" /></td>
+    <td coord="" size="sSize" /></td>
+    <td ng-repeat="row in stones track by $index" coord="$index" size="sSize" /></td>
   </tr>
   <tr ng-repeat="row in stones track by $index">
     <td coord="$index" display="coords" size="stoneSize" /></td>
@@ -11,12 +11,12 @@
         ng-mouseleave="cbHoverOut({row:$parent.$index,col:$index})"
         ng-class="cellClass($parent.$index,$index)">
     <div class="webgo-stone {{cell|stoneClass}}"
-      ng-style="{width:stoneSize||32,height:stoneSize||32}" />
+      ng-style="sizeStyle" />
     </td>
-    <td coord="$index" display="coords" size="stoneSize" /></td>
+    <td coord="$index" size="sSize" /></td>
   </tr>
   <tr>
-    <td coord="" size="stoneSize" /></td>
-    <td ng-repeat="row in stones track by $index" coord="$index" display="coords" ? $index+1 : ' '}}" size="stoneSize" /></td>
+    <td coord="" size="sSize" /></td>
+    <td ng-repeat="row in stones track by $index" coord="$index" size="sSize" /></td>
   </tr>
 </table>

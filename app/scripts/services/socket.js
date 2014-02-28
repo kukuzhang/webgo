@@ -188,10 +188,9 @@ angular.module('aApp')
 
     };
 
-    this.connectTo = function (gameId, user, pwd, sessionID) {
+    this.connectTo = function (gameId, sessionID) {
 
-      var auth = user + ":" + pwd;
-      console.log('connecting websocket:', gameId,user);
+      console.log('connecting websocket:', gameId,sessionID);
 
       if (myGameId) {
 
@@ -202,7 +201,6 @@ angular.module('aApp')
       }
 
       myGameId = gameId;
-      window.$c = $cookies;
       sessionID = sessionID || $cookies['connect.sid'];
       var opts = {query:'session_id=' + $cookies['connect.sid']};
       console.log('http://localhost:3000/', opts);

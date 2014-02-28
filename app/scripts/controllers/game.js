@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'GameSocket', 'stones2Scope', 'identity',
-  function ($scope, $routeParams, libgo, _, socket, stones2Scope, identity) {
+          'underscore', 'GameSocket', 'stones2Scope', 'Geometry', 'identity', '$rootScope',
+  function ($scope, $routeParams, libgo, _, socket, stones2Scope, Geometry, identity, $rootScope) {
 
     function action (actionId) { apiPlay({type:actionId}); }
 
@@ -114,6 +114,7 @@ angular.module('aApp')
 
       var game = socket.getGame();
 
+      console.log ($scope.username,game.myColor($scope.username), $scope.turn);
       if (!$scope.turn ||
         (game.myColor($scope.username) !== $scope.turn)) { return; }
 
@@ -146,16 +147,20 @@ angular.module('aApp')
       'event':updateByEvent,
       //'message': null.
     };
-    var auth = $routeParams.auth || 'black:123';
-    var parts = auth.split(':');
-    $scope.username = parts[0];
-    socket.connectTo($routeParams.gameId,parts[0],parts[1]);
+    socket.connectTo($routeParams.gameId);
     for (var ev in listeners) { socket.on(ev,listeners[ev]); }
 
     $scope.$on('destroy', function() {
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
+	$rootScope.$watch('boardPixels', function () {
+
+		var cells = ($scope.boardSize || 19) + 2;
+		$scope.stoneSize = Math.floor($scope.boardPixels / cells);
+		console.log('newSize',$scope.boardPixels, $scope.boardSize, $scope.stoneSize);
+		
+	});
     socket.routeByGameState();
     setTurn(null);
     setTimings();
@@ -164,7 +169,6 @@ angular.module('aApp')
     $scope.hoverOut = hoverOut;
     $scope.action = action;
     $scope.clickAction = play2Point;
-    $scope.$watch('showCoords',function (x) {console.log('2',x);});
     $scope.actions = [
       {name:'pass',label:'Pass'},
       {name:'resign',label:'Resign'}
