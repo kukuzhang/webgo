@@ -6,9 +6,11 @@
   {{user.name}}
 </div>
 <div class="webgo-control">
-  <div>{{stones | stoneCount}}</div>
-  <div>{{connection}}</div>
-  <input type="checkbox" ng-model="showCoords" ></input> coordinates
+	<div class="group">
+		<div>{{stones | stoneCount}}</div>
+		<div>{{connection}}</div>
+		<div><input type="checkbox" ng-model="showCoords" ></input> coordinates</div>
+	</div>
 </div>
 
 <div class="webgo-control webgo-player webgo-black" player

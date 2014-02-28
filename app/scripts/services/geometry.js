@@ -35,8 +35,8 @@ angular.module('aApp')
 			$rootScope.orientation = 'vertical';
 			limit = w;
 			other = h;
-			$cc.css('max-width',other - limit + 8);
-			$cc.css('max-height',null);
+			$cc.css('max-width',null);
+			$cc.css('max-height',other - limit + 8);
 			
 		}
 		

@@ -53,6 +53,7 @@
 	 &.vertical .webgo-control-container .webgo-control {
 		display: inline-block;
 		div,img { display: inline-block; }
+		.group div { display: block; }
 	 }
 	 
 }
