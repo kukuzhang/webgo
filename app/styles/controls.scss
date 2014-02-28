@@ -1,4 +1,5 @@
 .container {
+
 	.webgo-control-container {
 		float: right;
 		 
@@ -6,7 +7,9 @@
 			margin: 0.5em;
 			border: 1px solid grey;
 			padding: 0.5em;
-
+			background-color: #ddd;
+			word-wrap: break-word;
+				
 			a.webgo-action {
 				cursor: pointer;
 			}
@@ -16,55 +19,40 @@
 				background-color: #faa;
 			}
 
+			.webgo-profile-stone {
+				max-width: 16px;
+				max-height: 16px;
+				vertical-align: middle;
+				display: inline-block;
+			}
+			
 			.webgo-profile {
 				max-width: 100px;
 				max-height: 100px;
 			}
 
 			&.webgo-player {
-				border: 1px solid red;
-				background-color: #faa;
+				border-color: 1px solid #666;
 				padding: 0.5em;
 			}
 
-			&.webgo-black {
-				border-color: black;
-				background-color: gray;
-			}
-
-			&.webgo-white {
-				border-color: gray;
-				background-color: white;
-			}
-
 			&.webgo-myturn {
-				border-width: 3px;
+				box-shadow: 0 0 10px;
+				background-color: white;
 			}
 	 
 		}
 	  
 	 }
 	 
-	 &.horizontal .webgo-control-container {
-	 
-		.webgo-control {
-			display: block;
-			
-			div,img { display: block; }
-		
-		}
-	 
+	 &.horizontal .webgo-control-container .webgo-control {
+		display: block;
+		div,img { display: block; }
 	 }
 	 
-	 &.vertical .webgo-control-container {
-	 
-		.webgo-control {
-			display: inline-block;
-		
-			div,img { display: inline-block; }
-		
-		}
-	 
+	 &.vertical .webgo-control-container .webgo-control {
+		display: inline-block;
+		div,img { display: inline-block; }
 	 }
 	 
 }

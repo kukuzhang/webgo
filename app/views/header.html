@@ -12,12 +12,12 @@
 </div>
 
 <div class="webgo-control webgo-player webgo-black" player
-  ng-model="black" turn="blackTurn"
+  ng-model="black" turn="blackTurn" color="'black'"
   time-left="blackTime" prisoners="blackPrisoners">
 </div>
 <div class="webgo-control webgo-player webgo-white" player
-  ng-model="white" turn="whiteTurn" time-left="whiteTime"
-  prisoners="whitePrisoners">
+  ng-model="white" turn="whiteTurn" color="'white'"
+  time-left="whiteTime" prisoners="whitePrisoners">
 </div>
 <div class="webgo-control" class="webgo-error" ng-show="error" >{{error}}</div>
 

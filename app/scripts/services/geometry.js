@@ -11,7 +11,7 @@ angular.module('aApp')
 		
 		var $w = $(window);
 		var $c = $(".container");
-		var $c = $(".webgo-control-container");
+		var $cc = $(".webgo-control-container");
 
 
 		var w = $w.width();
@@ -25,6 +25,8 @@ angular.module('aApp')
 			$rootScope.orientation = 'horizontal';
 			limit = h;
 			other = w;
+			$cc.css('max-width',other - limit + 8);
+			$cc.css('max-height',null);
 			
 		} else {
 			
@@ -33,6 +35,8 @@ angular.module('aApp')
 			$rootScope.orientation = 'vertical';
 			limit = w;
 			other = h;
+			$cc.css('max-width',other - limit + 8);
+			$cc.css('max-height',null);
 			
 		}
 		

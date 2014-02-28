@@ -114,9 +114,8 @@ angular.module('aApp')
 
       var game = socket.getGame();
 
-      console.log ($scope.username,game.myColor($scope.username), $scope.turn);
       if (!$scope.turn ||
-        (game.myColor($scope.username) !== $scope.turn)) { return; }
+        (game.myColor($scope.user) !== $scope.turn)) { return; }
 
       var obj = {timestamp: new Date().getTime(), type:'stone',stone:$scope.turn,row:row,column:column};
       var move = libgo.newMove(obj);
@@ -134,10 +133,6 @@ angular.module('aApp')
     function hoverOut(row,column) {
 
       var game = socket.getGame();
-
-      if (!$scope.turn ||
-        (game.myColor($scope.username) !== $scope.turn)) { return; }
-
       $scope.stones[row][column] = game.getBoard().getStone(row,column);
 
     }
