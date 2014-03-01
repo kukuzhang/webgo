@@ -1,11 +1,11 @@
 <div ng-show="!user" class="webgo-control">
-  <a href="/auth/google">Login via Google</a>
+  <a href="/auth/google?redirect={{authRedirect}}">Login via Google</a>
 </div>
-<div ng-show="notPlaying" class="webgo-control">
+<div ng-show="user && notPlaying" class="webgo-control">
   <img class="webgo-profile" src="{{user.picture}}" />
   <div>{{user.name}}</div>
-  <div>Not currently playing.</div>
-  <div> <a href="/logout">Logout</a></div>
+  <div></div>
+  <div> <a href="/auth/logout?redirect={{authRedirect}}">Logout</a></div>
 </div>
 <div class="webgo-control webgo-player webgo-black" player
   ng-model="black" turn="blackTurn" color="'black'"

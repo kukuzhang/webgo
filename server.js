@@ -79,15 +79,29 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var authParams = {scope: [
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile'
+]};
+var googlePrepare = passport.authenticate('google', authParams);
+
+function myPrepare (req,res,next) {
+  
+  req.session.authRedirect = req.query.redirect;
+  console.log('prepare', req.query.redirect);
+  
+  return googlePrepare (req,res,next);
+};
+
+app.get('/auth/logout', auth.logout);
 app.get('/api/users', user.list);
 app.get('/api/game/:id', game.get);
 app.post('/api/game', game.createGame);
 app.get('/api/game', game.list);
 app.get('/auth', function (req,res) { res.json(req.user);} );
-app.get('/auth/google', passport.authenticate('google', {scope: [ 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile']}));
-app.get('/auth/google/callback', passport.authenticate('google'), function (req,res) {
-  res.json(req.user);});
-
+app.get('/auth/google', myPrepare);
+app.get('/auth/google/callback', passport.authenticate('google'),
+  auth.googleSignInCallback);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
