@@ -1,27 +1,32 @@
 <div class="webgo-configure webgo-board-container">
-  <form>
-    <label for="myColor">My color</label>
-    <select name="myColor" ng-model="myColor" ng-options="c.value as c.label for c in colors" /> <br />
-    <label for="opponent">{{otherColor}}</label>
-    <input name="opponent" disabled type="text" ng-model="opponent.name"/> <br />
-    <br />
-    <label for="komi">komi</label>
-    <select name="komi" ng-model="komi" ng-options="k for k in komis" /> <br />
-    <label for="handicaps">handicaps</label>
-    <select name="handicaps" ng-model="handicaps" ng-options="h for h in handicapss" /> <br />
-    <label for="boardSize">boardSize</label>
-    <input name="boardSize" ng-model="boardSize" type="number" ng-min="5" ng-max="29"/> <br />
-    <label for="timeMain">timeMain</label>
-    <input name="timeMain" ng-model="timeMain" type="number" ng-min="0" ng-max="3600"/> <br />
-    <label for="timeExtraPeriods">timeExtraPeriods</label>
-    <input name="timeExtraPeriods" ng-model="timeExtraPeriods" type="number" /> <br />
-    <label for="timeStonesPerPeriod">timeStonesPerPeriod</label>
-    <input name="timeStonesPerPeriod" ng-model="timeStonesPerPeriod" type="number" /> <br />
-    <label for="timePeriodLength">timePeriodLength</label>
-    <input name="timePeriodLength" ng-model="timePeriodLength" type="number" /> <br />
-    <acceptor ng-model="accept" me="true"/>
-    <acceptor ng-model="opponentAccepted" me="false"/>
-  </form>
+  <div class="dummy-board">
+
+    <div class="dummy-inner">
+      <form>
+        <label for="myColor">My color</label>
+        <select name="myColor" ng-model="myColor" ng-options="c.value as c.label for c in colors" /> <br />
+        <label for="opponent">{{otherColor}}</label>
+        <input name="opponent" disabled type="text" ng-model="opponent.name"/> <br />
+        <br />
+        <label for="komi">komi</label>
+        <select name="komi" ng-model="komi" ng-options="k for k in komis" /> <br />
+        <label for="handicaps">handicaps</label>
+        <select name="handicaps" ng-model="handicaps" ng-options="h for h in handicapss" /> <br />
+        <label for="boardSize">boardSize</label>
+        <input name="boardSize" ng-model="boardSize" type="number" ng-min="5" ng-max="29"/> <br />
+        <label for="timeMain">timeMain</label>
+        <input name="timeMain" ng-model="timeMain" type="number" ng-min="0" ng-max="3600"/> <br />
+        <label for="timeExtraPeriods">timeExtraPeriods</label>
+        <input name="timeExtraPeriods" ng-model="timeExtraPeriods" type="number" /> <br />
+        <label for="timeStonesPerPeriod">timeStonesPerPeriod</label>
+        <input name="timeStonesPerPeriod" ng-model="timeStonesPerPeriod" type="number" /> <br />
+        <label for="timePeriodLength">timePeriodLength</label>
+        <input name="timePeriodLength" ng-model="timePeriodLength" type="number" /> <br />
+        <acceptor ng-model="accept" me="true"/>
+        <acceptor ng-model="opponentAccepted" me="false"/>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="webgo-control-container"> <header /></div>
