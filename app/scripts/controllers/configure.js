@@ -19,6 +19,7 @@ angular.module('aApp')
 
       if (!game) return;
 
+	  $scope.error = null;
 	  $scope.black = game.black;
 	  $scope.white = game.white;
       $scope.myColor = identity.myColor(game) || '';
@@ -55,27 +56,7 @@ angular.module('aApp')
 
     }
 
-    function reconfig (newValue,oldValue,scope) {
-
-      $scope.otherColor = opposite($scope.myColor);
-      var config = {};
-      var changed = false;
-      var game = socket.getGame();
-
-      if (!game) { return; }
-
-      for (var attr in configurationAttributes) {
-
-        config[attr] = $scope[attr];
-
-        if (config[attr] !== game[attr]) {
-          console.log(attr,'=>', config[attr]);
-          changed = true;
-        }
-
-      }
-
-      function bIfAIsMeOrNull (a,b) {
+	function bIfAIsMeOrNull (a,b) {
 
         if (identity.isThisMe(a)) { a = null; }
 
@@ -91,9 +72,28 @@ angular.module('aApp')
 
       }
 
+    function reconfig (newValue,oldValue,scope) {
+
+      $scope.otherColor = opposite($scope.myColor);
+      var config = {};
+      var changed = false;
+      var game = socket.getGame();
       var oldBlack = game.black;
       var oldWhite = game.white;
 
+      if (!game) { return; }
+
+      for (var attr in configurationAttributes) {
+
+        config[attr] = $scope[attr];
+
+        if (config[attr] !== game[attr]) {
+          console.log(attr,'=>', config[attr]);
+          changed = true;
+        }
+
+      }
+  
       if ($scope.myColor === 'black') {
 
         game.black = identity.me();
@@ -105,6 +105,11 @@ angular.module('aApp')
         game.black = bIfAIsMeOrNull(game.black,game.white);
 
       } else {
+
+		console.log('Not my game, not configuring.');
+
+        return;
+
       }
       config.black = game.black;
       config.white = game.white;

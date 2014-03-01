@@ -1,18 +1,12 @@
 <div ng-show="!user" class="webgo-control">
   <a href="/auth/google">Login via Google</a>
 </div>
-<div ng-show="false && user" class="webgo-control">
+<div ng-show="notPlaying" class="webgo-control">
   <img class="webgo-profile" src="{{user.picture}}" />
-  {{user.name}}
+  <div>{{user.name}}</div>
+  <div>Not currently playing.</div>
+  <div> <a href="/logout">Logout</a></div>
 </div>
-<div class="webgo-control">
-	<div class="group">
-		<div>{{stones | stoneCount}}</div>
-		<div>{{connection}}</div>
-		<div><input type="checkbox" ng-model="showCoords" ></input> coordinates</div>
-	</div>
-</div>
-
 <div class="webgo-control webgo-player webgo-black" player
   ng-model="black" turn="blackTurn" color="'black'"
   time-left="blackTime" prisoners="blackPrisoners">
@@ -22,6 +16,13 @@
   time-left="whiteTime" prisoners="whitePrisoners">
 </div>
 <div class="webgo-control" class="webgo-error" ng-show="error" >{{error}}</div>
+<div class="webgo-control">
+	<div class="group">
+		<div>{{stones | stoneCount}}</div>
+		<div>{{connection}}</div>
+		<div><input type="checkbox" ng-model="showCoords" ></input> coordinates</div>
+	</div>
+</div>
 
 <div ng-repeat="a in actions" class="webgo-control">
   <a class="webgo-action" ng-click="action(a.name)">{{a.label}}</a>

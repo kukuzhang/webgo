@@ -45,6 +45,7 @@ angular.module('aApp')
       if (!game) return;
       var state = game.getState();
       setTurn(state.turn);
+      console.log(game);
       $scope.white = game.white;
       $scope.black = game.black;
       $scope.boardSize = game.boardSize;
@@ -100,11 +101,14 @@ angular.module('aApp')
 
     function apiPlay(options) {
 
-      var move = _.extend({
+	  var move = _.extend({
         stone: $scope.turn,
         type: 'stone'
       },options);
-      if (!move.stone) { throw new Error('Invalid stone',move.stone); }
+      if (!move.stone) {
+		  console.log('No-one\'s turn. Not playing.');
+		  return;
+	  }
       socket.move(move);
       setTurn(null);
 
@@ -159,6 +163,7 @@ angular.module('aApp')
     socket.routeByGameState();
     setTurn(null);
     setTimings();
+    $scope.error = null;
     $scope.showCoords = false;
     $scope.hover = hoverIn;
     $scope.hoverOut = hoverOut;

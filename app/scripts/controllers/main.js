@@ -27,6 +27,7 @@ angular.module('aApp')
   }
 
   var serverUrl = '/api';
+  $scope.notPlaying = true;
   $scope.stones = [];
   $scope.games = [];
   $scope.actions = [

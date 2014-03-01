@@ -23,7 +23,7 @@ angular.module('aApp')
 			
 		}
 		elem.addClass('webgo-coord');
-        scope.$watch('size', function (val,old) {
+    scope.$watch('size', function (val,old) {
 			var size = scope.sSize;
 			scope.myStyle = {width:size,height:size};
 			console.log('size change here', old,val);
