@@ -7,8 +7,9 @@
 			margin: 0.5em;
 			border: 1px solid grey;
 			padding: 0.5em;
-			background-color: #ddd;
+   		background: url('../images/wood1.jpg');
 			word-wrap: break-word;
+      border-radius: 3px;
 				
 			a.webgo-action {
 				cursor: pointer;
@@ -23,8 +24,7 @@
 				max-width: 16px;
 				max-height: 16px;
 				vertical-align: middle;
-				display: inline-block;
-			}
+      }
 			
 			.webgo-profile {
 				max-width: 100px;
@@ -47,7 +47,7 @@
 	 
 	 &.horizontal .webgo-control-container .webgo-control {
 		display: block;
-		div,img { display: block; }
+		div,.webgo-profile { display: block; }
 	 }
 	 
 	 &.vertical .webgo-control-container .webgo-control {

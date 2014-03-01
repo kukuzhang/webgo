@@ -3,7 +3,7 @@
 angular.module('aApp')
   .directive('coord', ['jquery', function ($) {
     return {
-	  template: '<div style="myStyle">{{visibleCoord}}</div>',
+	  template: '<div ng-style="{width:size,height:size}"">{{visibleCoord}}</div>',
       scope: {
         coord: '=',
         size: '='
@@ -22,13 +22,7 @@ angular.module('aApp')
 			scope.visibleCoord = scope.coord + 1;
 			
 		}
-		elem.addClass('webgo-coord');
-    scope.$watch('size', function (val,old) {
-			var size = scope.sSize;
-			scope.myStyle = {width:size,height:size};
-			console.log('size change here', old,val);
-		});
-		
+		elem.addClass('webgo-coord');		
 
       },
 
