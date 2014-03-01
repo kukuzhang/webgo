@@ -1,17 +1,16 @@
 'use strict';
 
 angular.module('aApp')
-  .service('Geometry', function Geometry($rootScope) {
+  .service('Geometry', function Geometry($rootScope,jquery) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-	$(window).resize( function () {$rootScope.$apply(myResize); } );
-	myResize();
-	
+  var $ = jquery;
+  
 	function myResize() {
 		
 		var $w = $(window);
-		var $c = $(".container");
-		var $cc = $(".webgo-control-container");
+		var $c = $('.container');
+		var $cc = $('.webgo-control-container');
 
 
 		var w = $w.width();
@@ -47,5 +46,8 @@ angular.module('aApp')
 
 	}
 
-  });
+	$(window).resize( function () {$rootScope.$apply(myResize); } );
+	myResize();
+	
+});
 

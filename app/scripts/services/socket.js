@@ -49,7 +49,7 @@ angular.module('aApp')
 
       }
 
-      var state = game.getState()
+      var state = game.getState();
       console.log('game state now',state.state);
 
       var url = null;
@@ -194,7 +194,7 @@ angular.module('aApp')
 
       if (myGameId) {
 
-        if (myGameId == gameId) { return; }
+        if (myGameId === gameId) { return; }
 
         throw new Error('Already connected to ' + myGameId + '.');
 
@@ -220,7 +220,7 @@ angular.module('aApp')
 
       for (var ev in listeners) { mySocket.on(ev,listeners[ev]); }
 
-    }
+    };
 
     internalSetConnectionStatus();
 

@@ -14,7 +14,7 @@ angular.module('aApp')
         // console.log(scope.change);
         // console.log(scope.me);
 
-        scope.change = function () { scope.ngModel = !scope.ngModel; }
+        scope.change = function () { scope.ngModel = !scope.ngModel; };
 
         scope.$watchCollection('[ngModel,me]', function () {
           scope.msg = scope.ngModel &&  scope.me ? 'Accepted':

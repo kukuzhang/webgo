@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('aApp')
-  .factory('stones2Scope', function Stones2scope() {
+  .factory('stones2Scope', ['libgo', function Stones2scope(libgo) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     return function ($scope, board, scoreBoard) {
 
-      if (!$scope.stones) $scope.stones = [];
+      if (!$scope.stones) { $scope.stones = []; }
 
       for (var row=0; row < board.boardSize; row++) {
 
-        if (!$scope.stones[row]) $scope.stones[row] = [];
+        if (!$scope.stones[row]) { $scope.stones[row] = []; }
 
         for (var column=0; column < board.boardSize; column++) {
 
@@ -28,7 +28,7 @@ angular.module('aApp')
 
       }
 
-    }
+    };
 
-  });
+  }]);
 

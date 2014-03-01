@@ -27,7 +27,7 @@ angular.module('aApp')
 
     this.myColor = function (game) {
 
-      if (!game) return null;
+      if (!game) { return null; }
 
       if (this.isThisMe(game.black)) { return 'black'; }
 
@@ -41,7 +41,7 @@ angular.module('aApp')
 
       return a && b && ( a.provider === b.provider ) && ( a.id === b.id );
 
-    }
+    };
 
     this.me = function () { return me; };
 

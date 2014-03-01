@@ -17,11 +17,11 @@ angular.module('aApp')
 
       var game = socket.getGame();
 
-      if (!game) return;
+      if (!game) { return; }
 
-	  $scope.error = null;
-	  $scope.black = game.black;
-	  $scope.white = game.white;
+      $scope.error = null;
+      $scope.black = game.black;
+      $scope.white = game.white;
       $scope.myColor = identity.myColor(game) || '';
       $scope.opponent = game[opposite($scope.myColor)];
       $scope.boardSize = game.boardSize;
@@ -56,23 +56,23 @@ angular.module('aApp')
 
     }
 
-	function bIfAIsMeOrNull (a,b) {
+    function bIfAIsMeOrNull (a,b) {
 
-        if (identity.isThisMe(a)) { a = null; }
+      if (identity.isThisMe(a)) { a = null; }
 
-        if (identity.isThisMe(b)) { b = null; }
+      if (identity.isThisMe(b)) { b = null; }
 
-        if (!a) { return b; }
+      if (!a) { return b; }
 
-        if (!b) { return a; }
+      if (!b) { return a; }
 
-        if (isThisMe(a)) { return b; }
+      if (identity.isThisMe(a)) { return b; }
 
-        return a;
+      return a;
 
-      }
+    }
 
-    function reconfig (newValue,oldValue,scope) {
+    function reconfig () {
 
       $scope.otherColor = opposite($scope.myColor);
       var config = {};
@@ -106,18 +106,18 @@ angular.module('aApp')
 
       } else {
 
-		console.log('Not my game, not configuring.');
+        console.log('Not my game, not configuring.');
 
         return;
 
       }
       config.black = game.black;
       config.white = game.white;
-      if (!identity.equals(game.black,oldBlack)
-            || !identity.equals(game.white,oldWhite)) {
-          console.log('roles changed');
-          changed = true;
-        }
+      if (!identity.equals(game.black,oldBlack) ||
+            !identity.equals(game.white,oldWhite)) {
+        console.log('roles changed');
+        changed = true;
+      }
 
       if (changed) {
 
@@ -163,10 +163,9 @@ angular.module('aApp')
 
     $scope.action = action;
     $scope.actions = [];
-    $scope.colors = [ // 'black', 'white', null ];
-    {label: 'Black', value: 'black'},
-      {label: 'White', value: 'white'},
-      {label: 'Not playing', value: ''} ];
+    $scope.colors = [ {label: 'Black', value: 'black'},
+                      {label: 'White', value: 'white'},
+                      {label: 'Not playing', value: ''} ];
     $scope.komis = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5];
     $scope.handicapss = [0,2,3,4,5,6,7,8,9];
     socket.routeByGameState();

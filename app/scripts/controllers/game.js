@@ -42,7 +42,7 @@ angular.module('aApp')
     function game2Scope () {
 
       var game = socket.getGame();
-      if (!game) return;
+      if (!game) { return; }
       var state = game.getState();
       setTurn(state.turn);
       console.log(game);
@@ -101,14 +101,14 @@ angular.module('aApp')
 
     function apiPlay(options) {
 
-	  var move = _.extend({
-        stone: $scope.turn,
-        type: 'stone'
-      },options);
+      var move = _.extend({
+          stone: $scope.turn,
+          type: 'stone'
+        },options);
       if (!move.stone) {
-		  console.log('No-one\'s turn. Not playing.');
-		  return;
-	  }
+        console.log('No-one\'s turn. Not playing.');
+        return;
+      }
       socket.move(move);
       setTurn(null);
 
@@ -153,13 +153,13 @@ angular.module('aApp')
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
-	$rootScope.$watch('boardPixels', function () {
+    $rootScope.$watch('boardPixels', function () {
 
-		var cells = ($scope.boardSize || 19) + 2;
-		$scope.stoneSize = Math.floor($scope.boardPixels / cells);
-		console.log('newSize',$scope.boardPixels, $scope.boardSize, $scope.stoneSize);
-		
-	});
+      var cells = ($scope.boardSize || 19) + 2;
+      $scope.stoneSize = Math.floor($scope.boardPixels / cells);
+      console.log('newSize',$scope.boardPixels, $scope.boardSize, $scope.stoneSize);
+      
+    });
     socket.routeByGameState();
     setTurn(null);
     setTimings();
