@@ -1,6 +1,6 @@
 <table class="table webgo-board {{boardCoordClass}}">
   <tr>
-    <td coord="" size="sSize" /></td>
+    <td ng-show="stones.length" coord="" size="sSize" /></td>
     <td ng-repeat="row in stones track by $index" coord="$index" size="sSize" /></td>
   </tr>
   <tr ng-repeat="row in stones track by $index">
@@ -16,7 +16,7 @@
     <td coord="$index" size="sSize" /></td>
   </tr>
   <tr>
-    <td coord="" size="sSize" /></td>
+    <td ng-show="stones.length" coord="" size="sSize" /></td>
     <td ng-repeat="row in stones track by $index" coord="$index" size="sSize" /></td>
   </tr>
 </table>

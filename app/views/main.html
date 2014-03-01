@@ -1,15 +1,19 @@
 <div class="webgo-board-container">
 
-  <h4>Mywebgoban</h4>
-  <p ng-show="!user">Please log in --&gt;</p>
-  <p ng-show="user">Create a new game or select one of your previously created games.</p>
-  <ul>
-      <li ng-repeat="game in games" >
-          <a href="#/game/{{game._id}}"> {{game._id}} </a> ({{game.black.name}} vs. {{game.white.name}})
-      </li>
-      <li ng-show="!games.length">You have not played before.</li>
-  </ul>
+  <div class="dummy-board">
 
+    <div class="dummy-inner">
+      <h4>Mywebgoban</h4>
+      <p ng-show="!user">Please log in --&gt;</p>
+      <p ng-show="user">Create a new game or select one of your previously created games.</p>
+      <ul>
+          <li ng-repeat="game in games" >
+              <a href="#/game/{{game._id}}"> {{game._id}} </a> ({{game.black.name}} vs. {{game.white.name}})
+          </li>
+          <li ng-show="!games.length">You have not played before.</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <div class="webgo-control-container"> <header /></div>

@@ -39,9 +39,26 @@ angular.module('aApp')
 			
 		}
 		
+    var boardSize = limit - 16; // body margin = 8px * 2
+    
 		console.log($rootScope.orientation);
 		$c.attr('data-limit',limit);
-		$rootScope.boardPixels = limit - 16; // body margin = 8px * 2
+    
+    $('.dummy-board')
+      .css('width',boardSize)
+		  .css('height',boardSize);
+    $('.dummy-inner')
+      .css('width',boardSize-100)
+		  .css('height',boardSize-100);
+      
+    var limitAndControls = limit + 150;
+    if (w > limit + 150) {
+      $c.css('max-width', limitAndControls)
+        .css('margin-left', (w - limitAndControls) / 2);
+      $cc.css('max-width',150);
+    }
+    
+		$rootScope.boardPixels = boardSize;
 		$rootScope.containerPixels = other - limit;
 
 	}
