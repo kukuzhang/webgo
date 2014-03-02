@@ -1,5 +1,11 @@
 <div ng-show="!user" class="webgo-control">
-  <a href="/auth/google?redirect={{authRedirect}}">Login via Google</a>
+  <div class="intro">Login with</div>
+  <a href="/auth/google?redirect={{authRedirect}}">
+    <img class="webgo-login-button" src="images/google.png" alt="google" />
+  </a>
+  <a href="/auth/facebook?redirect={{authRedirect}}">
+    <img class="webgo-login-button" src="images/facebook.png" alt="facebook" />
+  </a>
 </div>
 <div ng-show="user && notPlaying" class="webgo-control">
   <img class="webgo-profile" src="{{user.picture}}" />
@@ -7,11 +13,11 @@
   <div></div>
   <div> <a href="/auth/logout?redirect={{authRedirect}}">Logout</a></div>
 </div>
-<div class="webgo-control webgo-player webgo-black" player
+<div class="webgo-control webgo-player webgo-black" ng-show="black" player
   ng-model="black" turn="blackTurn" color="'black'"
   time-left="blackTime" prisoners="blackPrisoners">
 </div>
-<div class="webgo-control webgo-player webgo-white" player
+<div class="webgo-control webgo-player webgo-white" ng-show="white" player
   ng-model="white" turn="whiteTurn" color="'white'"
   time-left="whiteTime" prisoners="whitePrisoners">
 </div>

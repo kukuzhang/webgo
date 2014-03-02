@@ -126,7 +126,7 @@ angular.module('aApp')
 
     this.score = function (options) {
 
-      var dflt = { type : 'configure', gameId : myGameId };
+      var dflt = { gameId : myGameId };
       var data = _.extend(dflt,options);
       console.log('emitting',data);
       mySocket.emit('score',data);

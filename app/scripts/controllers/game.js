@@ -2,8 +2,8 @@
 
 angular.module('aApp')
   .controller('GameCtrl', ['$scope', '$routeParams', 'libgo',
-          'underscore', 'GameSocket', 'stones2Scope', 'Geometry', 'identity', '$rootScope',
-  function ($scope, $routeParams, libgo, _, socket, stones2Scope, Geometry, identity, $rootScope) {
+          'underscore', 'GameSocket', 'stones2Scope', 'Geometry', 'identity',
+  function ($scope, $routeParams, libgo, _, socket, stones2Scope, Geometry, identity) {
 
     function action (actionId) { apiPlay({type:actionId}); }
 
@@ -153,7 +153,7 @@ angular.module('aApp')
       for (var ev in listeners) { socket.off(ev,listeners[ev]); }
     });
 
-    $rootScope.$watch('boardPixels', function () {
+    $scope.$watch('boardPixels', function () {
 
       var cells = ($scope.boardSize || 19) + 2;
       $scope.stoneSize = Math.floor($scope.boardPixels / cells);

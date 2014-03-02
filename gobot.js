@@ -35,7 +35,7 @@ function sgfMove () {
 
   console.log('out of moves => pass');
 
-  return {type: 'pass', stone: myColor};
+  return {type: 'pass', stone: myColor, timestamp: now};
 
 }
 
@@ -89,7 +89,7 @@ function main() {
 
     console.log('sgf bot');
     sgf = sgfParse(fs.readFileSync(process.argv[3]));
-    q = 'auth=' + process.argv[6];
+    q = 'session_id=' + process.argv[6];
     gameId = process.argv[4];
     myColor = process.argv[5];
     pickAMove = sgfMove;
@@ -98,7 +98,7 @@ function main() {
   } else if (cmd === 'play') {
 
     console.log('random bot');
-    q = 'auth=' + process.argv[5];
+    q = 'session_id=' + process.argv[5];
     gameId = process.argv[3];
     myColor = process.argv[4];
     pickAMove = function () { return randomMove(3); };
@@ -237,7 +237,7 @@ function randomMove (tries) {
 
   }
 
-  return libgo.newMove({ type:'pass', stone:myColor });
+  return libgo.newMove({ type:'pass', stone:myColor, timestamp: now });
 
 }
 
@@ -300,7 +300,7 @@ function playIfPossible(data) {
 
   } else if (state.state == 'scoring') {
 
-    var attr = myColor == libgo.BLACK ?
+    var attr = myColor === libgo.BLACK ?
       'scoreOkBlack' :
       'scoreOkWhite';
 
@@ -313,8 +313,7 @@ function playIfPossible(data) {
       console.log('accepting score.');
       var data = {
         'scoreBoard':game.scoreBoard,
-        'scoreOkBlack':game.scoreOkBlack,
-        'scoreOkWhite':game.scoreOkWhite,
+        'accept':true,
         'gameId':gameId
       };
       data[attr] = true;

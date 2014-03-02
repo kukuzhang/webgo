@@ -3,12 +3,16 @@
   <div class="dummy-board">
 
     <div class="dummy-inner">
-      <h4>Mywebgoban</h4>
+      <h1>Mywebgoban</h1>
       <p ng-show="!user">Please log in --&gt;</p>
-      <p ng-show="user">Create a new game or select one of your previously created games.</p>
+      <p ng-show="user">Create a new game or select one of your
+      previously created games.</p>
       <ul>
           <li ng-repeat="game in games" >
-              <a href="#/game/{{game._id}}"> {{game._id}} </a> ({{game.black.name}} vs. {{game.white.name}})
+              <a href="#/game/{{game._id}}">
+                {{game.black.name}} vs. {{game.white.name}}
+              </a>
+              <br/> at {{game.started | mydate}}
           </li>
           <li ng-show="!games.length">You have not played before.</li>
       </ul>

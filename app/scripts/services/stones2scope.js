@@ -13,7 +13,7 @@ angular.module('aApp')
 
         for (var column=0; column < board.boardSize; column++) {
 
-          var score = scoreBoard && scoreBoard(board.point2Index(row,column));
+          var score = scoreBoard && scoreBoard[board.point2Index(row,column)];
           var stone = board.getStone(row,column);
           var newContent = (score && score !== libgo.EMPTY) ? score : stone;
 
