@@ -8,10 +8,10 @@ angular.module('aApp')
       var then = new Date(input);
 
       if (!input) { return ''; }
-      
+
       if (now.getFullYear() === then.getFullYear() &&
         now.getMonth() === then.getMonth() &&
-        now.getDate() === then.getMonth()) {
+        now.getDate() === then.getDate()) {
           
         return then.getHours() + ':' + then.getMinutes() + ':' + then.getSeconds() + '(GMT)';
         

@@ -8,7 +8,7 @@ describe('Say Hello', function() {
   });
 
   it('says hello', function() {
-    var message = ptor.findElement(protractor.By.className('webgo-white'));
-    expect(message.getText()).toContain('white');
+    var message = ptor.findElement(protractor.By.className('webgo-control-container'));
+    expect(message.getText()).toContain('Login with');
   });
 });

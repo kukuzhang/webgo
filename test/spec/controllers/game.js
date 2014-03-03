@@ -7,22 +7,29 @@ describe('Controller: GameCtrl', function () {
 
   var GameCtrl,
     scope,
-    requestedGame,
-    requestedUser,
-    requestedPwd,
     routeParamsMock = {auth:'nimi:salasana',gameId:'40005'},
     gameSocketMock = {
+      gameFromSocket: {
+        white: {'name':'jip'},
+        black: {'name':'jap'},
+        boardSize: 19,
+        komi: 6.5,
+        handicaps: 0,
+        timeMain: 3600,
+        timeExtraPeriods: 3,
+        timeStonesPerPeriod: 3,
+        timePeriodLength: 100,
+        blackPrisoners: 1,
+        whitePrisoners: 2,
+        remainingMilliSeconds: function () {return 3600000;},
+        getTurn: function () {return 'b';},
+        getState: function () { return {state: 'playing'}; },
+        getBoard: function () { var b = []; for (var i = 0; i < 19*19; i++) {b.push('_');} return b; },
+      },
 
       routeByGameState: function () { return; },
-      connectTo: function (gameId, user, pwd) {
-
-        console.log('connectTTo!!!',gameId,user,pwd);
-        requestedGame = gameId;
-        requestedUser = user;
-        requestedPwd = pwd;
-
-      },
-      getGame: function () { console.log('requesting game'); },
+      connectTo: function (gameId, user, pwd) { return; },
+      getGame: function () { return this.gameFromSocket; },
       requestGame: function () { return null; },
       isConnected: function () { return true; },
       getConnectionStatus: function () { return 'websocket'; },
@@ -56,21 +63,24 @@ describe('Controller: GameCtrl', function () {
   beforeEach(module(function ($provide) {
     $provide.value('GameSocket', gameSocketMock);
   }));
+  beforeEach(module(function ($provide) {
+    $provide.value('Geometry', {});
+  }));
+
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    requestedGame=null;
-    requestedUser=null;
-    requestedPwd=null;
     GameCtrl = $controller('GameCtrl', {
       $scope: scope
     });
   }));
 
-  it('should automatically request a game with proper parameters.', function () {
-    expect(requestedGame).toBe('40005');
-    expect(requestedUser).toBe('nimi');
-    expect(requestedPwd).toBe('salasana');
+  it('should set scope parameters from game received.', function () {
+    for (var attr in gameSocketMock.gameFromSocket) {
+      var val = gameSocketMock.gameFromSocket[attr];
+      if (typeof(val) === 'function') { continue; }
+      expect(scope[attr]).toBe(val);
+    }
   });
 });

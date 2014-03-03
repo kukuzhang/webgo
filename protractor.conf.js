@@ -18,7 +18,7 @@ exports.config = {
   // to the location of this config. If no other method of starting selenium
   // is found, this will default to
   // node_modules/protractor/selenium/selenium-server...
-  seleniumServerJar: 'selenium/selenium-server-standalone-2.39.0.jar',
+  //seleniumServerJar: 'selenium/selenium-server-standalone-2.39.0.jar',
   // The port to start the selenium server on, or null if the server should
   // find its own unused port.
   seleniumPort: null,
@@ -26,7 +26,7 @@ exports.config = {
   // find chromedriver. This will be passed to the selenium jar as
   // the system property webdriver.chrome.driver. If null, selenium will
   // attempt to find chromedriver using PATH.
-  chromeDriver: './selenium/chromedriver',
+  //chromeDriver: './selenium/chromedriver',
   // If true, only chromedriver will be started, not a standalone selenium.
   // Tests for browsers other than chrome will not run.
   chromeOnly: false,
@@ -53,7 +53,7 @@ exports.config = {
   //
   // Spec patterns are relative to the location of this config.
   specs: [
-    'test/spec/protractor/*.js',
+    'test/protractor/*.js',
   ],
 
   // Patterns to exclude.
