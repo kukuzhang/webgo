@@ -141,9 +141,17 @@ angular.module('aApp')
 
     }
 
+    function updateByError (data) {
+
+      var game = socket.getGame();
+
+      if (game) setTurn(game.getTurn());
+    }
+
     var listeners = {
       'game': updateGame,
       'event':updateByEvent,
+      'error':updateByError,
       //'message': null.
     };
     socket.connectTo($routeParams.gameId);
